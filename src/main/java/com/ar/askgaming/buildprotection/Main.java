@@ -8,7 +8,9 @@ import com.ar.askgaming.buildprotection.Listeners.PlayerInteractListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerMoveListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerQuitListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class Main extends JavaPlugin{
@@ -30,5 +32,5 @@ public class Main extends JavaPlugin{
     }
 
     public HashMap<Player,Selection> playersInEditMode = new HashMap<>();
-    public HashMap<Player,Protection> playersProtections = new HashMap<>();
+    public List<Protection> getAllProtections = new ArrayList<>();
 }

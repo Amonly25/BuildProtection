@@ -22,21 +22,23 @@ public class Selection extends BukkitRunnable{
 
     @Override
     public void run() {
+    
         
-       if (loc1 != null && loc2 != null){
-          generateParticles(loc1, loc2);
-       }
+        if (loc1 != null && loc2 != null){
+            generateParticles(loc1, loc2);
+        }
     }
 
     public void create(){
         if (loc1 != null && loc2 != null){
             Protection prote = new Protection(plugin,loc1,loc2,player);
             plugin.playersInEditMode.remove(player);
-            plugin.playersProtections.put(player, prote);
+            plugin.getAllProtections.add(prote);
             plugin.getConfig().set("test", prote);
             plugin.saveConfig();
-
             player.sendMessage("Has creado con exito tu proteccion.");
+
+            cancel();
        } else {
             player.sendMessage("Selecciona primero las dos esquinas o establece un radio.");
        }
@@ -57,6 +59,9 @@ public class Selection extends BukkitRunnable{
     private Particle.DustOptions dustOptions = new Particle.DustOptions(Color.YELLOW, 1);
 
      private void generateParticles(Location loc1, Location loc2) {
+
+        //Todo, generate cache 
+
         double x1 = Math.min(loc1.getX(), loc2.getX());
         double y1 = Math.min(loc1.getY(), loc2.getY());
         double z1 = Math.min(loc1.getZ(), loc2.getZ());

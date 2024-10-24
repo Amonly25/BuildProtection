@@ -12,48 +12,17 @@ public class Protection implements Serializable{
     private Main plugin;
     private Player owner;
     private ProtectionFlags flags;
-    public ProtectionFlags getFlags() {
-        return flags;
-    }
-
-    public void setFlags(ProtectionFlags flags) {
-        this.flags = flags;
-    }
-
-    public Player getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = owner;
-    }
-
+    private String name;
     private Location loc1, loc2;
-
-    public Location getLoc1() {
-        return loc1;
-    }
-
-    public void setLoc1(Location loc1) {
-        this.loc1 = loc1;
-    }
-
-    public Location getLoc2() {
-        return loc2;
-    }
-
-    public void setLoc2(Location loc2) {
-        this.loc2 = loc2;
-    }
 
     public Protection() {}
 
     public Protection(Main main, Location loc1, Location loc2, Player player) {
         plugin = main;
         owner = player;
+        name = player.getName() + "'s protection";
         this.loc1 = loc1;
         this.loc2 = loc2;
-
     }
 
     public boolean isInsideArea(Location check){
@@ -74,5 +43,43 @@ public class Protection implements Serializable{
         }
 
         return false;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ProtectionFlags getFlags() {
+        return flags;
+    }
+
+    public void setFlags(ProtectionFlags flags) {
+        this.flags = flags;
+    }
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+    public Location getLoc1() {
+        return loc1;
+    }
+
+    public void setLoc1(Location loc1) {
+        this.loc1 = loc1;
+    }
+
+    public Location getLoc2() {
+        return loc2;
+    }
+
+    public void setLoc2(Location loc2) {
+        this.loc2 = loc2;
     }
 }

@@ -22,10 +22,10 @@ public class PlayerMoveListener implements Listener {
         
         Player p = event.getPlayer();
 
-        if (plugin.playersProtections.containsKey(p)){
-            if (plugin.playersProtections.get(p).isInsideArea(event.getTo())){
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Estas dentro de tu proteccion"));          
+        plugin.getAllProtections.forEach(prote -> {
+            if (prote.isInsideArea(event.getTo())){
+                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("Bienvenido a " + prote.getName()));          
             }
-        }
+        });
     }
 }
