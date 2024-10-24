@@ -1,0 +1,9 @@
+com\ar\askgaming\buildprotection\Main.class
+com\ar\askgaming\buildprotection\Listeners\PlayerMoveListener.class
+com\ar\askgaming\buildprotection\DataHandler.class
+com\ar\askgaming\buildprotection\Selection.class
+com\ar\askgaming\buildprotection\Listeners\PlayerInteractListener.class
+com\ar\askgaming\buildprotection\Commands.class
+com\ar\askgaming\buildprotection\Flag.class
+com\ar\askgaming\buildprotection\Protection.class
+com\ar\askgaming\buildprotection\Listeners\PlayerQuitListener.class

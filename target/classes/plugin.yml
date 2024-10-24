@@ -1,0 +1,12 @@
+main: com.ar.askgaming.buildprotection.Main
+name: BuildProtection
+api-version: 1.21
+version: 0.1
+author: AMONLY
+soft-depend: [Residence]
+commands:
+  prote:
+    aliases: [protection]
+    description: Manage dragons in your server.
+    permission: buildprotection.commands
+    permission-message: You do not have permission to use this command.
