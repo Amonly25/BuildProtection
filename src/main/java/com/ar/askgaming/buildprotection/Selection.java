@@ -24,18 +24,18 @@ public class Selection extends BukkitRunnable{
     public void run() {
         
        if (loc1 != null && loc2 != null){
-          // generateParticles(loc1, loc2);
+          generateParticles(loc1, loc2);
        }
     }
 
     public void create(){
         if (loc1 != null && loc2 != null){
-           // Protection prote = new Protection(plugin,loc1,loc2,player);
+            Protection prote = new Protection(plugin,loc1,loc2,player);
             plugin.playersInEditMode.remove(player);
-           // plugin.playersProtections.put(player, prote);
-           // plugin.getConfig().set("test", prote);
-           // plugin.saveConfig();
-           plugin.getResidence().getResidenceManager().addResidence(player,"ByProte", loc1, loc2,true);
+            plugin.playersProtections.put(player, prote);
+            plugin.getConfig().set("test", prote);
+            plugin.saveConfig();
+
             player.sendMessage("Has creado con exito tu proteccion.");
        } else {
             player.sendMessage("Selecciona primero las dos esquinas o establece un radio.");
@@ -51,9 +51,7 @@ public class Selection extends BukkitRunnable{
         loc1 = new Location(p.getWorld(), x-radius, y-radius, z-radius);
         loc2 = new Location(p.getWorld(), x+radius, y+radius, z+radius);
 
-        plugin.getResidence().getSelectionManager().placeLoc1(p, loc1,true);
-        plugin.getResidence().getSelectionManager().placeLoc2(p, loc2,true);
-      //  plugin.getResidence().getSelectionManager().placeLoc1
+
     }
 
     private Particle.DustOptions dustOptions = new Particle.DustOptions(Color.YELLOW, 1);

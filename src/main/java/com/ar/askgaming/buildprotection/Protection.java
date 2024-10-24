@@ -11,6 +11,15 @@ public class Protection implements Serializable{
 
     private Main plugin;
     private Player owner;
+    private ProtectionFlags flags;
+    public ProtectionFlags getFlags() {
+        return flags;
+    }
+
+    public void setFlags(ProtectionFlags flags) {
+        this.flags = flags;
+    }
+
     public Player getOwner() {
         return owner;
     }

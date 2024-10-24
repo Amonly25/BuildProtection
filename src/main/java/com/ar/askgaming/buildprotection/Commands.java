@@ -9,9 +9,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.bekvon.bukkit.residence.Residence;
-import com.bekvon.bukkit.residence.selection.SelectionManager;
-
 public class Commands implements TabExecutor {
     
     private Main plugin;
@@ -46,8 +43,7 @@ public class Commands implements TabExecutor {
             switch (args[0]) {
                 case "select":
                     if (!plugin.playersInEditMode.containsKey(p)){
-                        Selection sel = new Selection(p,plugin);
-                        //sel.setByRadius(5, p);
+                        new Selection(p,plugin);
                         p.sendMessage("Estas en modo edicion para protecction.");
                         
                     } else {
@@ -75,8 +71,6 @@ public class Commands implements TabExecutor {
                             int i = Integer.parseInt(args[1]);
                             plugin.playersInEditMode.get(p).setByRadius(i, p);
                             p.sendMessage("Has establecido el radio en " + i);
-
-                
                             
                         } catch (Exception e) {
                             p.sendMessage("Numero invalido.");
