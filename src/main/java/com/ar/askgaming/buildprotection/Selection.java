@@ -1,12 +1,9 @@
 package com.ar.askgaming.buildprotection;
 
-import org.bukkit.Color;
 import org.bukkit.Location;
-import org.bukkit.Particle;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 
-public class Selection extends BukkitRunnable{
+public class Selection{
     
     private Main plugin;
     private Location loc1, loc2 = null;
@@ -14,92 +11,77 @@ public class Selection extends BukkitRunnable{
 
     public Selection(Player p, Main main) {
 
-        main.playersInEditMode.put(p, this);
-        this.runTaskTimer(main, 0L, 20L);
+        main.getProtectionsManager().getPlayersInEditMode().put(p, this);
+
         plugin = main;
         player = p;
     }
 
-    @Override
-    public void run() {
-    
-        
-        if (loc1 != null && loc2 != null){
-            generateParticles(loc1, loc2);
-        }
-    }
+    public void create(String name){
 
-    public void create(){
-        if (loc1 != null && loc2 != null){
-            Protection prote = new Protection(plugin,loc1,loc2,player);
-            plugin.playersInEditMode.remove(player);
-            plugin.getAllProtections.add(prote);
-            plugin.getConfig().set("test", prote);
-            plugin.saveConfig();
-            player.sendMessage("Has creado con exito tu proteccion.");
+        //Añadir costo cuando haga la economia
 
-            cancel();
-       } else {
+        if (loc1 == null || loc2 == null){
             player.sendMessage("Selecciona primero las dos esquinas o establece un radio.");
-       }
+            return ;
+        }
+        if (!loc1.getWorld().equals(loc2.getWorld())){
+            player.sendMessage("Los puntos deben estar en el mismo mundo.");
+            return ;
+        }
+
+        Protection prote = new Protection(loc1,loc2,player,name);
+        plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
+        plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
+        player.sendMessage("Has creado con exito tu proteccion.");
+    
     }
 
-    public void setByRadius(int radius,Player p){
+    public void setByRadius(int radius,Player p, Location l){
+        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
 
-        int x = p.getLocation().getBlockX();
-        int y = p.getLocation().getBlockY();
-        int z = p.getLocation().getBlockZ();
+        if (prote != null){
+            p.sendMessage("No puedes establecer una proteccion dentro de otra.");
+            return;
+        }
+        if (radius < 1) {
+            p.sendMessage("El radio no puede ser menos a 1.");
+            return;
+        }
+        if (radius > 100) {
+            p.sendMessage("El radio no puede ser mayor a 100.");
+            return;
+        }
+ 
+        p.sendMessage("Has establecido el radio en " + radius);
+        p.sendMessage("Mostrando seleccion.");
+        int x = l.getBlockX();
+        int y = l.getBlockY();
+        int z = l.getBlockZ();
 
         loc1 = new Location(p.getWorld(), x-radius, y-radius, z-radius);
         loc2 = new Location(p.getWorld(), x+radius, y+radius, z+radius);
 
+    }
+    public double getDistanceBetwennCorners(){
 
+        if (loc1 != null && loc2 != null){
+            return loc1.distance(loc2);
+        } else return 0;
+        
     }
 
-    private Particle.DustOptions dustOptions = new Particle.DustOptions(Color.YELLOW, 1);
-
-     private void generateParticles(Location loc1, Location loc2) {
-
-        //Todo, generate cache 
-
-        double x1 = Math.min(loc1.getX(), loc2.getX());
-        double y1 = Math.min(loc1.getY(), loc2.getY());
-        double z1 = Math.min(loc1.getZ(), loc2.getZ());
-
-        double x2 = Math.max(loc1.getX(), loc2.getX());
-        double y2 = Math.max(loc1.getY(), loc2.getY());
-        double z2 = Math.max(loc1.getZ(), loc2.getZ());
-
-        // Generate particles along the X edges
-        for (double x = x1; x <= x2; x++) {
-            loc1.getWorld().spawnParticle(Particle.DUST, x, y1, z1, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x, y1, z2, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x, y2, z1, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x, y2, z2, 1, 0, 0, 0, 0, dustOptions);
-        }
-
-        // Generate particles along the Y edges
-        for (double y = y1; y <= y2; y++) {
-            loc1.getWorld().spawnParticle(Particle.DUST, x1, y, z1, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x1, y, z2, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x2, y, z1, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x2, y, z2, 1, 0, 0, 0, 0, dustOptions);
-        }
-
-        // Generate particles along the Z edges
-        for (double z = z1; z <= z2; z++) {
-            loc1.getWorld().spawnParticle(Particle.DUST, x1, y1, z, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x1, y2, z, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x2, y1, z, 1, 0, 0, 0, 0, dustOptions);
-            loc1.getWorld().spawnParticle(Particle.DUST, x2, y2, z, 1, 0, 0, 0, 0, dustOptions);
-        }
-    }
     public Location getLoc1() {
         return loc1;
     }
 
     public void setLoc1(Location loc1) {
+
         this.loc1 = loc1;
+        if (loc1 != null && loc2 != null){
+            player.sendMessage("Mostrando seleccion.");
+            return ;
+        }
     }
 
     public Location getLoc2() {
@@ -108,5 +90,9 @@ public class Selection extends BukkitRunnable{
 
     public void setLoc2(Location loc2) {
         this.loc2 = loc2;
+        if (loc1 != null && loc2 != null){
+            player.sendMessage("Mostrando seleccion.");
+            return ;
+        }
     }
 }

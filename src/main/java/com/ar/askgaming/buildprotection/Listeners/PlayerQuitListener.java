@@ -17,9 +17,8 @@ public class PlayerQuitListener implements Listener{
     @EventHandler()
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player p = event.getPlayer();
-        if (plugin.playersInEditMode.containsKey(p)){
-            plugin.playersInEditMode.get(p).cancel();
-            plugin.playersInEditMode.remove(p);
+        if (plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
+            plugin.getProtectionsManager().getPlayersInEditMode().remove(p);
         }
     }
 }

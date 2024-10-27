@@ -8,5 +8,16 @@ commands:
   prote:
     aliases: [protection]
     description: Manage dragons in your server.
-    permission: buildprotection.commands
-    permission-message: You do not have permission to use this command.
+permissions:
+  buildprotection.commands:
+    description: Allows the player to use the /protection command.
+    default: true
+  buildprotection.admin:
+    description: Allows Admins control all the protections
+    default: op
+  buildprotection.teleport:
+    description: Allows the player to teleport to the protection
+    default: op
+  buildprotection.listohers:
+    description: Allows the player to list the protections of others
+    default: op
