@@ -2,6 +2,7 @@ package com.ar.askgaming.buildprotection;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import java.util.HashMap;
 
 public class Selection{
     
@@ -22,10 +23,11 @@ public class Selection{
         //Añadir costo cuando haga la economia
 
         if (loc1 == null || loc2 == null){
-            player.sendMessage("Selecciona primero las dos esquinas o establece un radio.");
+            player.sendMessage(plugin.getDataHandler().getLang("select.must", player));
             return ;
         }
         if (!loc1.getWorld().equals(loc2.getWorld())){
+            //REVISAR ESTO
             player.sendMessage("Los puntos deben estar en el mismo mundo.");
             return ;
         }
@@ -33,34 +35,35 @@ public class Selection{
         Protection prote = new Protection(loc1,loc2,player,name);
         plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
         plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
-        player.sendMessage("Has creado con exito tu proteccion.");
+        player.sendMessage(plugin.getDataHandler().getLang("prote.create", player));
     
     }
 
-    public void setByRadius(int radius,Player p, Location l){
+    public void setByRadius(int radius){
+        Location l = player.getLocation();
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
 
         if (prote != null){
-            p.sendMessage("No puedes establecer una proteccion dentro de otra.");
+            player.sendMessage(plugin.getDataHandler().getLang("select.cant", player));
             return;
         }
         if (radius < 1) {
-            p.sendMessage("El radio no puede ser menos a 1.");
+            player.sendMessage(plugin.getDataHandler().getLang("select.too_low", player));
             return;
         }
         if (radius > 100) {
-            p.sendMessage("El radio no puede ser mayor a 100.");
+            player.sendMessage(plugin.getDataHandler().getLang("select.too_high", player));
             return;
         }
- 
-        p.sendMessage("Has establecido el radio en " + radius);
-        p.sendMessage("Mostrando seleccion.");
+
+        player.sendMessage(plugin.getDataHandler().getLang("select.radius",player).replace("%radius%", String.valueOf(radius)));
+        player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
         int x = l.getBlockX();
         int y = l.getBlockY();
         int z = l.getBlockZ();
 
-        loc1 = new Location(p.getWorld(), x-radius, y-radius, z-radius);
-        loc2 = new Location(p.getWorld(), x+radius, y+radius, z+radius);
+        loc1 = new Location(player.getWorld(), x-radius, y-radius, z-radius);
+        loc2 = new Location(player.getWorld(), x+radius, y+radius, z+radius);
 
     }
     public double getDistanceBetwennCorners(){
@@ -79,7 +82,7 @@ public class Selection{
 
         this.loc1 = loc1;
         if (loc1 != null && loc2 != null){
-            player.sendMessage("Mostrando seleccion.");
+            player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
             return ;
         }
     }
@@ -91,7 +94,7 @@ public class Selection{
     public void setLoc2(Location loc2) {
         this.loc2 = loc2;
         if (loc1 != null && loc2 != null){
-            player.sendMessage("Mostrando seleccion.");
+            player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
             return ;
         }
     }

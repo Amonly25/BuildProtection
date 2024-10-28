@@ -26,7 +26,7 @@ public class Fish implements Listener{
         Location l = event.getHook().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.FISH, p, l)){
-            p.sendMessage("No tienes permiso para pescar en este lugar.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.fish", p));
             event.setCancelled(true);
         }
     }
@@ -37,7 +37,7 @@ public class Fish implements Listener{
         Location l = event.getEntity().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.FISH, p, l)){
-            p.sendMessage("No tienes permiso para pescar en este lugar.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.fish", p));
             event.setCancelled(true);
         }
     }

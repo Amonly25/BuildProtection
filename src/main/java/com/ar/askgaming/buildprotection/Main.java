@@ -21,6 +21,7 @@ import com.ar.askgaming.buildprotection.Listeners.PlayerInteractListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerMoveListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerQuitListener;
 
+import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin{
@@ -94,7 +95,6 @@ public class Main extends JavaPlugin{
     public Economy getEconomy() {
         return economy;
     }
-
     public ProtectionFlags getProtectionFlags() {
         return protectionFlags;
     }

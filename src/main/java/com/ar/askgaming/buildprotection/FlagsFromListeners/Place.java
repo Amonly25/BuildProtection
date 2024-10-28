@@ -21,7 +21,7 @@ public class Place implements Listener {
         Location l = event.getBlock().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.PLACE, p, l)){
-            p.sendMessage("No tienes permiso para colocar bloques en este lugar.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.place", p));
             event.setCancelled(true);
         }
     }

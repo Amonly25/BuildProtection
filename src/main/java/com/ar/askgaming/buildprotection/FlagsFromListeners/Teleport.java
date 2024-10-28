@@ -21,7 +21,7 @@ public class Teleport implements Listener {
         Location l = event.getTo();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.TELEPORT, p, l)){
-            p.sendMessage("No tienes permiso para teletransportarte a este lugar.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.teleport", p));
             event.setCancelled(true);
         }
     } 

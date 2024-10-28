@@ -24,6 +24,7 @@ public class PlayerMoveListener implements Listener {
         
         Player p = event.getPlayer();
         //Revisar el mejor metodo
+        //No mondar de forma constante el mensaje
 
         if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
             event.getFrom().getBlockY() == event.getTo().getBlockY() &&

@@ -1,0 +1,59 @@
+select:
+  enter: "&eYou have entered in edit mode. Can select now two blocks or set a radius. Use &6/prote exit &eto exit."
+  exit: "&eYou have exited from edit mode."
+  cant: "&cYou can't select here, there is an another protection."
+  p1: "&eYou have selected the first point."
+  p2: "&eYou have selected the second point."
+  must: "&cYou must have a selection first."
+  too_low: "&cThe selection is too low."
+  too_high: "&cThe selection is too high."
+  radius: "&eYou have selected a radius of &6%radius%&e."
+  show: "&eShowing the selection."
+
+prote:
+  create: "&2You have created a protection."
+  delete: "&2You have deleted a protection."
+  flag_set: "&2You have set the flag &6%flag%&2 to &6%value%&2."
+  player_added: "&2You have added the player &6%player%&2."
+  player_removed: "&2You have removed the player &6%player%&2."
+  message_set: "&2You have set the message to %message%."
+  no: "&cThere is no protection here."
+  exist: "&cA protection with this name already exists."
+  no_exist: "&cThis protection doesn't exist."
+  list: "&eProtections in that world:"
+  info:
+    name: "&eName: &6 "
+    owner: "&eOwner: &6"
+    flags: "&eFlags 
+    hover: "&7(Hover over to see the flags)"
+    players: "&ePlayers: &6 "
+    message: "&eMessage: &6 "
+
+flags:
+  move: "&cYou can't move here."
+  place: "&cYou can't place here."
+  break: "&cYou can't break here."
+  interact: "&cYou can't interact here."
+  pvp: "&cYou can't attack here."
+  teleport: "&cYou can't teleport here."
+  fish: "&cYou can't fish here."
+  ride: "&cYou can't ride here."
+  invalid: "&cInvalid flag."
+  no_perm: "&cYou don't have permission to set this flag."
+
+help:
+  - "&e/prote select &7- Enter in edit mode."
+  - "&e/prote create &7- Create a protection."
+  - "&e/prote set flag &7- Set a flag."
+  - "&e/prote add/remove player &7- Remove a player."
+  - "&e/prote message &7- Changue the message."
+  - "&e/prote delete &7- Delete a protection."
+  - "&e/prote list &7- List all protections."
+  - "&e/prote info &7- Show information about a protection."
+
+commands:
+  invalid: "&cInvalid command, use /prote help."
+  no_perm: "&cYou don't have permission to do that."
+  missing_arg: "&cMissing argument, use /prote help."
+
+

@@ -25,7 +25,7 @@ public class EntityDamage implements Listener{
 
             if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.PVP, d.getLocation())){
                 event.setCancelled(true);
-                d.sendMessage("No puedes atacar a esta zona");
+                p.sendMessage(plugin.getDataHandler().getLang("flags.pvp", p));
                 return;
             }
         }

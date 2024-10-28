@@ -23,7 +23,7 @@ public class Break implements Listener {
         Location l = event.getBlock().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.BREAK, p, l)){
-            p.sendMessage("No tienes permiso para romper este bloque.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.break", p));
             event.setCancelled(true);
         }
     }

@@ -29,6 +29,8 @@ public class PlayerInteractListener implements Listener{
         if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){return;}
         if (event.getClickedBlock() == null){return;}
 
+        //hacerlo por jugador - es global asi que si dos jugadores estan editando al mismo tiempo se jode todo
+
         long currentTime = System.currentTimeMillis();
         if (currentTime - lastClickTime < 100) { // 100 ms de espera
             return; // Ignorar si el clic fue demasiado rápido
@@ -43,17 +45,17 @@ public class PlayerInteractListener implements Listener{
             Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
 
             if (prote != null){
-                p.sendMessage("No puedes establecer una proteccion dentro de otra.");
+                p.sendMessage(plugin.getDataHandler().getLang("select.cant", p));
                 return;
             }
 
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(block.getLocation());
-               p.sendMessage("Has establecido la esquina 1");
+               p.sendMessage(plugin.getDataHandler().getLang("select.p1", p));
 
             } else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation());
-                p.sendMessage("Has establecido la esquina 2");
+                p.sendMessage(plugin.getDataHandler().getLang("select.p2", p));
             }
         }
     }

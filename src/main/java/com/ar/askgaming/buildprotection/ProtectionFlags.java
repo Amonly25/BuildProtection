@@ -48,6 +48,13 @@ public class ProtectionFlags {
         
         return true;
     }
+    public boolean hasFlagPermission(FlagType type, Player player){
+
+        if (player.hasPermission("buildprotection.flags." + type.toString().toLowerCase())) {
+            return true;
+        }
+        return false;
+    }
     public boolean isFlagEnabled(FlagType type, Location location){
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(location);
         if (prote != null){

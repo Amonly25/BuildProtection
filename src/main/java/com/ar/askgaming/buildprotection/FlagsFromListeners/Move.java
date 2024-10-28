@@ -1,5 +1,6 @@
 package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -16,15 +17,17 @@ public class Move implements Listener{
     @EventHandler()
     public void onPlayerMove(PlayerMoveEvent event){
 
+        Player p = event.getPlayer();
+
         if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
             event.getFrom().getBlockY() == event.getTo().getBlockY() &&
             event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
             return;
         }
 
-        if (!plugin.getProtectionFlags().hasPermission(FlagType.MOVE, event.getPlayer(), event.getTo())){
+        if (!plugin.getProtectionFlags().hasPermission(FlagType.MOVE, p, event.getTo())){
             event.setCancelled(true);
-            event.getPlayer().sendMessage("No puedes moverte en esta zona");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.move", p));
         }
     }
 

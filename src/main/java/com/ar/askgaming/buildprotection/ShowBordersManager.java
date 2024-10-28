@@ -39,45 +39,11 @@ public class ShowBordersManager extends BukkitRunnable {
                 }
             });
         }
-
     }
     private Particle.DustOptions dustOptions = new Particle.DustOptions(Color.YELLOW, 1);
 
     private void generateParticles(Location loc1, Location loc2) {
 
-        //Todo, generate cache 
-
-        // double x1 = Math.min(loc1.getX(), loc2.getX());
-        // double y1 = Math.min(loc1.getY(), loc2.getY());
-        // double z1 = Math.min(loc1.getZ(), loc2.getZ());
-
-        // double x2 = Math.max(loc1.getX(), loc2.getX());
-        // double y2 = Math.max(loc1.getY(), loc2.getY());
-        // double z2 = Math.max(loc1.getZ(), loc2.getZ());
-
-        // // Generate particles along the X edges
-        // for (double x = x1; x <= x2; x++) {
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x, y1, z1, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x, y1, z2, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x, y2, z1, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x, y2, z2, 1, 0, 0, 0, 0, dustOptions);
-        // }
-
-        // // Generate particles along the Y edges
-        // for (double y = y1; y <= y2; y++) {
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x1, y, z1, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x1, y, z2, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x2, y, z1, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x2, y, z2, 1, 0, 0, 0, 0, dustOptions);
-        // }
-
-        // // Generate particles along the Z edges
-        // for (double z = z1; z <= z2; z++) {
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x1, y1, z, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x1, y2, z, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x2, y1, z, 1, 0, 0, 0, 0, dustOptions);
-        //     loc1.getWorld().spawnParticle(Particle.DUST, x2, y2, z, 1, 0, 0, 0, 0, dustOptions);
-        // }
         int minX = Math.min(loc1.getBlockX(), loc2.getBlockX());
         int maxX = Math.max(loc1.getBlockX(), loc2.getBlockX());
         int minY = Math.min(loc1.getBlockY(), loc2.getBlockY());

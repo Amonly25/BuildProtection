@@ -1,6 +1,7 @@
 package com.ar.askgaming.buildprotection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -9,8 +10,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-
-import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -26,19 +25,36 @@ public class Commands implements TabExecutor {
         @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         
+        List<String> list = new ArrayList<>();
+
         if (args.length == 1) {
             return List.of("select", "create", "list","set","tp","info","show","add","remove","message","delete");
         }
-        if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
-            List<String> flags = new ArrayList<>();
-            for (ProtectionFlags.FlagType flag : ProtectionFlags.FlagType.values()) {
-                flags.add(flag.toString().toLowerCase());
+        if (args.length == 2) {
+            switch (args[0].toLowerCase()) {
+                case "set":
+                    for (ProtectionFlags.FlagType flag : ProtectionFlags.FlagType.values()) {
+                        list.add(flag.toString().toLowerCase());
+                    }
+                    //Limit to permissions
+                    break;
+                case "add":
+                    for (Player p : Bukkit.getOnlinePlayers()){
+                        list.add(p.getName());
+                    }
+                    break;    
+                case "remove":
+                    for (Player p : Bukkit.getOnlinePlayers()){
+                        list.add(p.getName());
+                    }
+                    break; 
+                default:
+                    break;
             }
-            return flags;
         }
-        return new ArrayList<>();
+        return list;
     }
-        @Override
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
                 
         if (sender instanceof Player){
@@ -47,8 +63,7 @@ public class Commands implements TabExecutor {
         Player p = (Player) sender;
 
         if (args.length == 0) {
-            p.sendMessage("Use /prote select para empezar a crear una proteccion.");
-            p.sendMessage("O usa /prote help para ver los comandos disponibles.");
+            p.sendMessage(plugin.getDataHandler().getLang("help", p));
             return true;
         }
 
@@ -82,7 +97,7 @@ public class Commands implements TabExecutor {
                 handleMessageCommand(p, args);
                 break;
             case "help":
-                handleHelpCommand(p, args);
+                p.sendMessage(plugin.getDataHandler().getLang("help", p));
                 break;
             case "create":
                 handleCreateCommand(p, args);
@@ -91,7 +106,7 @@ public class Commands implements TabExecutor {
                  handleDeleteCommand(p, args);
                 break;
             default:
-                p.sendMessage("Subcomando invalido. ");
+                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
                 break;
         }
         return false;
@@ -102,28 +117,14 @@ public class Commands implements TabExecutor {
             if (prote != null){
                 if (prote.isAdminProtection(p)){
                     plugin.getProtectionsManager().deleteProtection(prote);
-                    p.sendMessage("Proteccion eliminada.");
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
                 } else {
-                    p.sendMessage("No tienes permiso para hacer eso.");
+                    p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
                 }
             } else {
-                p.sendMessage("No estas en una proteccion.");
+                p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
 
             }
-        }
-    private void handleHelpCommand(Player p, String[] args) {
-            p.sendMessage("§eComandos de proteccion:");
-            p.sendMessage("§7/protection select - Selecciona un area para crear una proteccion.");
-            p.sendMessage("§7/protection create <nombre> - Crea una proteccion con el area seleccionada.");
-            p.sendMessage("§7/protection list <jugador/all> - Muestra las protecciones de un jugador o todas.");
-            p.sendMessage("§7/protection info - Muestra informacion de la proteccion en la que estas.");
-            p.sendMessage("§7/protection show - Muestra la proteccion en la que estas.");
-            p.sendMessage("§7/protection set <flag> <true/false> - Cambia el estado de una flag.");
-            p.sendMessage("§7/protection tp <nombre> - Teletransporta a una proteccion.");
-            p.sendMessage("§7/protection add <jugador> - Añade un jugador a la proteccion.");
-            p.sendMessage("§7/protection remove <jugador> - Elimina un jugador de la proteccion.");
-            p.sendMessage("§7/protection message <mensaje> - Cambia el mensaje de la proteccion.");
-
         }
    
     private void handleMessageCommand(Player p, String[] args) {
@@ -131,63 +132,68 @@ public class Commands implements TabExecutor {
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
 
         if (prote == null){
-            p.sendMessage("No estas en una proteccion.");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
             return;
         }
 
         if (!prote.isAdminProtection(p)){
-            p.sendMessage("No tienes permiso para hacer eso.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
             return;
         }
     
         if (args.length < 2) {
-            p.sendMessage("Faltan argumentos.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
             return;
         }
         StringBuilder message = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
             message.append(args[i]).append(" ");
         }
-        p.sendMessage("Cambiaste el mensaje a: " + message.toString().trim());
+        p.sendMessage(plugin.getDataHandler().getLang("prote.message", p).replace("message", message.toString().trim()));
         prote.setMessage(message.toString().trim());
     }
    
     private void handleSetFlagCommand(Player p, String[] args) {
 
         if (args.length != 3) {
-            p.sendMessage("Faltan argumentos.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
             return;
         }
         if (!plugin.getProtectionFlags().isValid(args[1])) {
-            p.sendMessage("Flag invalida.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.invalid", p));
             return;
         }
 
         Protection proteByLoc = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
 
         if (proteByLoc == null){
-            p.sendMessage("No estas en una proteccion.");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
             return;
         }
 
         boolean value = Boolean.parseBoolean(args[2]);
 
         if (proteByLoc.isAdminProtection(p)){
-            p.sendMessage("Flag " + args[1] + " seteado a " + value);
-            proteByLoc.setFlag(FlagType.valueOf(args[1].toUpperCase()), value);
-            
+            if (plugin.getProtectionFlags().hasFlagPermission(ProtectionFlags.FlagType.valueOf(args[1].toUpperCase()), p)){
+                proteByLoc.setFlag(ProtectionFlags.FlagType.valueOf(args[1].toUpperCase()), value);
+                
+                p.sendMessage(plugin.getDataHandler().getLang("prote.flag.set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
+                
+            } else {
+                p.sendMessage(plugin.getDataHandler().getLang("flags.no_perm", p));
+            }            
         } else {
-            p.sendMessage("No tienes permiso para hacer eso.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
         }
     }
 
     private void handleCreateCommand(Player p, String[] args) {
         if (args.length != 2) {
-            p.sendMessage("En necesario establecer un nombre.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
             return;
         }
         if (plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).containsKey(args[1])){
-            p.sendMessage("Ya existe una proteccion con ese nombre.");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.exists", p));
         } else {
             plugin.getProtectionsManager().getPlayersInEditMode().get(p).create(args[1]);
         }
@@ -196,13 +202,10 @@ public class Commands implements TabExecutor {
     private void handleSelectCommand(Player p, String[] args) {
         if (args.length == 1) {
             if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
-                new Selection(p,plugin);
-                p.sendMessage("§eEstas en modo edicion para protecction.");
-                p.sendMessage("§7Ahora puedes seleccionar dos puntos con un palo.");
-                p.sendMessage("§7O usa /protection select <radio> para seleccionar un area alrededor de ti.");
-                
+                new Selection(p,plugin);  
+                p.sendMessage(plugin.getDataHandler().getLang("select.enter", p));          
             } else {
-                p.sendMessage("Has salido del modo edicion.");
+                p.sendMessage(plugin.getDataHandler().getLang("select.exit", p));
                 plugin.getProtectionsManager().getPlayersInEditMode().remove(p);    
             }
 
@@ -210,10 +213,10 @@ public class Commands implements TabExecutor {
             if (plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
                 try {
                     int i = Integer.parseInt(args[1]);
-                    plugin.getProtectionsManager().getPlayersInEditMode().get(p).setByRadius(i, p, p.getLocation());
+                    plugin.getProtectionsManager().getPlayersInEditMode().get(p).setByRadius(i);
                     
                 } catch (Exception e) {
-                    p.sendMessage("Numero invalido.");
+                    p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
                 }
             }
         }
@@ -221,11 +224,11 @@ public class Commands implements TabExecutor {
 
     private void handleTpCommand(Player p, String[] args) {
         if (args.length != 2) {
-            p.sendMessage("Falta un argumento.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
             return;
         }
         if (!p.hasPermission("buildprotection.teleport")) {
-            p.sendMessage("No tienes permiso para teletransportarte.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
             return;
         }
 
@@ -234,10 +237,10 @@ public class Commands implements TabExecutor {
             Location l = prote.getCenter();
             if (l != null){
                 p.teleport(l);
-                p.sendMessage("Te has teletransportado a la proteccion " + args[1]);
+                //Message?
             }
         }else {
-            p.sendMessage("No existe una proteccion con ese nombre.");
+            p.sendMessage(plugin.getDataHandler().getLang("no_exist", p));
         }    
     }
 
@@ -251,26 +254,31 @@ public class Commands implements TabExecutor {
                     plugin.getShowParticles().getShowProtections().remove(prote);
                 }, 100L); // 100 ticks = 5 segundos (1 segundo = 20 ticks)
             } else {
-                p.sendMessage("No tienes permiso para hacer eso.");
+                p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
             }
         }else {
-            p.sendMessage("No estas en una proteccion.");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
         }    
     }
 
     private void handleListCommand(Player p, String[] args) {
         if (args.length == 1) {
             // Listar todas las protecciones del jugador
-            p.sendMessage("Mostrando tus protecciones");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.list", p));
+            plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).forEach((name, prote) -> {
+                if (prote.getOwner().equalsIgnoreCase(p.getName())){
+                    p.sendMessage(name);
+                }
+            });
             return;
         }
         if (!p.hasPermission("buildprotection.listothers")) {
-            p.sendMessage("No tienes permiso para hacer eso.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
             return;
         }
         if (args[1].equalsIgnoreCase("all")){
             plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).forEach((name, prote) -> {
-                p.sendMessage("Obteniendo todas las protecciones del mundo " + p.getWorld().getName());
+                p.sendMessage("Listing protections of world " + p.getWorld().getName());
                 p.sendMessage(name);
             });
         } else {
@@ -278,8 +286,8 @@ public class Commands implements TabExecutor {
             plugin.getProtectionsManager().getAllProtections().forEach((world,map) -> {
                 map.forEach((name,prote) -> {
                     if (prote.getOwner().equalsIgnoreCase(args[1])){
-                        p.sendMessage("Obteniendo protecciones de " + args[1]);
-                        p.sendMessage(name + " en " + world);
+                        p.sendMessage("Listing protections of player " + args[1]);
+                        p.sendMessage(name + " at world: " + world);
                     }
                 });
             });
@@ -290,13 +298,14 @@ public class Commands implements TabExecutor {
 
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (prote != null){
-            p.sendMessage("Nombre: " + prote.getName());
-            p.sendMessage("Dueño: " + prote.getOwner());
-            p.sendMessage("Con permisos: " + prote.getPlayers().toString());
-            p.sendMessage("Mensaje: " + prote.getMessage());
+
+            p.sendMessage(plugin.getDataHandler().getLang("prote.info.name", p) + prote.getName());
+            p.sendMessage(plugin.getDataHandler().getLang("prote.info.owner", p) + prote.getOwner());
+            p.sendMessage(plugin.getDataHandler().getLang("prote.info.players", p) + prote.getPlayers().toString());
+            p.sendMessage(plugin.getDataHandler().getLang("prote.info.message", p) + prote.getMessage());
             
-            TextComponent flags = new TextComponent("Flags");
-            TextComponent hoverOver = new TextComponent("(Hover over for more info)");
+            TextComponent flags = new TextComponent(plugin.getDataHandler().getLang("prote.info.flags",p));
+            TextComponent hoverOver = new TextComponent(plugin.getDataHandler().getLang("prote.info.hover",p));
             HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GRAY+prote.getFlagsMap().toString().replaceAll("false", ChatColor.RED+"false"+ChatColor.GRAY).replaceAll("true", ChatColor.GREEN+"true"+ChatColor.GRAY)));
                              
             flags.setHoverEvent(he);
@@ -304,32 +313,32 @@ public class Commands implements TabExecutor {
 
             p.spigot().sendMessage(flags);
         } else {
-            p.sendMessage("No existe proteccion aqui.");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
         }
     }
 
     private void handleAddRemovePlayerCommand(Player p, String[] args) {
         if (args.length != 2) {
-            p.sendMessage("Faltan argumentos.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
             return;
         }
         Protection proteByLoc = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (proteByLoc == null){
-            p.sendMessage("No estas en una proteccion.");
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
             return;
         }
         if (proteByLoc.isAdminProtection(p)){
             if (args[0].equalsIgnoreCase("add")){
                 proteByLoc.addPlayer(args[1]);
-                p.sendMessage("Has añadido a " + args[1] +" a la proteccion");
+                p.sendMessage(plugin.getDataHandler().getLang("prote.player_added", p).replace("%player%", args[1]));
             } else if (args[0].equalsIgnoreCase("remove")){
                 proteByLoc.removePlayer(args[1]);
-                p.sendMessage("Jugador eliminado a "+ args[1] +" de la proteccion");
+                p.sendMessage(plugin.getDataHandler().getLang("prote.player_removed", p).replace("%player%", args[1]));
             } else {
-                p.sendMessage("Argumento invalido. utiliza add o remove.");
+                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
             }
         } else {
-            p.sendMessage("No tienes permiso para hacer eso.");
+            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
         }
     }
 }

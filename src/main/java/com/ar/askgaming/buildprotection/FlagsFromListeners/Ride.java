@@ -16,6 +16,8 @@ public class Ride implements Listener{
         plugin = main;
     }
 
+    //Interact overides this event
+
     @EventHandler()
     public void onRide(EntityMountEvent event){
 
@@ -24,7 +26,7 @@ public class Ride implements Listener{
             Player p = (Player) event.getEntity();
             Location l = p.getLocation();
             if (!plugin.getProtectionFlags().hasPermission(FlagType.RIDE, p,l)){
-                p.sendMessage("No tienes permiso para montar en este lugar.");
+                p.sendMessage(plugin.getDataHandler().getLang("flags.ride", p));
                 event.setCancelled(true);
             }
         } else {

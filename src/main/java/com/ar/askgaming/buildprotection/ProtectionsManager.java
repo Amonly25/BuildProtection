@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;

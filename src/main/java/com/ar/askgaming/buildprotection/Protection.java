@@ -61,7 +61,7 @@ public class Protection implements ConfigurationSerializable{
     public Protection(Location loc1, Location loc2, Player player, String proteName) {
 
         owner = player.getName();
-        message = "Bienvenido a " + proteName;
+        message = "Welcome to " + proteName;
         
         name = proteName;
         this.loc1 = loc1;

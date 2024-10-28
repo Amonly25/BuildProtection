@@ -25,7 +25,7 @@ public class Interact implements Listener {
         Location l = event.getClickedBlock().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
-            p.sendMessage("No tienes permiso para interactuar con este bloque.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
             event.setCancelled(true);
         }
     }
@@ -36,7 +36,7 @@ public class Interact implements Listener {
         Location l = event.getRightClicked().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
-            p.sendMessage("No tienes permiso para interactuar aqui.");
+            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
             event.setCancelled(true);
         }
     }
