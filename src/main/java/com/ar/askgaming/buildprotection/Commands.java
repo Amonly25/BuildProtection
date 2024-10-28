@@ -9,7 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.s;
 
 import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
 
@@ -28,7 +27,7 @@ public class Commands implements TabExecutor {
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         
         if (args.length == 1) {
-            return List.of("select", "create", "list","set","tp","info","show","add","remove","message");
+            return List.of("select", "create", "list","set","tp","info","show","add","remove","message","delete");
         }
         if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
             List<String> flags = new ArrayList<>();
@@ -88,6 +87,9 @@ public class Commands implements TabExecutor {
             case "create":
                 handleCreateCommand(p, args);
                 break;
+            case "delete":
+                 handleDeleteCommand(p, args);
+                break;
             default:
                 p.sendMessage("Subcomando invalido. ");
                 break;
@@ -95,6 +97,20 @@ public class Commands implements TabExecutor {
         return false;
     }
 
+    private void handleDeleteCommand(Player p, String[] args) {
+        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
+            if (prote != null){
+                if (prote.isAdminProtection(p)){
+                    plugin.getProtectionsManager().deleteProtection(prote);
+                    p.sendMessage("Proteccion eliminada.");
+                } else {
+                    p.sendMessage("No tienes permiso para hacer eso.");
+                }
+            } else {
+                p.sendMessage("No estas en una proteccion.");
+
+            }
+        }
     private void handleHelpCommand(Player p, String[] args) {
             p.sendMessage("§eComandos de proteccion:");
             p.sendMessage("§7/protection select - Selecciona un area para crear una proteccion.");

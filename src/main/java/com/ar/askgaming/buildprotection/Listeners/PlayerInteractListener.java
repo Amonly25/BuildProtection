@@ -1,7 +1,5 @@
 package com.ar.askgaming.buildprotection.Listeners;
 
-import java.util.Map.Entry;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -54,7 +52,7 @@ public class PlayerInteractListener implements Listener{
                p.sendMessage("Has establecido la esquina 1");
 
             } else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation().clone().add(1, 1, 1));
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation());
                 p.sendMessage("Has establecido la esquina 2");
             }
         }

@@ -3,7 +3,7 @@ C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\ProtectionsManager.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\ShowBordersManager.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Interact.java
-C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Pvp.java
+C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Explode.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Move.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Commands.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Damage.java
@@ -21,3 +21,4 @@ C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Listeners\PlayerQuitListener.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Flow.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Listeners\PlayerInteractListener.java
+C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\EntityDamage.java

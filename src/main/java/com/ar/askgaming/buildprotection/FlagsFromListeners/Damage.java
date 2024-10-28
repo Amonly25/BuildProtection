@@ -1,11 +1,9 @@
 package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
 import org.bukkit.Location;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
 import com.ar.askgaming.buildprotection.Main;

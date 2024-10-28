@@ -14,6 +14,7 @@ import com.ar.askgaming.buildprotection.FlagsFromListeners.Move;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Piston;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Place;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.EntityDamage;
+import com.ar.askgaming.buildprotection.FlagsFromListeners.Explode;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Ride;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Teleport;
 import com.ar.askgaming.buildprotection.Listeners.PlayerInteractListener;
@@ -63,6 +64,7 @@ public class Main extends JavaPlugin{
         Bukkit.getPluginManager().registerEvents(new Teleport(this), this);
         Bukkit.getPluginManager().registerEvents(new Move(this), this);
         Bukkit.getPluginManager().registerEvents(new Ignite(this), this);
+        Bukkit.getPluginManager().registerEvents(new Explode(this), this);
 
         //Vault Integration
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {

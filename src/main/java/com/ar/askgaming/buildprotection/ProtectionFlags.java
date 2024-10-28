@@ -2,9 +2,6 @@ package com.ar.askgaming.buildprotection;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.checkerframework.checker.units.qual.t;
-
-import java.util.Map.Entry;
 
 public class ProtectionFlags {
     
@@ -28,6 +25,7 @@ public class ProtectionFlags {
         MOVE,
         ANIMALS,
         MONSTERS,
+        EXPLODE
     }
 
     public boolean hasPermission(FlagType type, Player player, Location location){

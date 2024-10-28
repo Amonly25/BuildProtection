@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -66,10 +67,11 @@ public class ProtectionsManager {
         flagsMap.put(FlagType.PVP, true);
         flagsMap.put(FlagType.MOVE, true);
         flagsMap.put(FlagType.PISTON, false);
-        flagsMap.put(FlagType.DAMAGE, false);
+        flagsMap.put(FlagType.DAMAGE, true);
         flagsMap.put(FlagType.FLOW, true);
         flagsMap.put(FlagType.ANIMALS, false);
         flagsMap.put(FlagType.MONSTERS, true);
+        flagsMap.put(FlagType.EXPLODE, false);
 
     }
 
@@ -104,5 +106,16 @@ public class ProtectionsManager {
             }
         }
         return null;
+    }
+
+    public void deleteProtection(Protection prote) {
+        String wName = prote.getLoc1().getWorld().getName();
+        FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(wName);
+        if (cfg != null){
+            cfg.set(prote.getName(), null);
+            plugin.getDataHandler().saveWorldConfig(cfg, wName);
+            mapList.get(wName).remove(prote.getName());
+            prote = null;
+        }
     }
 }

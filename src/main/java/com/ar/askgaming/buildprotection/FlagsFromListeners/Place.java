@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerBucketEvent;
 
 import com.ar.askgaming.buildprotection.Main;
 import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
@@ -26,15 +25,4 @@ public class Place implements Listener {
             event.setCancelled(true);
         }
     }
-    // @EventHandler()
-    // public void onBucketPlace(PlayerBucketEvent event){
-    //     Player p = event.getPlayer();
-    //     Location l = event.getBlockClicked().getLocation();
-        
-    //     if (!plugin.getProtectionFlags().hasPermission(FlagType.PLACE, p, l)){
-    //         p.sendMessage("No tienes permiso para colocar esto aqui.");
-    //         event.setCancelled(true);
-    //     }
-    // }
-
 }
