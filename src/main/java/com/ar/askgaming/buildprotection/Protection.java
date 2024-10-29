@@ -2,6 +2,7 @@ package com.ar.askgaming.buildprotection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -12,8 +13,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
-
-import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Protection implements ConfigurationSerializable{
 
@@ -103,7 +103,7 @@ public class Protection implements ConfigurationSerializable{
         return owner;
     }
     public boolean isOwner(Player player){
-        return owner.equals(player);
+        return owner.equals(player.getName());
     }
 
     public void setOwner(String owner) {
@@ -217,5 +217,18 @@ public class Protection implements ConfigurationSerializable{
     public void setFlag(FlagType type, boolean value) {
         getFlagsMap().put(type, value);
         save();
+    }
+    public LinkedHashMap<FlagType, Boolean> getSortedFlags(){
+        List<Map.Entry<FlagType, Boolean>> entryList = new ArrayList<>(flagsMap.entrySet());
+
+        // Ordenar la lista: los valores `true` primero y luego los `false`
+        entryList.sort((entry1, entry2) -> Boolean.compare(!entry1.getValue(), !entry2.getValue()));
+
+        // Crear un nuevo LinkedHashMap para mantener el orden
+        LinkedHashMap<FlagType, Boolean> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<FlagType, Boolean> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
     }
 }

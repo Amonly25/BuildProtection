@@ -1,7 +1,10 @@
-package com.ar.askgaming.buildprotection;
+package com.ar.askgaming.buildprotection.Managers;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.Protection;
 
 public class ProtectionFlags {
     
@@ -48,12 +51,12 @@ public class ProtectionFlags {
         
         return true;
     }
-    public boolean hasFlagPermission(FlagType type, Player player){
+    public boolean hasFlagPermission(String flag, Player player){
 
-        if (player.hasPermission("buildprotection.flags." + type.toString().toLowerCase())) {
-            return true;
+        if (!player.hasPermission("buildprotection.flags." + flag)) {
+            return false;
         }
-        return false;
+        return true;
     }
     public boolean isFlagEnabled(FlagType type, Location location){
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(location);

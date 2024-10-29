@@ -50,12 +50,12 @@ public class PlayerInteractListener implements Listener{
             }
 
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-               plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(block.getLocation());
                p.sendMessage(plugin.getDataHandler().getLang("select.p1", p));
+               plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(block.getLocation());
 
             } else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation());
                 p.sendMessage(plugin.getDataHandler().getLang("select.p2", p));
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation());
             }
         }
     }

@@ -1,7 +1,6 @@
 package com.ar.askgaming.buildprotection;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -10,6 +9,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -122,7 +123,7 @@ public class Commands implements TabExecutor {
                     p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
                 }
             } else {
-                p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
+                p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
 
             }
         }
@@ -132,7 +133,7 @@ public class Commands implements TabExecutor {
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
 
         if (prote == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
             return;
         }
 
@@ -145,11 +146,16 @@ public class Commands implements TabExecutor {
             p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
             return;
         }
+        if (args[1].length() > 32){
+            p.sendMessage(plugin.getDataHandler().getLang("prote.message_long", p));
+            return;
+
+        }
         StringBuilder message = new StringBuilder();
         for (int i = 1; i < args.length; i++) {
             message.append(args[i]).append(" ");
         }
-        p.sendMessage(plugin.getDataHandler().getLang("prote.message", p).replace("message", message.toString().trim()));
+        p.sendMessage(plugin.getDataHandler().getLang("prote.message_set", p).replace("%message%", message.toString().trim()));
         prote.setMessage(message.toString().trim());
     }
    
@@ -167,17 +173,17 @@ public class Commands implements TabExecutor {
         Protection proteByLoc = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
 
         if (proteByLoc == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
             return;
         }
 
         boolean value = Boolean.parseBoolean(args[2]);
 
         if (proteByLoc.isAdminProtection(p)){
-            if (plugin.getProtectionFlags().hasFlagPermission(ProtectionFlags.FlagType.valueOf(args[1].toUpperCase()), p)){
+            if (plugin.getProtectionFlags().hasFlagPermission(args[1].toLowerCase(), p)){
                 proteByLoc.setFlag(ProtectionFlags.FlagType.valueOf(args[1].toUpperCase()), value);
                 
-                p.sendMessage(plugin.getDataHandler().getLang("prote.flag.set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
+                p.sendMessage(plugin.getDataHandler().getLang("prote.flag_set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
                 
             } else {
                 p.sendMessage(plugin.getDataHandler().getLang("flags.no_perm", p));
@@ -195,11 +201,21 @@ public class Commands implements TabExecutor {
         if (plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).containsKey(args[1])){
             p.sendMessage(plugin.getDataHandler().getLang("prote.exists", p));
         } else {
-            plugin.getProtectionsManager().getPlayersInEditMode().get(p).create(args[1]);
+            if (plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).create(args[1]);
+            } else {
+                p.sendMessage(plugin.getDataHandler().getLang("select.must", p));
+            }
         }
     }
 
+    
+    @SuppressWarnings("deprecation")
     private void handleSelectCommand(Player p, String[] args) {
+
+        p.sendMessage("Balance " + String.valueOf(plugin.getEconomy().getBalance(p.getName())));
+        p.sendMessage("Balance " + String.valueOf(plugin.getEconomy().getBalance(p)));
+
         if (args.length == 1) {
             if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
                 new Selection(p,plugin);  
@@ -240,7 +256,7 @@ public class Commands implements TabExecutor {
                 //Message?
             }
         }else {
-            p.sendMessage(plugin.getDataHandler().getLang("no_exist", p));
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_exist", p));
         }    
     }
 
@@ -249,6 +265,7 @@ public class Commands implements TabExecutor {
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (prote != null){
             if (prote.isAdminProtection(p)){
+                p.sendMessage(plugin.getDataHandler().getLang("select.show", p));
                 plugin.getShowParticles().getShowProtections().add(prote);
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     plugin.getShowParticles().getShowProtections().remove(prote);
@@ -257,7 +274,7 @@ public class Commands implements TabExecutor {
                 p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
             }
         }else {
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
         }    
     }
 
@@ -277,16 +294,16 @@ public class Commands implements TabExecutor {
             return;
         }
         if (args[1].equalsIgnoreCase("all")){
+            p.sendMessage("Listing protections of world " + p.getWorld().getName());
             plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).forEach((name, prote) -> {
-                p.sendMessage("Listing protections of world " + p.getWorld().getName());
                 p.sendMessage(name);
             });
         } else {
             //Obtener proteciones de un jugador
+            p.sendMessage("Listing protections of player " + args[1]);
             plugin.getProtectionsManager().getAllProtections().forEach((world,map) -> {
                 map.forEach((name,prote) -> {
                     if (prote.getOwner().equalsIgnoreCase(args[1])){
-                        p.sendMessage("Listing protections of player " + args[1]);
                         p.sendMessage(name + " at world: " + world);
                     }
                 });
@@ -306,14 +323,14 @@ public class Commands implements TabExecutor {
             
             TextComponent flags = new TextComponent(plugin.getDataHandler().getLang("prote.info.flags",p));
             TextComponent hoverOver = new TextComponent(plugin.getDataHandler().getLang("prote.info.hover",p));
-            HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GRAY+prote.getFlagsMap().toString().replaceAll("false", ChatColor.RED+"false"+ChatColor.GRAY).replaceAll("true", ChatColor.GREEN+"true"+ChatColor.GRAY)));
+            HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GRAY+prote.getSortedFlags().toString().replaceAll("false", ChatColor.RED+"false"+ChatColor.GRAY).replaceAll("true", ChatColor.GREEN+"true"+ChatColor.GRAY)));
                              
             flags.setHoverEvent(he);
             flags.addExtra(hoverOver);
 
             p.spigot().sendMessage(flags);
         } else {
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
         }
     }
 
@@ -324,7 +341,7 @@ public class Commands implements TabExecutor {
         }
         Protection proteByLoc = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (proteByLoc == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no", p));
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
             return;
         }
         if (proteByLoc.isAdminProtection(p)){

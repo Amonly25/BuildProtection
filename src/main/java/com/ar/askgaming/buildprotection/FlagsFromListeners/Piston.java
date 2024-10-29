@@ -10,7 +10,7 @@ import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
 import com.ar.askgaming.buildprotection.Main;
-import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Piston implements Listener{
 

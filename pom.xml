@@ -6,7 +6,7 @@
 
   <groupId>com.ar.askgaming.buildprotection</groupId>
   <artifactId>buildprotection</artifactId>
-  <version>0.1</version>
+  <version>1</version>
 
   <name>buildprotection</name>
   <!-- FIXME change it to the project's website -->
@@ -30,10 +30,10 @@
       <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
     </repository>
     <!-- Vault repository -->
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
+  <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+  </repository>
   </repositories>
 
   <dependencies>

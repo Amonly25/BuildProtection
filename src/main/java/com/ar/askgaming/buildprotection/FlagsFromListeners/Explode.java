@@ -10,7 +10,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
 import com.ar.askgaming.buildprotection.Main;
-import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Explode implements Listener{
 

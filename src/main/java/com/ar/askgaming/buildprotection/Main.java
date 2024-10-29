@@ -2,10 +2,13 @@ package com.ar.askgaming.buildprotection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Break;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Damage;
+import com.ar.askgaming.buildprotection.FlagsFromListeners.EntityDamage;
+import com.ar.askgaming.buildprotection.FlagsFromListeners.Explode;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Fish;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Flow;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Ignite;
@@ -13,15 +16,16 @@ import com.ar.askgaming.buildprotection.FlagsFromListeners.Interact;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Move;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Piston;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Place;
-import com.ar.askgaming.buildprotection.FlagsFromListeners.EntityDamage;
-import com.ar.askgaming.buildprotection.FlagsFromListeners.Explode;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Ride;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Teleport;
 import com.ar.askgaming.buildprotection.Listeners.PlayerInteractListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerMoveListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerQuitListener;
+import com.ar.askgaming.buildprotection.Managers.DataHandler;
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
+import com.ar.askgaming.buildprotection.Managers.ProtectionsManager;
+import com.ar.askgaming.buildprotection.Managers.ShowBordersManager;
 
-import net.md_5.bungee.api.ChatColor;
 import net.milkbowl.vault.economy.Economy;
 
 public class Main extends JavaPlugin{
@@ -69,9 +73,16 @@ public class Main extends JavaPlugin{
 
         //Vault Integration
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {
-            getLogger().info("�2Vault found!");
-            //RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-            //economy = rsp.getProvider();
+            getLogger().info("Vault found!");
+            RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp == null) {
+                getLogger().info("Non economy plugin found! disabling plugin");
+                //getServer().getPluginManager().disablePlugin(this);
+            } else {
+                economy = rsp.getProvider();
+                getLogger().info("Vault Economy found!");
+            }
+
         } else {
             getLogger().info("Vault not found! disabling plugin");
             //getServer().getPluginManager().disablePlugin(this);
@@ -97,5 +108,11 @@ public class Main extends JavaPlugin{
     }
     public ProtectionFlags getProtectionFlags() {
         return protectionFlags;
+    }
+
+    private Economy vaultEconomy = null;
+
+    public Economy getVault() {
+        return vaultEconomy;
     }
 }

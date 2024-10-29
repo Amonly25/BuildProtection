@@ -1,5 +1,5 @@
 select:
-  enter: "&eYou have entered in edit mode. Can select now two blocks or set a radius. Use &6/prote exit &eto exit."
+  enter: "&eYou have entered in edit mode. Can select now two blocks or set a radius. Use &6/prote selec &eagain to exit."
   exit: "&eYou have exited from edit mode."
   cant: "&cYou can't select here, there is an another protection."
   p1: "&eYou have selected the first point."
@@ -17,14 +17,15 @@ prote:
   player_added: "&2You have added the player &6%player%&2."
   player_removed: "&2You have removed the player &6%player%&2."
   message_set: "&2You have set the message to %message%."
-  no: "&cThere is no protection here."
+  message_long: "&cThe message is too long, max allowed es 32."
+  no_there: "&cThere is no protection here."
   exist: "&cA protection with this name already exists."
   no_exist: "&cThis protection doesn't exist."
   list: "&eProtections in that world:"
   info:
     name: "&eName: &6 "
     owner: "&eOwner: &6"
-    flags: "&eFlags 
+    flags: "&eFlags"
     hover: "&7(Hover over to see the flags)"
     players: "&ePlayers: &6 "
     message: "&eMessage: &6 "

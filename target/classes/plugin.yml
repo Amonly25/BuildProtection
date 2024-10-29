@@ -1,9 +1,9 @@
 main: com.ar.askgaming.buildprotection.Main
 name: BuildProtection
 api-version: 1.21
-version: 0.1
+version: 1
 author: AMONLY
-soft-depend: [Residence]
+soft-depend: [Vault]
 commands:
   prote:
     aliases: [protection]
@@ -21,3 +21,6 @@ permissions:
   buildprotection.listohers:
     description: Allows the player to list the protections of others
     default: op
+  buildprotection.flags.*:
+    description: Allows the player change flags
+    default: true

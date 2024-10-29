@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.ar.askgaming.buildprotection.Main;
-import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Move implements Listener{
 

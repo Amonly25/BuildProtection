@@ -9,6 +9,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import com.ar.askgaming.buildprotection.Main;
 import com.ar.askgaming.buildprotection.Protection;
 
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -35,7 +36,7 @@ public class PlayerMoveListener implements Listener {
         Location l = p.getLocation();
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
         if (prote != null){
-            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(prote.getMessage()));
+            p.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ChatColor.translateAlternateColorCodes('&', prote.getMessage())));
         }
     }
 }

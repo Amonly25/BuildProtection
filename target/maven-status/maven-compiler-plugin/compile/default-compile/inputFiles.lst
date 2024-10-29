@@ -1,7 +1,6 @@
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Teleport.java
-C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\ProtectionFlags.java
-C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\ProtectionsManager.java
-C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\ShowBordersManager.java
+C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Managers\ProtectionsManager.java
+C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Managers\ShowBordersManager.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Interact.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Explode.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Move.java
@@ -16,7 +15,8 @@ C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Protection.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Break.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Selection.java
-C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\DataHandler.java
+C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Managers\DataHandler.java
+C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Managers\ProtectionFlags.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Main.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\Listeners\PlayerQuitListener.java
 C:\Users\Luisito\Desktop\vs_code\BuildProtection\src\main\java\com\ar\askgaming\buildprotection\FlagsFromListeners\Flow.java

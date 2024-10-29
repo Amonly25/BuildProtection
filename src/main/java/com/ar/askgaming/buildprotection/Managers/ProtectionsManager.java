@@ -1,4 +1,8 @@
-package com.ar.askgaming.buildprotection;
+package com.ar.askgaming.buildprotection.Managers;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -6,11 +10,10 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.ar.askgaming.buildprotection.ProtectionFlags.FlagType;
-
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
+import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.Protection;
+import com.ar.askgaming.buildprotection.Selection;
+import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class ProtectionsManager {
 
