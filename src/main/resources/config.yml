@@ -1,1 +1,4 @@
-cost_per_block: 1
+
+protection:
+  cost_create_per_block: 1
+  cost_sell_per_block: 1

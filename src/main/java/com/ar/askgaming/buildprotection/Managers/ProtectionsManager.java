@@ -114,6 +114,13 @@ public class ProtectionsManager {
         String wName = prote.getLoc1().getWorld().getName();
         FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(wName);
         if (cfg != null){
+            double d = calculateM3(prote.getLoc1(), prote.getLoc2());  
+            if (plugin.getEconomy() != null){
+                double price = d * plugin.getConfig().getDouble("protection.cost_sell_per_block"); 
+                plugin.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(prote.getOwner()), price);
+                Bukkit.getPlayer(prote.getOwner()).sendMessage("You have been refunded " + price + " for the protection " + prote.getName());
+
+            }
             cfg.set(prote.getName(), null);
             plugin.getDataHandler().saveWorldConfig(cfg, wName);
             mapList.get(wName).remove(prote.getName());

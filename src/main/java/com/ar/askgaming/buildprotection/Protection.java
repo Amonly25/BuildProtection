@@ -6,6 +6,7 @@ import java.util.UUID;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -31,7 +32,13 @@ public class Protection implements ConfigurationSerializable{
     public List<UUID> getPlayers() {
         return players;
     }
-
+    public List<String> getPlayersNames(){
+        List<String> names = new ArrayList<>();
+        for (UUID uuid : players){
+            names.add(Bukkit.getOfflinePlayer(uuid).getName());
+        }
+        return names;
+    }
     public Protection(Map<String, Object> map) {
         message = (String) map.get("message");
         loc1 =  (Location) map.get("loc1");
@@ -150,7 +157,7 @@ public class Protection implements ConfigurationSerializable{
         map.put("loc2", loc2);
         map.put("owner", owner.toString());
         map.put("flags", toStringFlag);
-        map.put("players", players);
+        map.put("players", players.stream().map(UUID::toString).collect(Collectors.toList()));
         return map;
     }
     public static Protection deserialize(Map<String, Object> map) {

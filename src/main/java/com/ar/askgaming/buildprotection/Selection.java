@@ -5,8 +5,6 @@ import org.bukkit.entity.Player;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
-import java.util.HashMap;
-
 public class Selection{
     
     private Main plugin;
@@ -36,7 +34,8 @@ public class Selection{
         }
         if (plugin.getEconomy() != null){
             int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
-            EconomyResponse e = plugin.getEconomy().withdrawPlayer(player, cost);
+            double price = cost * plugin.getConfig().getDouble("protection.cost_create_per_block"); 
+            EconomyResponse e = plugin.getEconomy().withdrawPlayer(player, price);
     
             if (e.transactionSuccess()){
                 createSucces(name);

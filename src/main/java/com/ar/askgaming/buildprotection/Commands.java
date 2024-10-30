@@ -313,7 +313,7 @@ public class Commands implements TabExecutor {
 
             p.sendMessage(plugin.getDataHandler().getLang("prote.info.name", p) + prote.getName());
             p.sendMessage(plugin.getDataHandler().getLang("prote.info.owner", p) + prote.getOwnerName());
-            p.sendMessage(plugin.getDataHandler().getLang("prote.info.players", p) + prote.getPlayers().toString());
+            p.sendMessage(plugin.getDataHandler().getLang("prote.info.players", p) + prote.getPlayersNames());
             p.sendMessage(plugin.getDataHandler().getLang("prote.info.message", p) + prote.getMessage());
             
             TextComponent flags = new TextComponent(plugin.getDataHandler().getLang("prote.info.flags",p));
