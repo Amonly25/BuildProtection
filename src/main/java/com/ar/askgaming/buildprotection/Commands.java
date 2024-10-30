@@ -209,12 +209,7 @@ public class Commands implements TabExecutor {
         }
     }
 
-    
-    @SuppressWarnings("deprecation")
     private void handleSelectCommand(Player p, String[] args) {
-
-        p.sendMessage("Balance " + String.valueOf(plugin.getEconomy().getBalance(p.getName())));
-        p.sendMessage("Balance " + String.valueOf(plugin.getEconomy().getBalance(p)));
 
         if (args.length == 1) {
             if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){

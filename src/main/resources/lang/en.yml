@@ -1,5 +1,6 @@
 select:
   enter: "&eYou have entered in edit mode. Can select now two blocks or set a radius. Use &6/prote selec &eagain to exit."
+  cost: "&eThe selection cost is &6%cost%&e."
   exit: "&eYou have exited from edit mode."
   cant: "&cYou can't select here, there is an another protection."
   p1: "&eYou have selected the first point."
@@ -12,6 +13,8 @@ select:
 
 prote:
   create: "&2You have created a protection."
+  cost: "&2You have paid &6%cost%&2."
+  no_money: "&cYou don't have enough money."
   delete: "&2You have deleted a protection."
   flag_set: "&2You have set the flag &6%flag%&2 to &6%value%&2."
   player_added: "&2You have added the player &6%player%&2."

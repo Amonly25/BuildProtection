@@ -120,4 +120,17 @@ public class ProtectionsManager {
             prote = null;
         }
     }
+    public Integer calculateM3(Location loc1, Location loc2){
+        
+        int x1 = loc1.getBlockX();
+        int y1 = loc1.getBlockY();
+        int z1 = loc1.getBlockZ();
+        int x2 = loc2.getBlockX();
+        int y2 = loc2.getBlockY();
+        int z2 = loc2.getBlockZ();
+        
+        int m3 = (Math.abs(x1 - x2) + 1) * (Math.abs(y1 - y2) + 1) * (Math.abs(z1 - z2) + 1);
+        return m3;
+
+    }
 }

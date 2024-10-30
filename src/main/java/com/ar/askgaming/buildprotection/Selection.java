@@ -2,6 +2,9 @@ package com.ar.askgaming.buildprotection;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+
+import net.milkbowl.vault.economy.EconomyResponse;
+
 import java.util.HashMap;
 
 public class Selection{
@@ -31,14 +34,27 @@ public class Selection{
             player.sendMessage("Los puntos deben estar en el mismo mundo.");
             return ;
         }
-
-        Protection prote = new Protection(loc1,loc2,player,name);
-        plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
-        plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
-        player.sendMessage(plugin.getDataHandler().getLang("prote.create", player));
+        if (plugin.getEconomy() != null){
+            int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
+            EconomyResponse e = plugin.getEconomy().withdrawPlayer(player, cost);
     
+            if (e.transactionSuccess()){
+                createSucces(name);
+                player.sendMessage(plugin.getDataHandler().getLang("prote.cost", player).replace("%cost%", String.valueOf(cost)));
+            } else {
+                player.sendMessage(plugin.getDataHandler().getLang("prote.no_money", player));
+            }
+        } else {
+            plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
+            createSucces(name);
+        }
     }
-
+    private void createSucces(String name){
+            Protection prote = new Protection(loc1,loc2,player,name);
+            plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
+            plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
+            player.sendMessage(plugin.getDataHandler().getLang("prote.create", player));
+    }
     public void setByRadius(int radius){
         Location l = player.getLocation();
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
@@ -65,6 +81,9 @@ public class Selection{
         loc1 = new Location(player.getWorld(), x-radius, y-radius, z-radius);
         loc2 = new Location(player.getWorld(), x+radius, y+radius, z+radius);
 
+        int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
+        player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
+
     }
     public double getDistanceBetwennCorners(){
 
@@ -83,6 +102,8 @@ public class Selection{
         this.loc1 = loc1;
         if (loc1 != null && loc2 != null){
             player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
+            int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
+            player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
             return ;
         }
     }
@@ -95,6 +116,8 @@ public class Selection{
         this.loc2 = loc2;
         if (loc1 != null && loc2 != null){
             player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
+            int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
+            player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
             return ;
         }
     }
