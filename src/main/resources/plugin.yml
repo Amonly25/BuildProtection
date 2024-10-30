@@ -18,7 +18,7 @@ permissions:
   buildprotection.teleport:
     description: Allows the player to teleport to the protection
     default: op
-  buildprotection.listohers:
+  buildprotection.listothers:
     description: Allows the player to list the protections of others
     default: op
   buildprotection.flags.*:

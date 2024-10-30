@@ -2,12 +2,15 @@ package com.ar.askgaming.buildprotection;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -19,13 +22,13 @@ public class Protection implements ConfigurationSerializable{
 
     private Main plugin = Main.getPlugin(Main.class);
     private String message;
-    private String owner;
+    private UUID owner;
     private String name;
     private Location loc1, loc2;
     private HashMap<FlagType, Boolean> flagsMap = new HashMap<>();
-    private List<String> players = new ArrayList<>();
+    private List<UUID> players = new ArrayList<>();
 
-    public List<String> getPlayers() {
+    public List<UUID> getPlayers() {
         return players;
     }
 
@@ -33,14 +36,14 @@ public class Protection implements ConfigurationSerializable{
         message = (String) map.get("message");
         loc1 =  (Location) map.get("loc1");
         loc2 = (Location) map.get("loc2");
-        owner = (String) map.get("owner");
+        owner = UUID.fromString((String) map.get("owner"));
 
         Object playersObj = map.get("players");
         if (playersObj instanceof List<?>) {
             players = new ArrayList<>();
             for (Object obj : (List<?>) playersObj) {
                 if (obj instanceof String) {
-                    players.add((String) obj);
+                    players.add(UUID.fromString((String) obj));
                 }
             }
         }
@@ -60,7 +63,7 @@ public class Protection implements ConfigurationSerializable{
 
     public Protection(Location loc1, Location loc2, Player player, String proteName) {
 
-        owner = player.getName();
+        owner = player.getUniqueId();
         message = "Welcome to " + proteName;
         
         name = proteName;
@@ -99,15 +102,15 @@ public class Protection implements ConfigurationSerializable{
         this.name = name;
     }
 
-    public String getOwner() {
+    public UUID getOwner() {
         return owner;
     }
     public boolean isOwner(Player player){
         return owner.equals(player.getName());
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public void setOwner(OfflinePlayer owner) {
+        this.owner = owner.getUniqueId();
         save();
     }
     public Location getLoc1() {
@@ -145,7 +148,7 @@ public class Protection implements ConfigurationSerializable{
         map.put("message", message);
         map.put("loc1", loc1);
         map.put("loc2", loc2);
-        map.put("owner", owner);
+        map.put("owner", owner.toString());
         map.put("flags", toStringFlag);
         map.put("players", players);
         return map;
@@ -204,14 +207,26 @@ public class Protection implements ConfigurationSerializable{
         return false;
     }
 
-    public void addPlayer(String string) {
-        players.add(string);
-        save();
+    public boolean addPlayer(String playerName) {
+        @SuppressWarnings("deprecation")
+        OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
+        if (player.hasPlayedBefore()){
+            players.add(player.getUniqueId());
+            save();
+            return true;
+        }
+        return false;
     }
 
-    public void removePlayer(String string) {
-        players.remove(string);
-        save();
+    public boolean removePlayer(String playerName) {
+        @SuppressWarnings("deprecation")
+        OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
+        if (players.contains(player.getUniqueId())){
+            players.remove(player.getUniqueId());
+            save();
+            return true;
+        }
+        return false;
     }
 
     public void setFlag(FlagType type, boolean value) {
@@ -230,5 +245,9 @@ public class Protection implements ConfigurationSerializable{
             sortedMap.put(entry.getKey(), entry.getValue());
         }
         return sortedMap;
+    }
+
+    public String getOwnerName(){
+        return Bukkit.getOfflinePlayer(owner).getName(); 
     }
 }

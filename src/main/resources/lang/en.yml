@@ -16,6 +16,7 @@ prote:
   flag_set: "&2You have set the flag &6%flag%&2 to &6%value%&2."
   player_added: "&2You have added the player &6%player%&2."
   player_removed: "&2You have removed the player &6%player%&2."
+  player_no_exist: "&cThis player doesn't exist."
   message_set: "&2You have set the message to %message%."
   message_long: "&cThe message is too long, max allowed es 32."
   no_there: "&cThere is no protection here."

@@ -39,9 +39,9 @@ public class ProtectionFlags {
 
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(location);
         if (prote != null){
-            if (prote.getOwner().equals(player.getName())) {
+            if (prote.getOwner().equals(player.getUniqueId())) {
                 return true;
-            } else if (prote.getPlayers().contains(player.getName())){
+            } else if (prote.getPlayers().contains(player.getUniqueId())){
                 return true;
             }
             else {

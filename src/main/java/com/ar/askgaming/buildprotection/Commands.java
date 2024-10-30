@@ -209,12 +209,7 @@ public class Commands implements TabExecutor {
         }
     }
 
-    
-    @SuppressWarnings("deprecation")
     private void handleSelectCommand(Player p, String[] args) {
-
-        p.sendMessage("Balance " + String.valueOf(plugin.getEconomy().getBalance(p.getName())));
-        p.sendMessage("Balance " + String.valueOf(plugin.getEconomy().getBalance(p)));
 
         if (args.length == 1) {
             if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
@@ -283,7 +278,7 @@ public class Commands implements TabExecutor {
             // Listar todas las protecciones del jugador
             p.sendMessage(plugin.getDataHandler().getLang("prote.list", p));
             plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).forEach((name, prote) -> {
-                if (prote.getOwner().equalsIgnoreCase(p.getName())){
+                if (prote.getOwner().equals(p.getUniqueId())){
                     p.sendMessage(name);
                 }
             });
@@ -303,7 +298,7 @@ public class Commands implements TabExecutor {
             p.sendMessage("Listing protections of player " + args[1]);
             plugin.getProtectionsManager().getAllProtections().forEach((world,map) -> {
                 map.forEach((name,prote) -> {
-                    if (prote.getOwner().equalsIgnoreCase(args[1])){
+                    if (prote.getOwner().equals(Bukkit.getPlayer(args[1]).getUniqueId())){
                         p.sendMessage(name + " at world: " + world);
                     }
                 });
@@ -317,7 +312,7 @@ public class Commands implements TabExecutor {
         if (prote != null){
 
             p.sendMessage(plugin.getDataHandler().getLang("prote.info.name", p) + prote.getName());
-            p.sendMessage(plugin.getDataHandler().getLang("prote.info.owner", p) + prote.getOwner());
+            p.sendMessage(plugin.getDataHandler().getLang("prote.info.owner", p) + prote.getOwnerName());
             p.sendMessage(plugin.getDataHandler().getLang("prote.info.players", p) + prote.getPlayers().toString());
             p.sendMessage(plugin.getDataHandler().getLang("prote.info.message", p) + prote.getMessage());
             
@@ -346,11 +341,17 @@ public class Commands implements TabExecutor {
         }
         if (proteByLoc.isAdminProtection(p)){
             if (args[0].equalsIgnoreCase("add")){
-                proteByLoc.addPlayer(args[1]);
-                p.sendMessage(plugin.getDataHandler().getLang("prote.player_added", p).replace("%player%", args[1]));
+                if (proteByLoc.addPlayer(args[1])){
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_added", p).replace("%player%", args[1]));
+                } else{
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_no_exist", p).replace("%player%", args[1]));
+                }
             } else if (args[0].equalsIgnoreCase("remove")){
-                proteByLoc.removePlayer(args[1]);
-                p.sendMessage(plugin.getDataHandler().getLang("prote.player_removed", p).replace("%player%", args[1]));
+                if (proteByLoc.removePlayer(args[1])){
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_removed", p).replace("%player%", args[1]));
+                } else {
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_no_exist", p).replace("%player%", args[1]));        
+                }
             } else {
                 p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
             }
