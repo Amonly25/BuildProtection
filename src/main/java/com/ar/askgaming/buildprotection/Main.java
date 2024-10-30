@@ -109,10 +109,4 @@ public class Main extends JavaPlugin{
     public ProtectionFlags getProtectionFlags() {
         return protectionFlags;
     }
-
-    private Economy vaultEconomy = null;
-
-    public Economy getVault() {
-        return vaultEconomy;
-    }
 }
