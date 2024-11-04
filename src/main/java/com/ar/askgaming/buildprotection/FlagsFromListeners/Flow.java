@@ -16,12 +16,16 @@ public class Flow implements Listener{
     }
     @EventHandler()
     public void onBlockFromTo(BlockFromToEvent event){
-        Location l = event.getBlock().getLocation();
-        
-        if (event.getBlock().isLiquid()) {
-            if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.FLOW, l)){
-                event.setCancelled(true);
+        try {
+            Location l = event.getBlock().getLocation();
+            
+            if (event.getBlock().isLiquid()) {
+                if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.FLOW, l)){
+                    event.setCancelled(true);
+                }
             }
+        } catch (Exception e) {
+            // TODO: handle exception
         }
     }
 

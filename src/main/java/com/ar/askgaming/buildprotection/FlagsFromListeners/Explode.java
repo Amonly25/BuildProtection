@@ -38,15 +38,19 @@ public class Explode implements Listener{
     }
     @EventHandler()
     public void onEntityExplode(EntityChangeBlockEvent event){
-        if (event.getEntity() instanceof Player){
-            return;
-        }
-        if (event.getEntity() instanceof Villager){
-            return;
-        }
-        if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.EXPLODE, event.getBlock().getLocation())){
-            event.setCancelled(true);
-        }
+       try {
+         if (event.getEntity() instanceof Player){
+             return;
+         }
+         if (event.getEntity() instanceof Villager){
+             return;
+         }
+         if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.EXPLODE, event.getBlock().getLocation())){
+             event.setCancelled(true);
+         }
+       } catch (Exception e) {
+              e.printStackTrace();
+       }
 
     }
     
