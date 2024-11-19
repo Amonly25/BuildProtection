@@ -1,5 +1,7 @@
 package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
+import java.util.HashMap;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
@@ -23,7 +25,7 @@ public class Break implements Listener {
         Location l = event.getBlock().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.BREAK, p, l)){
-            p.sendMessage(plugin.getDataHandler().getLang("flags.break", p));
+            sendMessage(p);
             event.setCancelled(true);
         }
     }
@@ -34,6 +36,21 @@ public class Break implements Listener {
                 event.setCancelled(true);
             }
         }
+    }
 
+    private HashMap<Player, Long> lastMessage = new HashMap<Player, Long>();
+    private void sendMessage(Player p) {
+
+        // Añadir un mensaje de cooldown
+        long lastHitTime = lastMessage.getOrDefault(p, 0L);
+        long currentTime = System.currentTimeMillis();
+        // Calcular el tiempo transcurrido desde el último golpe
+        long timeSinceLastHit = System.currentTimeMillis() - lastHitTime;
+
+        if (timeSinceLastHit > 15000) {
+            // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
+            p.sendMessage(plugin.getDataHandler().getLang("flags.break", p));
+            lastMessage.put(p, currentTime);
+        }
     }
 }

@@ -1,6 +1,9 @@
 package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
+import java.util.HashMap;
+
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,17 +19,20 @@ public class Interact implements Listener {
     public Interact(Main main){
         plugin = main;
     }
+
     @EventHandler()
     public void onBlockInteract(PlayerInteractEvent event){
         Player p = event.getPlayer();
 
-        if (event.getClickedBlock() == null) return;
+        Block b = event.getClickedBlock();
+        if (b == null) return;
 
-        Location l = event.getClickedBlock().getLocation();
+        Location l = b.getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+
             event.setCancelled(true);
+            sendMessage(p);
         }
     }
     @EventHandler()
@@ -36,9 +42,24 @@ public class Interact implements Listener {
         Location l = event.getRightClicked().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            sendMessage(p);
             event.setCancelled(true);
         }
     }
 
+    private HashMap<Player, Long> lastMessage = new HashMap<Player, Long>();
+    private void sendMessage(Player p) {
+
+        // Añadir un mensaje de cooldown
+        long lastHitTime = lastMessage.getOrDefault(p, 0L);
+        long currentTime = System.currentTimeMillis();
+        // Calcular el tiempo transcurrido desde el último golpe
+        long timeSinceLastHit = System.currentTimeMillis() - lastHitTime;
+
+        if (timeSinceLastHit > 15000) {
+            // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
+            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            lastMessage.put(p, currentTime);
+        }
+    }
 }

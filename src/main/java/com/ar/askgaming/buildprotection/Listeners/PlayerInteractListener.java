@@ -45,9 +45,13 @@ public class PlayerInteractListener implements Listener{
             Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
 
             if (prote != null){
-                p.sendMessage(plugin.getDataHandler().getLang("select.cant", p));
-                return;
+                if (!prote.getOwner().equals(p.getUniqueId())){
+                    p.sendMessage(plugin.getDataHandler().getLang("select.not_owner", p));
+                    return;
+                }
+                p.sendMessage(plugin.getDataHandler().getLang("select.inside_own", p));
             }
+            
 
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
                p.sendMessage(plugin.getDataHandler().getLang("select.p1", p));

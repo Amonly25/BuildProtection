@@ -6,10 +6,12 @@ import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.Main;
 import com.ar.askgaming.buildprotection.Protection;
 import com.ar.askgaming.buildprotection.Selection;
@@ -57,8 +59,9 @@ public class ProtectionsManager {
         });
     }
 
-    public void setDefaultsFlags(Protection prote){
-        HashMap<FlagType, Boolean> flagsMap = prote.getFlagsMap();
+    //#region setDefautsFlags
+    public void setDefaultsFlags(Area area){
+        HashMap<FlagType, Boolean> flagsMap = area.getFlagsMap();
         flagsMap.put(FlagType.PLACE, false);
         flagsMap.put(FlagType.BREAK, false);
         flagsMap.put(FlagType.IGNITE, false);
@@ -88,10 +91,30 @@ public class ProtectionsManager {
         for (Entry<String, Protection> entry : plugin.getProtectionsManager().getProtectionsByWorld(l.getWorld()).entrySet()) {
 
             Protection prote = entry.getValue(); 
-
-            if (prote.isInsideArea(l)){
+            if (prote.isInside(l)){
                 return prote;
             }
+        }
+
+        return null;
+    }
+    public Area getAreaByLocation(Location l){
+
+        // Iterar sobre el HashMap usando un bucle for tradicional
+        Protection prote = getProtectionByLocation(l);
+        if (prote != null){
+            int highestPriorityArea = 0;
+            Area highestPriorityAreaObj = null;
+            for (Entry<String, Area> entry2 : prote.getAreas().entrySet()) {
+                Area area = entry2.getValue(); 
+                if (area.isInside(l)) {
+                    if (area.getPriority() > highestPriorityArea) {
+                        highestPriorityArea = area.getPriority();
+                        highestPriorityAreaObj = area;
+                    }
+                }
+            }
+            return highestPriorityAreaObj;
         }
 
         return null;
@@ -110,17 +133,23 @@ public class ProtectionsManager {
         return null;
     }
 
+    //#region deleteProtection
     public void deleteProtection(Protection prote) {
         String wName = prote.getLoc1().getWorld().getName();
         FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(wName);
         if (cfg != null){
             double d = calculateM3(prote.getLoc1(), prote.getLoc2());  
             if (plugin.getEconomy() != null){
-                double price = d * plugin.getConfig().getDouble("protection.cost_sell_per_block"); 
-                plugin.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(prote.getOwner()), price);
-                Bukkit.getPlayer(prote.getOwner()).sendMessage("You have been refunded " + price + " for the protection " + prote.getName());
-
+                OfflinePlayer owner = Bukkit.getOfflinePlayer(prote.getOwner());
+                if (!owner.getPlayer().hasPermission("buildprotection.admin")){
+                    double price = d * plugin.getConfig().getDouble("protection.cost_sell_per_block"); 
+                    plugin.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(prote.getOwner()), price);
+                    Bukkit.getPlayer(prote.getOwner()).sendMessage("You have been refunded " + price + " for the protection " + prote.getName());
+                } else {
+                    Bukkit.getPlayer(prote.getOwner()).sendMessage("No refund was given because you are an admin");
+                }
             }
+            Bukkit.getPlayer(prote.getOwner()).sendMessage("You have deleted the protection " + prote.getName());
             cfg.set(prote.getName(), null);
             plugin.getDataHandler().saveWorldConfig(cfg, wName);
             mapList.get(wName).remove(prote.getName());

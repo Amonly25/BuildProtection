@@ -44,6 +44,7 @@ public class Main extends JavaPlugin{
         dataHandler = new DataHandler(this);
         
         ConfigurationSerialization.registerClass(Protection.class,"Protection");
+        ConfigurationSerialization.registerClass(Area.class,"Area");
   
         protectionsManager = new ProtectionsManager(this);
         protectionFlags = new ProtectionFlags(this);

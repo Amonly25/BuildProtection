@@ -128,6 +128,6 @@ public class DataHandler {
             return result.toString().trim();
         }
 
-        return lang.getString(path,"Undefined");
+        return lang.getString(path,"Undefined key: " + path);
     }
 }

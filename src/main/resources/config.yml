@@ -1,4 +1,13 @@
+# This is the main configuration file for BuildProtection. You can change the settings here to your liking.
+# If you have any questions, feel free to ask in the Discord server: https://discord.gg/7QbJ6j6
+
+#enter_message_type: "message" "action" "none"
+
 
 protection:
   cost_create_per_block: 1
   cost_sell_per_block: 1
+  enter_message_type: "message"
+
+options:
+  no_enter_message_using_elytra: true 

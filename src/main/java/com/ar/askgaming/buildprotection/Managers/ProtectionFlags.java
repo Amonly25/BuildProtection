@@ -3,8 +3,8 @@ package com.ar.askgaming.buildprotection.Managers;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
+import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.Main;
-import com.ar.askgaming.buildprotection.Protection;
 
 public class ProtectionFlags {
     
@@ -37,15 +37,15 @@ public class ProtectionFlags {
             return true;
         }
 
-        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(location);
-        if (prote != null){
-            if (prote.getOwner().equals(player.getUniqueId())) {
+        Area area = plugin.getProtectionsManager().getAreaByLocation(location);
+        if (area != null){
+            if (area.getParentProtection().getOwner().equals(player.getUniqueId())) {
                 return true;
-            } else if (prote.getPlayers().contains(player.getUniqueId())){
+            } else if (area.getPlayers().contains(player.getUniqueId())){
                 return true;
             }
             else {
-                return prote.getFlagsMap().get(type);
+                return area.getFlagsMap().get(type);
             }
         } 
         
@@ -59,9 +59,9 @@ public class ProtectionFlags {
         return true;
     }
     public boolean isFlagEnabled(FlagType type, Location location){
-        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(location);
-        if (prote != null){
-            return prote.getFlagsMap().get(type);
+        Area area = plugin.getProtectionsManager().getAreaByLocation(location);
+        if (area != null){
+            return area.getFlagsMap().get(type);
         } 
         return true;
     }
