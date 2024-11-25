@@ -53,6 +53,7 @@ flags:
   ride: "&cYou can't ride here."
   invalid: "&cInvalid flag."
   no_perm: "&cYou don't have permission to set this flag."
+  container: "&cYou can't open containers here."
 
 help:
   - "&e/prote select &7- Enter in edit mode."

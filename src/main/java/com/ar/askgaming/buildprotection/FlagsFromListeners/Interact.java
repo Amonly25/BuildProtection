@@ -2,13 +2,16 @@ package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.InventoryHolder;
 
 import com.ar.askgaming.buildprotection.Main;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
@@ -28,6 +31,14 @@ public class Interact implements Listener {
         if (b == null) return;
 
         Location l = b.getLocation();
+
+        if (b.getState() instanceof InventoryHolder) {
+            if (!plugin.getProtectionFlags().hasPermission(FlagType.CONTAINER, p, l)){
+                p.sendMessage(plugin.getDataHandler().getLang("flags.container", p));
+                event.setCancelled(true);
+            }
+            return;
+        }
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
 
@@ -42,6 +53,14 @@ public class Interact implements Listener {
         Location l = event.getRightClicked().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
+            sendMessage(p);
+            event.setCancelled(true);
+        }
+    }
+    @EventHandler
+    public void onEntityInteract(PlayerInteractAtEntityEvent event) {
+        Player p = event.getPlayer();
+        if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, event.getRightClicked().getLocation())) {
             sendMessage(p);
             event.setCancelled(true);
         }

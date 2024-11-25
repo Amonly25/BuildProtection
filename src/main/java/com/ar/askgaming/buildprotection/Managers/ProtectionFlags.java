@@ -18,7 +18,7 @@ public class ProtectionFlags {
         PLACE,
         INTERACT,
         PVP,
-        DAMAGE,
+        ENTITY_DAMAGE,
         IGNITE,
         PISTON,
         RIDE,
@@ -28,7 +28,8 @@ public class ProtectionFlags {
         MOVE,
         ANIMALS,
         MONSTERS,
-        EXPLODE
+        EXPLODE,
+        CONTAINER
     }
 
     public boolean hasPermission(FlagType type, Player player, Location location){

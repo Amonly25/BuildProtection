@@ -72,11 +72,12 @@ public class ProtectionsManager {
         flagsMap.put(FlagType.PVP, true);
         flagsMap.put(FlagType.MOVE, true);
         flagsMap.put(FlagType.PISTON, false);
-        flagsMap.put(FlagType.DAMAGE, true);
+        flagsMap.put(FlagType.ENTITY_DAMAGE, false);
         flagsMap.put(FlagType.FLOW, true);
         flagsMap.put(FlagType.ANIMALS, false);
         flagsMap.put(FlagType.MONSTERS, true);
         flagsMap.put(FlagType.EXPLODE, false);
+        flagsMap.put(FlagType.CONTAINER, false);
 
     }
 
