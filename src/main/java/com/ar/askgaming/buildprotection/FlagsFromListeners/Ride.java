@@ -21,7 +21,7 @@ public class Ride implements Listener{
     @EventHandler()
     public void onRide(EntityMountEvent event){
 
-        if (!(event.getEntity() instanceof Player)) {
+        if (event.getEntity() instanceof Player) {
             
             Player p = (Player) event.getEntity();
             Location l = p.getLocation();
