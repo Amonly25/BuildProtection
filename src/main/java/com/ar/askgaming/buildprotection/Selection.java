@@ -1,6 +1,7 @@
 package com.ar.askgaming.buildprotection;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -32,15 +33,14 @@ public class Selection{
             return ;
         }
 
-        if (!loc1.getWorld().equals(loc2.getWorld())){
-            //REVISAR ESTO
-            player.sendMessage("Los puntos deben estar en el mismo mundo.");
-            return ;
+        if (detectCollision(loc1, loc2)){
+            player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
+            return;
         }
-        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(loc1);
-        Protection prote2 = plugin.getProtectionsManager().getProtectionByLocation(loc2);
-        if (prote != null || prote2 != null){
-            player.sendMessage("Usa /prote create_subzone <nombre> para crear una subprotección.");
+        Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
+        Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
+        if (area != null || area2 != null){
+            player.sendMessage("Ya existe una proteccion en esta area.");
             return;
         }
 
@@ -72,15 +72,12 @@ public class Selection{
             player.sendMessage(plugin.getDataHandler().getLang("select.must", player));
             return ;
         }
-        if (!loc1.getWorld().equals(loc2.getWorld())){
-            //REVISAR ESTO
-            player.sendMessage("Los puntos deben estar en el mismo mundo.");
-            return ;
-        }
+
         if (loc1.equals(loc2)){
             player.sendMessage(plugin.getDataHandler().getLang("select.same", player));
             return ;
         }
+        
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != area2){
@@ -89,6 +86,57 @@ public class Selection{
         }
         createAreaSucces(name,area.getParentProtection());
 
+    }
+    //#region expand Area
+    public void expandArea(){
+        if (detectCollision(loc1, loc2)){
+            player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
+            return;
+        }
+        Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
+        if (area == null){
+            area = plugin.getProtectionsManager().getAreaByLocation(loc2);
+        }
+        if (area == null){
+            player.sendMessage(plugin.getDataHandler().getLang("prote.no_area", player));
+            return;
+        }
+        if (!checkExpand(area)){
+            return;
+        }
+        area.setLoc1(loc1); 
+        area.setLoc2(loc2);
+        Protection prote = area.getParentProtection();
+        prote.setLoc1(loc1);
+        prote.setLoc2(loc2);
+        prote.save();
+        player.sendMessage(plugin.getDataHandler().getLang("prote.area_expand", player));
+        plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
+    }
+     
+    private boolean checkExpand(Area area){
+
+        int actualCost = plugin.getProtectionsManager().calculateM3(area.getLoc1(), area.getLoc2());
+        int newCost = 0;
+
+        if (area.getLoc1().equals(getLoc1())){
+            newCost = plugin.getProtectionsManager().calculateM3(getLoc1(), area.getLoc2());
+        } else if (area.getLoc2().equals(getLoc2())){
+            newCost = plugin.getProtectionsManager().calculateM3(area.getLoc1(), getLoc2());
+        }
+
+        newCost = actualCost - newCost;
+        double price = newCost * plugin.getConfig().getDouble("protection.cost_create_per_block"); 
+
+        EconomyResponse e = plugin.getEconomy().withdrawPlayer(player, price);
+       
+        if (e.transactionSuccess()){
+           return true;
+        } else {
+            player.sendMessage(plugin.getDataHandler().getLang("prote.no_money", player.getPlayer()));
+        }
+        
+        return false;
     }
     //#region Create Area
     private void createAreaSucces(String name, Protection prote){
@@ -175,5 +223,42 @@ public class Selection{
             player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
             return ;
         }
+    }
+    public boolean detectCollision(Location loc1, Location loc2) {
+        // Asegurarse de que ambas ubicaciones estén en el mismo mundo
+        if (!loc1.getWorld().equals(loc2.getWorld())) {
+            player.sendMessage("Deben estar en el mismo mundo.");
+        }
+
+        World world = loc1.getWorld();
+
+        // Determinar las esquinas inferiores y superiores
+        int lowerX = Math.min(loc1.getBlockX(), loc2.getBlockX());
+        int upperX = Math.max(loc1.getBlockX(), loc2.getBlockX());
+        int lowerY = Math.min(loc1.getBlockY(), loc2.getBlockY());
+        int upperY = Math.max(loc1.getBlockY(), loc2.getBlockY());
+        int lowerZ = Math.min(loc1.getBlockZ(), loc2.getBlockZ());
+        int upperZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
+
+        // Obtener el área de la primera ubicación
+        Area initialArea = plugin.getProtectionsManager().getAreaByLocation(new Location(world, lowerX, lowerY, lowerZ));
+
+        // Recorrer todos los bloques en el cuboide
+        for (int x = lowerX; x <= upperX; x++) {
+            for (int y = lowerY; y <= upperY; y++) {
+                for (int z = lowerZ; z <= upperZ; z++) {
+                    Location currentLocation = new Location(world, x, y, z);
+                    Area currentArea = plugin.getProtectionsManager().getAreaByLocation(currentLocation);
+
+                    // Si el área es diferente, retornar false
+                    if (currentArea != null && !currentArea.equals(initialArea)) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // Si todas las áreas son iguales, retornar true
+        return false;
     }
 }

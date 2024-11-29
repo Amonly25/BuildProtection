@@ -12,6 +12,7 @@ select:
   radius: "&eYou have selected a radius of &6%radius%&e."
   show: "&eShowing the selection."
   same: "&cThe selection is the same."
+  collision: "&cThe selection is colliding with another protection."
 
 prote:
   create: "&2You have created a protection."
@@ -32,6 +33,8 @@ prote:
   sub_exist: "&cA subzone with this name already exists."
   no_exist: "&cThis protection doesn't exist."
   list: "&eProtections in that world:"
+  expand: "&eYou have expanded the protection."
+  expand_fail: "&cYou can't expand the protection."
   info:
     name: "&eName: &6 "
     owner: "&eOwner: &6"

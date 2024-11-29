@@ -29,7 +29,7 @@ public class Commands implements TabExecutor {
         List<String> list = new ArrayList<>();
 
         if (args.length == 1) {
-            return List.of("select", "create", "list","set","tp","info","show","add","remove","message","delete","create_subzone","delete_subzone","help");
+            return List.of("expand","select", "create", "list","set","tp","info","show","add","remove","message","delete","create_subzone","delete_subzone","help");
         }
         if (args.length == 2) {
             switch (args[0].toLowerCase()) {
@@ -49,6 +49,14 @@ public class Commands implements TabExecutor {
                         list.add(p.getName());
                     }
                     break; 
+                case "expand":
+                    list.add("up");
+                    list.add("down");
+                    list.add("north");
+                    list.add("south");
+                    list.add("east");
+                    list.add("west");
+                    break;
                 default:
                     break;
             }
@@ -112,6 +120,9 @@ public class Commands implements TabExecutor {
             case "delete_subzone":
                 deleteSubzone(p, args);
                 break;
+            case "expand":
+                expand(p,args);
+                break;
             default:
                 p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
                 break;
@@ -120,6 +131,22 @@ public class Commands implements TabExecutor {
     }
     //#region delete
     private void handleDeleteCommand(Player p, String[] args) {
+
+        if (args.length == 2){
+            Protection prote = plugin.getProtectionsManager().getProtectionByName(args[1],p.getWorld());
+            if (prote != null){
+                if (prote.isAdminProtection(p)){
+                    plugin.getProtectionsManager().deleteProtection(prote);
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
+                } else {
+                    p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+                }
+            } else {
+                p.sendMessage(plugin.getDataHandler().getLang("prote.no_exist", p));
+            }
+            return;
+        }
+
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (prote != null){
             if (prote.isAdminProtection(p)){
@@ -448,6 +475,50 @@ public class Commands implements TabExecutor {
             prote.getAreas().remove(area.getName());
             area = null;
             prote.save();
+        }
+        //#region expand
+        private void expand(Player p, String[] args){
+            if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
+                p.sendMessage(plugin.getDataHandler().getLang("select.must", p));
+                return;      
+            }     
+            if (args.length == 2 && args[1].equalsIgnoreCase("confirm")){
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).expandArea();
+                return;
+            }
+            Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
+            if (area == null){
+                p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+                return;
+            }
+            if (!area.getParentProtection().isAdminProtection(p)){
+                p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+                return;
+            }
+            if (args.length != 3){
+                p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+                return;
+            }
+
+            Area.Direction direction;
+            try {
+                direction = Area.Direction.valueOf(args[1].toUpperCase());
+            } catch (Exception e) {
+                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                return;
+            }
+            int i = 0;
+            try {
+                i = Integer.parseInt(args[2]);
+            } catch (Exception e) {
+                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                return;
+            }
+            p.sendMessage("You have selected to expand " + direction.toString() + " by " + i + " blocks");
+            p.sendMessage("To confirm use /prote expand confirm");
+            area.expand(direction, i);
+
+
         }
 }
 

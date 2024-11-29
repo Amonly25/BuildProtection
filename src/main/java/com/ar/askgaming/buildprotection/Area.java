@@ -12,8 +12,11 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Player;
 
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+
+import net.milkbowl.vault.economy.EconomyResponse;
 
 public class Area implements ConfigurationSerializable {
 
@@ -23,6 +26,14 @@ public class Area implements ConfigurationSerializable {
     private int priority = 0;
 
     private Location loc1, loc2;
+
+    public void setLoc1(Location loc1) {
+        this.loc1 = loc1;
+    }
+
+    public void setLoc2(Location loc2) {
+        this.loc2 = loc2;
+    }
 
     private String enterMessage;
     private String exitMessage;
@@ -212,5 +223,85 @@ public class Area implements ConfigurationSerializable {
     }
     public boolean isMain(){
         return priority == 1;
+    }
+    private Location getUpperLocation() {
+        return getLoc1().getY() > getLoc2().getY() ? loc1 : loc2;
+    }
+    
+    private Location getLowerLocation() {
+        return getLoc1().getY() < getLoc2().getY() ? loc1 : loc2;
+    }
+    
+    private Location getNorthLocation() {
+        return getLoc1().getZ() < getLoc2().getZ() ? loc1 : loc2;
+    }
+    
+    private Location getSouthLocation() {
+        return getLoc1().getZ() > getLoc2().getZ() ? loc1 : loc2;
+    }
+    
+    private Location getEastLocation() {
+        return getLoc1().getX() > getLoc2().getX() ? loc1 : loc2;
+    }
+    
+    private Location getWestLocation() {
+        return getLoc1().getX() < getLoc2().getX() ? loc1 : loc2;
+    }
+    public enum Direction {
+        UP,
+        DOWN,
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST
+    }
+    public void expand(Direction direction, int amount) {
+        Location loc;
+        Location newLoc;
+
+        switch (direction) {
+            case UP:
+                loc = getUpperLocation();
+                newLoc = loc.clone().add(0, amount, 0);
+                break;
+            case DOWN:
+                loc = getLowerLocation();
+                newLoc = loc.clone().add(0, -amount, 0);
+                break;
+            case NORTH:
+                loc = getNorthLocation();
+                newLoc = loc.clone().add(0, 0, -amount);
+                break;
+            case SOUTH:
+                loc = getSouthLocation();
+                newLoc = loc.clone().add(0, 0, amount);
+                break;
+            case EAST:
+                loc = getEastLocation();
+                newLoc = loc.clone().add(amount, 0, 0);
+                break;
+            case WEST:
+                loc = getWestLocation();
+                newLoc = loc.clone().add(-amount, 0, 0);
+                break;
+            default:
+                loc = null;
+                newLoc = null;
+                break;
+                
+        }
+
+        if (loc != null && newLoc != null) {
+            Protection protection = getParentProtection();
+            Player p = Bukkit.getPlayer(protection.getOwner());
+            if (getLoc1().equals(loc)) {
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(newLoc);
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(getLoc2());
+            } else if (getLoc2().equals(loc)) {
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(getLoc1());
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(newLoc);
+
+            }
+        }
     }
 }
