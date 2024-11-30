@@ -36,14 +36,11 @@ public class PlayerMoveListener implements Listener {
                 return;
             }
         }
-
+        
         if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
             event.getFrom().getBlockY() == event.getTo().getBlockY() &&
             event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
             return;
-        }
-        if (p.isGliding()){
-            p.sendMessage("test" + p.getFlySpeed());
         }
 
         Location l = p.getLocation();

@@ -65,7 +65,7 @@ public class ProtectionsManager {
         flagsMap.put(FlagType.PLACE, false);
         flagsMap.put(FlagType.BREAK, false);
         flagsMap.put(FlagType.IGNITE, false);
-        flagsMap.put(FlagType.INTERACT, false);
+        flagsMap.put(FlagType.INTERACT, true);
         flagsMap.put(FlagType.FISH, false);
         flagsMap.put(FlagType.RIDE, false);
         flagsMap.put(FlagType.TELEPORT, true);
@@ -78,6 +78,7 @@ public class ProtectionsManager {
         flagsMap.put(FlagType.MONSTERS, true);
         flagsMap.put(FlagType.EXPLODE, false);
         flagsMap.put(FlagType.CONTAINER, false);
+        flagsMap.put(FlagType.USE, false);
 
     }
 
