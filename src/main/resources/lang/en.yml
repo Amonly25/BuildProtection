@@ -58,6 +58,7 @@ flags:
   invalid: "&cInvalid flag."
   no_perm: "&cYou don't have permission to set this flag."
   container: "&cYou can't open containers here."
+  use: "&cYou can't use that here."
 
 help:
   - "&e/prote select &7- Enter in edit mode."

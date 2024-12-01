@@ -22,20 +22,22 @@ Commands
 Flag list:
   You must set the buildprotection.flags.* to allow changes and then you can limit some flags by setting false, example buildprotection.flags.pvp
 
-  Interact: Players cand interact with any blocks or entitys, this override (break,place,ride) - Default false
+  Interact: Players cant interact with any blocks or entitys, default should be allways true and player cant changued it. For example, if a player is consuming a item clicking an block, it will be cancelled, and can de potential to do traps. 
+  Container: Deny players to open: barrel, chest,shulkerbox, furnace, crafter, dispenser, dropper, heopper, smoker, brewingstand.
+  Use: Deny players to use any powered(redstone) blocks, bed and enchantingtable.
   Break: Dont let break blocks from players
   Place: Dont let place blocks from players
   Animals: Dont let players kill animals  
   Monster: Dont let players kill monsters
-  Damage: Disable damage for any Entity and Player
-  Pvp: Disable pvp from players
+  EntityDamage: Disable damage for any Entity non player.
+  Pvp: Disable pvp and damage to players
   Explode: Disable any blocks, entityes to explode or bosses/enderman destroy blocks
   Fish: Disable players to fish
-  Ride: Disable players to Ride
+  Ride: Disable players to Ride Entity or Entity ride Entity. any entity or player can ride another player(for other purposes).
   Flow: Disable water/lava flowing
   Ignite: Disable ignite and burn events
-  Move: Disable players to move
-  Teleport: Allow player to teleport by any type of teleport
+  Move: Disable players to move, why will you set it? Idk.
+  Teleport: Allow player to teleport by any type of teleport, take cauting with chorus fruit if you enable it, its not beeen deactivated to not limit vanilla items. (Otherwise boring..)
 
 
 

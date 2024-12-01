@@ -29,7 +29,8 @@ public class ProtectionFlags {
         ANIMALS,
         MONSTERS,
         EXPLODE,
-        CONTAINER
+        CONTAINER,
+        USE
     }
 
     public boolean hasPermission(FlagType type, Player player, Location location){
