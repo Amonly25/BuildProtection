@@ -40,7 +40,7 @@ public class Selection{
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != null || area2 != null){
-            player.sendMessage("Ya existe una proteccion en esta area.");
+            player.sendMessage(plugin.getDataHandler().getLang("prote.exists", player));
             return;
         }
 
@@ -63,7 +63,8 @@ public class Selection{
             }
         } else {
             plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
-            createSucces(name);
+            player.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", player));
+            //createSucces(name);
         }
     }
     //#region Inner create Area
@@ -81,24 +82,15 @@ public class Selection{
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != area2){
-            player.sendMessage("Los puntos deben estar dentro de la misma area.");
             return;
         }
         createAreaSucces(name,area.getParentProtection());
 
     }
     //#region expand Area
-    public void expandArea(){
+    public void expandArea(Area area){
         if (detectCollision(loc1, loc2)){
             player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
-            return;
-        }
-        Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
-        if (area == null){
-            area = plugin.getProtectionsManager().getAreaByLocation(loc2);
-        }
-        if (area == null){
-            player.sendMessage(plugin.getDataHandler().getLang("prote.no_area", player));
             return;
         }
         if (!checkExpand(area)){
@@ -116,21 +108,23 @@ public class Selection{
      
     private boolean checkExpand(Area area){
 
-        int actualCost = plugin.getProtectionsManager().calculateM3(area.getLoc1(), area.getLoc2());
-        int newCost = 0;
-
-        if (area.getLoc1().equals(getLoc1())){
-            newCost = plugin.getProtectionsManager().calculateM3(getLoc1(), area.getLoc2());
-        } else if (area.getLoc2().equals(getLoc2())){
-            newCost = plugin.getProtectionsManager().calculateM3(area.getLoc1(), getLoc2());
+        if (plugin.getEconomy() == null){
+            plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
+            player.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", player));
+            return true;
         }
 
-        newCost = actualCost - newCost;
-        double price = newCost * plugin.getConfig().getDouble("protection.cost_create_per_block"); 
+        int actualCost = plugin.getProtectionsManager().calculateM3(area.getLoc1(), area.getLoc2());
+        int newCost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
 
+        newCost = newCost - actualCost;
+        double price = newCost * plugin.getConfig().getDouble("protection.cost_create_per_block"); 
+        
+        player.sendMessage(plugin.getDataHandler().getLang("prote.expand_cost", player).replace("%cost%", String.valueOf(price)));
         EconomyResponse e = plugin.getEconomy().withdrawPlayer(player, price);
        
         if (e.transactionSuccess()){
+            player.sendMessage(plugin.getDataHandler().getLang("prote.cost", player).replace("%cost%", String.valueOf(newCost)));
            return true;
         } else {
             player.sendMessage(plugin.getDataHandler().getLang("prote.no_money", player.getPlayer()));
@@ -153,10 +147,10 @@ public class Selection{
     }
     private void createSucces(String name){
         Protection prote = new Protection(loc1,loc2,player,name);
-        createAreaSucces("Main",prote);
         plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
         plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
-        player.sendMessage(plugin.getDataHandler().getLang("prote.create", player));
+        player.sendMessage(plugin.getDataHandler().getLang("prote.create", player).replace("%name%", name));
+        createAreaSucces("Main",prote);
     }
     public void setByRadius(int radius){
         Location l = player.getLocation();
@@ -227,7 +221,7 @@ public class Selection{
     public boolean detectCollision(Location loc1, Location loc2) {
         // Asegurarse de que ambas ubicaciones estén en el mismo mundo
         if (!loc1.getWorld().equals(loc2.getWorld())) {
-            player.sendMessage("Deben estar en el mismo mundo.");
+            return true;
         }
 
         World world = loc1.getWorld();

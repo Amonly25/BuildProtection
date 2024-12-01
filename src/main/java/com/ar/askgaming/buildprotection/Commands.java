@@ -483,7 +483,12 @@ public class Commands implements TabExecutor {
                 return;      
             }     
             if (args.length == 2 && args[1].equalsIgnoreCase("confirm")){
-                plugin.getProtectionsManager().getPlayersInEditMode().get(p).expandArea();
+                Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
+                if (area == null){
+                    p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+                    return;
+                }
+                plugin.getProtectionsManager().getPlayersInEditMode().get(p).expandArea(area);
                 return;
             }
             Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());

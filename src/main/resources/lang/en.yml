@@ -15,11 +15,11 @@ select:
   collision: "&cThe selection is colliding with another protection."
 
 prote:
-  create: "&2You have created a protection."
+  create: "&2You have created a protection with the name &6%name%&2."
   cost: "&2You have paid &6%cost%&2."
   no_money: "&cYou don't have enough money."
   delete: "&2You have deleted a protection."
-  subzone_create: "&2You have created a subzone."
+  subzone_create: "&2You have added a new area."
   subzone_delete: "&2You have deleted a subzone."
   subzone_main: "&cYou can't delete the main zone."
   flag_set: "&2You have set the flag &6%flag%&2 to &6%value%&2."
@@ -35,6 +35,7 @@ prote:
   list: "&eProtections in that world:"
   expand: "&eYou have expanded the protection."
   expand_fail: "&cYou can't expand the protection."
+  expand_cost: "&cProcessing the expansion cost: &6%cost%&c."
   info:
     name: "&eName: &6 "
     owner: "&eOwner: &6"
@@ -73,4 +74,6 @@ commands:
   no_perm: "&cYou don't have permission to do that."
   missing_arg: "&cMissing argument, use /prote help."
 
+misc:
+  no_economy: "&cEconomy plugin not found, cant create protection."
 
