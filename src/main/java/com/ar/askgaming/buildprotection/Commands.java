@@ -401,7 +401,6 @@ public class Commands implements TabExecutor {
             if (area != null){
                 p.sendMessage(plugin.getDataHandler().getLang("prote.info.area_name", p) + area.getName());
                 p.sendMessage(plugin.getDataHandler().getLang("prote.info.players", p) + area.getPlayersNames());
-                p.sendMessage(plugin.getDataHandler().getLang("prote.info.message", p) + area.getEnterMessage());
                 TextComponent flags = new TextComponent(plugin.getDataHandler().getLang("prote.info.flags",p));
                 TextComponent hoverOver = new TextComponent(plugin.getDataHandler().getLang("prote.info.hover",p));
                 HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GRAY+area.getSortedFlags().toString().replaceAll("false", ChatColor.RED+"false"+ChatColor.GRAY).replaceAll("true", ChatColor.GREEN+"true"+ChatColor.GRAY)));
