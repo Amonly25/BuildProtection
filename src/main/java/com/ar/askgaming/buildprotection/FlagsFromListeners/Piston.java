@@ -9,13 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPistonRetractEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Piston implements Listener{
 
-    private Main plugin;
-    public Piston(Main main){
+    private BuildProtection plugin;
+    public Piston(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

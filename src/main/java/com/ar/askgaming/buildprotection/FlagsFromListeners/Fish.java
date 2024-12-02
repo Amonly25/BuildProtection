@@ -7,13 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBucketEntityEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Fish implements Listener{
 
-    private Main plugin;   
-    public Fish(Main main){
+    private BuildProtection plugin;   
+    public Fish(BuildProtection main){
         plugin = main;
     }
 

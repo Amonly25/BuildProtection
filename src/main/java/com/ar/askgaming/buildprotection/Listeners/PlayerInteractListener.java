@@ -9,13 +9,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Protection;
 
 public class PlayerInteractListener implements Listener{
 
-    private Main plugin;
-    public PlayerInteractListener(Main main){
+    private BuildProtection plugin;
+    public PlayerInteractListener(BuildProtection main){
         plugin = main;
     }
 

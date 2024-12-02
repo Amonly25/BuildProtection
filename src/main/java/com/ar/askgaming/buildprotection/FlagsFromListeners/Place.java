@@ -7,13 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Place implements Listener {
     
-    private Main plugin;
-    public Place(Main main){
+    private BuildProtection plugin;
+    public Place(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

@@ -10,13 +10,13 @@ import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.ar.askgaming.buildprotection.Area;
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 
 public class ShowBordersManager extends BukkitRunnable {
 
-    private Main plugin;
+    private BuildProtection plugin;
 
-    public ShowBordersManager(Main main) {
+    public ShowBordersManager(BuildProtection main) {
         plugin = main;
     }
 

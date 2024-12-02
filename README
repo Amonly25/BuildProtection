@@ -12,18 +12,20 @@ Commands
   prote create <name> (When you have a sucesfully area selected, this will create the prote and set default flags).
   prote set <flag> <true/false> (You can enable or disable some flags to public players. See the list below).
   prote <add/remove> <playerName> (To add or remove players from your protection, you cant set per player flags.)
+  prote subzone <create/delete> <name> (Handle subzones, subzones can un unlimited inside each other, that use a priority creating system).
+  prote expand <up/down/east/west/south/north> <number> Create a selection expanded by a area size.
   prote remove (To remove the protection where you are standing)
   prote show (Show the border of the protected area for 5 seconds)
   prote info (Show the info; name, owner, flags and players)
-  prote message (Change the message when you are on the protection)
+  prote message <enter/exit> <message >(Change the message when you are on the protection)
   prote list <all/others> (Possible to list protections, for others you need buildprotection.listothers permission)
   prote tp <name> (To teleport to the prote, you need the buildprotection.teleport permission)
 
 Flag list:
   You must set the buildprotection.flags.* to allow changes and then you can limit some flags by setting false, example buildprotection.flags.pvp
 
-  Interact: Players cant interact with any blocks or entitys, default should be allways true and player cant changued it. For example, if a player is consuming a item clicking an block, it will be cancelled, and can de potential to do traps. 
-  Container: Deny players to open: barrel, chest,shulkerbox, furnace, crafter, dispenser, dropper, heopper, smoker, brewingstand.
+  Interact: Players cant interact with any entity 
+  Container: Deny players to containers
   Use: Deny players to use any powered(redstone) blocks, bed and enchantingtable.
   Break: Dont let break blocks from players
   Place: Dont let place blocks from players
@@ -37,7 +39,7 @@ Flag list:
   Flow: Disable water/lava flowing
   Ignite: Disable ignite and burn events
   Move: Disable players to move, why will you set it? Idk.
-  Teleport: Allow player to teleport by any type of teleport, take cauting with chorus fruit if you enable it, its not beeen deactivated to not limit vanilla items. (Otherwise boring..)
+  Teleport: Allow player to teleport by any type of teleport
 
 
 

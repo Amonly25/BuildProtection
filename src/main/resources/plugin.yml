@@ -1,4 +1,4 @@
-main: com.ar.askgaming.buildprotection.Main
+main: com.ar.askgaming.buildprotection.BuildProtection
 name: BuildProtection
 api-version: 1.21
 version: 1

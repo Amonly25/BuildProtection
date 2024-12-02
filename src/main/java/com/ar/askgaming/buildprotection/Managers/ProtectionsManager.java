@@ -12,10 +12,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import com.ar.askgaming.buildprotection.Area;
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Protection;
 import com.ar.askgaming.buildprotection.Selection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class ProtectionsManager {
 
@@ -29,8 +28,8 @@ public class ProtectionsManager {
         return mapList.get(world.getName());
     }
 
-    private Main plugin;
-    public ProtectionsManager(Main main){
+    private BuildProtection plugin;
+    public ProtectionsManager(BuildProtection main){
         plugin = main;
 
         // Cargar todas las protecciones guardadas en los archivos de configuración

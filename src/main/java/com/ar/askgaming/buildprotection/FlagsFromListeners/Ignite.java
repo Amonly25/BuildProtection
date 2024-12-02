@@ -6,13 +6,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Ignite implements Listener{
 
-    private Main plugin;
-    public Ignite(Main main){
+    private BuildProtection plugin;
+    public Ignite(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

@@ -9,13 +9,13 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Explode implements Listener{
 
-    private Main plugin;
-    public Explode(Main main){
+    private BuildProtection plugin;
+    public Explode(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

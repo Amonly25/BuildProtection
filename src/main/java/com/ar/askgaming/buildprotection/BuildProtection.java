@@ -24,15 +24,18 @@ import com.ar.askgaming.buildprotection.Listeners.PlayerQuitListener;
 import com.ar.askgaming.buildprotection.Managers.DataHandler;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
 import com.ar.askgaming.buildprotection.Managers.ProtectionsManager;
+import com.ar.askgaming.buildprotection.Managers.SelectionManager;
 import com.ar.askgaming.buildprotection.Managers.ShowBordersManager;
 
 import net.milkbowl.vault.economy.Economy;
 
-public class Main extends JavaPlugin{
+public class BuildProtection extends JavaPlugin{
 
     private ShowBordersManager showParticles;
     private DataHandler dataHandler;
     private ProtectionsManager protectionsManager;
+    private SelectionManager selectionManager;
+
     private ProtectionFlags protectionFlags;
 
     private Economy economy;
@@ -47,6 +50,7 @@ public class Main extends JavaPlugin{
         ConfigurationSerialization.registerClass(Area.class,"Area");
   
         protectionsManager = new ProtectionsManager(this);
+        selectionManager = new SelectionManager(this);
         protectionFlags = new ProtectionFlags(this);
 
         showParticles = new ShowBordersManager(this);
@@ -109,5 +113,8 @@ public class Main extends JavaPlugin{
     }
     public ProtectionFlags getProtectionFlags() {
         return protectionFlags;
+    }
+    public SelectionManager getSelectionManager() {
+        return selectionManager;
     }
 }

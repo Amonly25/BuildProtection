@@ -7,13 +7,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Teleport implements Listener {
     
-    private Main plugin;
-    public Teleport(Main main){
+    private BuildProtection plugin;
+    public Teleport(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

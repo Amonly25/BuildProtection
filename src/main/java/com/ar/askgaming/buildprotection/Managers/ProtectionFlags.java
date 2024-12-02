@@ -13,15 +13,15 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.ar.askgaming.buildprotection.Area;
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 
 public class ProtectionFlags {
     
     private File file;
     private FileConfiguration config;
     
-    private Main plugin;
-    public ProtectionFlags(Main main){
+    private BuildProtection plugin;
+    public ProtectionFlags(BuildProtection main){
         plugin = main;
 
         file = new File(plugin.getDataFolder(), "flags.yml");

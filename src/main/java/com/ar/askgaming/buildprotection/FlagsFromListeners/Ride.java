@@ -7,13 +7,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Ride implements Listener{
 
-    private Main plugin;
-    public Ride(Main main){
+    private BuildProtection plugin;
+    public Ride(BuildProtection main){
         plugin = main;
     }
 

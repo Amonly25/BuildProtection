@@ -15,7 +15,7 @@ import org.bukkit.entity.Player;
 
 public class Protection implements ConfigurationSerializable{
 
-    private Main plugin = Main.getPlugin(Main.class);
+    private BuildProtection plugin = BuildProtection.getPlugin(BuildProtection.class);
 
     private UUID owner;
 
