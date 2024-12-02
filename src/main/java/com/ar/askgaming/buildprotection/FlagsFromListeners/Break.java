@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
 import com.ar.askgaming.buildprotection.Main;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
@@ -30,8 +31,17 @@ public class Break implements Listener {
         }
     }
     @EventHandler()
-    public void onHangingItemBreak(EntityDamageEvent event){
-        if (event.getEntity() instanceof Hanging){
+    public void onHangingItemBreak(HangingBreakByEntityEvent event){
+        if (event.getRemover() instanceof Player){
+            Player p = (Player) event.getRemover();
+            Hanging h = event.getEntity();
+            Location l = h.getLocation();
+            
+            if (!plugin.getProtectionFlags().hasPermission(FlagType.BREAK, p, l)){
+                sendMessage(p);
+                event.setCancelled(true);
+            }
+        } else {
             if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.BREAK, event.getEntity().getLocation())){
                 event.setCancelled(true);
             }

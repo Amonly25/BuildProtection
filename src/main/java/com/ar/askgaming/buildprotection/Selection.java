@@ -12,7 +12,6 @@ public class Selection{
     private Location loc1, loc2 = null;
     private Player player;
 
-
     public Selection(Player p, Main main) {
 
         main.getProtectionsManager().getPlayersInEditMode().put(p, this);
@@ -24,13 +23,8 @@ public class Selection{
     //#region Create protection
     public void create(String name){
 
-        if (loc1 == null || loc2 == null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.must", player));
-            return ;
-        }
-        if (loc1.equals(loc2)){
-            player.sendMessage(plugin.getDataHandler().getLang("select.same", player));
-            return ;
+        if (!isValidSelection()){
+            return;
         }
 
         if (detectCollision(loc1, loc2)){
@@ -69,19 +63,15 @@ public class Selection{
     }
     //#region Inner create Area
     public void createArea(String name){
-        if (loc1 == null || loc2 == null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.must", player));
-            return ;
-        }
-
-        if (loc1.equals(loc2)){
-            player.sendMessage(plugin.getDataHandler().getLang("select.same", player));
-            return ;
+        
+        if (!isValidSelection()){
+            return;
         }
         
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != area2){
+            player.sendMessage(plugin.getDataHandler().getLang("select.no_same_area", player));
             return;
         }
         createAreaSucces(name,area.getParentProtection());
@@ -135,9 +125,7 @@ public class Selection{
     //#region Create Area
     private void createAreaSucces(String name, Protection prote){
 
-        Location l1 = plugin.getProtectionsManager().getPlayersInEditMode().get(player).getLoc1();
-        Location l2 = plugin.getProtectionsManager().getPlayersInEditMode().get(player).getLoc2();
-        Area subzone = new Area(l1, l2, name, prote);
+        Area subzone = new Area(loc1, loc2, name, prote);
         subzone.setPriority(prote.getAreas().size()+1);
         prote.getAreas().put(name, subzone);
         prote.save();
@@ -254,5 +242,20 @@ public class Selection{
 
         // Si todas las áreas son iguales, retornar true
         return false;
+    }
+    private boolean isValidSelection(){
+        if (loc1 == null || loc2 == null){
+            player.sendMessage(plugin.getDataHandler().getLang("select.must", player));
+            return false;
+        }
+        if (loc1.equals(loc2)){
+            player.sendMessage(plugin.getDataHandler().getLang("select.same", player));
+            return false;
+        }
+        if (loc1.getBlockZ() == loc2.getBlockZ() || loc1.getBlockX() == loc2.getBlockX()){
+            player.sendMessage(plugin.getDataHandler().getLang("select.flat", player));
+            return false;
+        }
+        return true;
     }
 }

@@ -1,0 +1,63 @@
+#Default flags on creating a protection
+default_flags:
+  move: true
+  place: false
+  break: false
+  interact: false
+  pvp: true
+  teleport: false
+  fish: false
+  ride: false
+  piston: false
+  ignite: false
+  explode: false
+  entity_damage: false
+  animals: false
+  monsters: true
+  container: false
+  use: false
+  flow: true
+
+#You can change blocks types of some flags
+flags:
+  container:
+  - CHEST # apply to all chest
+  - HOPPER
+  - DISPENSER
+  - DROPPER
+  - FURNACE # all types
+  - BARREL
+  - SMOKER
+  - SHULKER # and all the colors
+  - JUKEBOX
+  - LECTERN
+  - LODESTONE
+  - COMPOSTER
+  - LOCM
+  - CARTOGRAPHY_TABLE
+  - BREWING_STAND
+  use:
+  - SIGN
+  - DOOR # and all the colors
+  - TRAPDOOR
+  - FENCE_GATE
+  - PRESSURE_PLATE
+  - BUTTON
+  - LEVER
+  - ANVIL
+  - TABLE # all types
+  - LOOM
+  - BEACON
+  - NOTE_BLOCK
+  - COMPARATOR
+  - REPEATER
+  - RESPAWN_ANCHOR
+  - BELL
+  - STONECUTTER
+  - POT
+  - GRINDSTONE
+  teleport: # This blocks chorus teleport
+  - CHORUS_FRUIT
+  #- COMMAND
+  #- ENDER_PEARl
+  #- NETHER_PORTAL

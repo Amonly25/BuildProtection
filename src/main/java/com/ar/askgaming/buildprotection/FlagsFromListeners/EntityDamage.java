@@ -2,7 +2,11 @@ package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
 import java.util.HashMap;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -22,12 +26,19 @@ public class EntityDamage implements Listener{
     @EventHandler
     public void onEntityAttack(EntityDamageByEntityEvent event) {
         
-        if (event.getEntity() instanceof Player) {
+        Entity entity = event.getEntity();
+
+        if (entity instanceof Player) {
             handlePlayerDamage(event);
-        } else if (event.getEntity() instanceof Animals) {
+        } else if (entity instanceof Animals) {
             handleAnimalDamage(event);
-        } else if (event.getEntity() instanceof Monster) {
+        } else if (entity instanceof Monster) {
             handleMonsterDamage(event);
+        }
+        else {
+            if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.ENTITY_DAMAGE, entity.getLocation())) {
+                event.setCancelled(true);
+            }
         }
     }
     

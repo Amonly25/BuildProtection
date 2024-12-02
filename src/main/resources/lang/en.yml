@@ -13,6 +13,7 @@ select:
   show: "&eShowing the selection."
   same: "&cThe selection is the same."
   collision: "&cThe selection is colliding with another protection."
+  flat: "&cThe selection can't be flat."
 
 prote:
   create: "&2You have created a protection with the name &6%name%&2."
@@ -52,7 +53,7 @@ flags:
   break: "&cYou can't break here."
   interact: "&cYou can't interact here."
   pvp: "&cYou can't attack here."
-  teleport: "&cYou can't teleport here."
+  teleport: "&cYou can't teleport here with that."
   fish: "&cYou can't fish here."
   ride: "&cYou can't ride here."
   invalid: "&cInvalid flag."

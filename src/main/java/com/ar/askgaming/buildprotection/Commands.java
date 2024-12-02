@@ -1,6 +1,7 @@
 package com.ar.askgaming.buildprotection;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -23,7 +24,21 @@ public class Commands implements TabExecutor {
     public Commands(Main main) {
         plugin = main;
     }
-        @Override
+
+    private List<Player> confirmMessage = new ArrayList<>();
+
+    private boolean confirm(Player p){
+        if (confirmMessage.contains(p)){
+            confirmMessage.remove(p);
+            return true;
+        } else {
+            p.sendMessage(plugin.getDataHandler().getLang("commands.confirm", p));
+            confirmMessage.add(p);
+            return false;
+        }
+    }
+
+    @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
         
         List<String> list = new ArrayList<>();
@@ -136,7 +151,9 @@ public class Commands implements TabExecutor {
             Protection prote = plugin.getProtectionsManager().getProtectionByName(args[1],p.getWorld());
             if (prote != null){
                 if (prote.isAdminProtection(p)){
-                    plugin.getProtectionsManager().deleteProtection(prote);
+                    if (confirm(p)){
+                        plugin.getProtectionsManager().deleteProtection(prote);
+                    }
                     p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
                 } else {
                     p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
@@ -150,7 +167,9 @@ public class Commands implements TabExecutor {
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (prote != null){
             if (prote.isAdminProtection(p)){
-                plugin.getProtectionsManager().deleteProtection(prote);
+                if (confirm(p)){
+                    plugin.getProtectionsManager().deleteProtection(prote);
+                }
                 p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
             } else {
                 p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
@@ -450,10 +469,11 @@ public class Commands implements TabExecutor {
         }
         plugin.getProtectionsManager().getPlayersInEditMode().get(p).createArea(args[1]);
     }
-        //#region create_subzone
+        //#region dlete_subzone
         private void deleteSubzone(Player p, String[] args) {
 
             Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
+
             if (prote == null){
                 p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
                 return;
@@ -462,19 +482,28 @@ public class Commands implements TabExecutor {
                 p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
                 return;
             }
-            Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
-            if (area.isMain()){
-                p.sendMessage(plugin.getDataHandler().getLang("prote.subzone_main", p));
+            if (args.length != 2){
+                p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
                 return;
             }
-            if (!prote.getAreas().containsValue(area)){
-                p.sendMessage(plugin.getDataHandler().getLang("prote.no_exists", p));
-                return;
+            String name = args[1];
+            for (Area area : prote.getAreas().values()) {
+                if (area.getName().equalsIgnoreCase(name)){
+                    if (area.isMain()){
+                        p.sendMessage(plugin.getDataHandler().getLang("prote.subzone_main", p));
+                        return;
+                    }
+                    if (confirm(p)){
+                        p.sendMessage(plugin.getDataHandler().getLang("prote.subzone_delete", p));
+                        prote.getAreas().remove(area.getName());
+                        area = null;
+                        prote.save();
+                    }
+                    return;
+                }
             }
-            p.sendMessage(plugin.getDataHandler().getLang("prote.subzone_delete", p));
-            prote.getAreas().remove(area.getName());
-            area = null;
-            prote.save();
+
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_exists", p));
         }
         //#region expand
         private void expand(Player p, String[] args){

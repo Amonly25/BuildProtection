@@ -60,7 +60,7 @@ public class Area implements ConfigurationSerializable {
         enterMessage = "Welcome to " + name;
         exitMessage = "Goodbye from " + name;
 
-        plugin.getProtectionsManager().setDefaultsFlags(this);
+        plugin.getProtectionFlags().setDefaultsFlags(this);
     }
 
     public Area(Map<String, Object> map) {

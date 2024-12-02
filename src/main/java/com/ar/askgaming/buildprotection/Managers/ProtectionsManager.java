@@ -59,29 +59,6 @@ public class ProtectionsManager {
         });
     }
 
-    //#region setDefautsFlags
-    public void setDefaultsFlags(Area area){
-        HashMap<FlagType, Boolean> flagsMap = area.getFlagsMap();
-        flagsMap.put(FlagType.PLACE, false);
-        flagsMap.put(FlagType.BREAK, false);
-        flagsMap.put(FlagType.IGNITE, false);
-        flagsMap.put(FlagType.INTERACT, true);
-        flagsMap.put(FlagType.FISH, false);
-        flagsMap.put(FlagType.RIDE, false);
-        flagsMap.put(FlagType.TELEPORT, true);
-        flagsMap.put(FlagType.PVP, true);
-        flagsMap.put(FlagType.MOVE, true);
-        flagsMap.put(FlagType.PISTON, false);
-        flagsMap.put(FlagType.ENTITY_DAMAGE, false);
-        flagsMap.put(FlagType.FLOW, true);
-        flagsMap.put(FlagType.ANIMALS, false);
-        flagsMap.put(FlagType.MONSTERS, true);
-        flagsMap.put(FlagType.EXPLODE, false);
-        flagsMap.put(FlagType.CONTAINER, false);
-        flagsMap.put(FlagType.USE, false);
-
-    }
-
     private HashMap<Player,Selection> playersInEditMode = new HashMap<>();
     
     public HashMap<Player, Selection> getPlayersInEditMode() {
@@ -105,17 +82,15 @@ public class ProtectionsManager {
         // Iterar sobre el HashMap usando un bucle for tradicional
         Protection prote = getProtectionByLocation(l);
         if (prote != null){
-            int highestPriorityArea = 0;
+            int highestPriority = 0;
             Area highestPriorityAreaObj = null;
-            for (Entry<String, Area> entry2 : prote.getAreas().entrySet()) {
-                Area area = entry2.getValue(); 
-                if (area.isInside(l)) {
-                    if (area.getPriority() > highestPriorityArea) {
-                        highestPriorityArea = area.getPriority();
-                        highestPriorityAreaObj = area;
-                    }
+            for (Area area : prote.getAreas().values()) {
+                if (area.isInside(l) && area.getPriority() > highestPriority) {
+                    highestPriority = area.getPriority();
+                    highestPriorityAreaObj = area;
                 }
             }
+            
             return highestPriorityAreaObj;
         }
 
