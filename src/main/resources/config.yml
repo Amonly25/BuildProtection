@@ -8,6 +8,9 @@ protection:
   cost_create_per_block: 1
   cost_sell_per_block: 1
   enter_message_type: "message"
+  max_height: 100
+  max_width: 100
+  max_radius: 50
 
 options:
   no_enter_message_using_elytra: true 

@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import com.ar.askgaming.buildprotection.Area;
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 import net.md_5.bungee.api.ChatColor;
@@ -18,8 +18,8 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class PlayerMoveListener implements Listener {
     
-    private Main plugin;
-    public PlayerMoveListener(Main main){
+    private BuildProtection plugin;
+    public PlayerMoveListener(BuildProtection main){
         plugin = main;
     }
 

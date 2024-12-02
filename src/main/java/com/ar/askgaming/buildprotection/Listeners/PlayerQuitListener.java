@@ -5,12 +5,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 
 public class PlayerQuitListener implements Listener{
 
-    private Main plugin;
-    public PlayerQuitListener(Main main){
+    private BuildProtection plugin;
+    public PlayerQuitListener(BuildProtection main){
         plugin = main;
     }
 

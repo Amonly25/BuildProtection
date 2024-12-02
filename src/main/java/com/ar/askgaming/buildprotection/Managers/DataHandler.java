@@ -9,16 +9,16 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 
 import net.md_5.bungee.api.ChatColor;
 
 
 public class DataHandler {
     
-    private final Main plugin;
+    private final BuildProtection plugin;
 
-    public DataHandler(Main main) {
+    public DataHandler(BuildProtection main) {
         plugin = main;
 
         File protectionsFolder = new File(plugin.getDataFolder() + "/protections");

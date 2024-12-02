@@ -5,13 +5,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Flow implements Listener{
 
-    private Main plugin;
-    public Flow(Main main){
+    private BuildProtection plugin;
+    public Flow(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

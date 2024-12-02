@@ -8,13 +8,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class Damage implements Listener{
 
-    private Main plugin;
-    public Damage(Main main){
+    private BuildProtection plugin;
+    public Damage(BuildProtection main){
         plugin = main;
     }
     @EventHandler()

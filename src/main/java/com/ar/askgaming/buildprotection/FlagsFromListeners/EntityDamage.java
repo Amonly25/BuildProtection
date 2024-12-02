@@ -2,11 +2,8 @@ package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -14,13 +11,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
-import com.ar.askgaming.buildprotection.Main;
+import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
 public class EntityDamage implements Listener{
     
-    private Main plugin;
-    public EntityDamage(Main main){
+    private BuildProtection plugin;
+    public EntityDamage(BuildProtection main){
         plugin = main;
     }
     @EventHandler
