@@ -153,36 +153,29 @@ public class Commands implements TabExecutor {
     //#region delete
     private void handleDeleteCommand(Player p, String[] args) {
 
-        if (args.length == 2){
-            Protection prote = plugin.getProtectionsManager().getProtectionByName(args[1],p.getWorld());
-            if (prote != null){
-                if (prote.isAdminProtection(p)){
-                    if (confirm(p)){
-                        plugin.getProtectionsManager().deleteProtection(prote);
-                    }
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
-                } else {
-                    p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
-                }
-            } else {
-                p.sendMessage(plugin.getDataHandler().getLang("prote.no_exist", p));
-            }
-            return;
-        }
+        Protection prote = null;
 
-        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
-        if (prote != null){
-            if (prote.isAdminProtection(p)){
-                if (confirm(p)){
-                    plugin.getProtectionsManager().deleteProtection(prote);
-                }
-                p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
-            } else {
-                p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+        if (args.length == 2) {
+            prote = plugin.getProtectionsManager().getProtectionByName(args[1], p.getWorld());
+            if (prote == null) {
+                p.sendMessage(plugin.getDataHandler().getLang("prote.no_exist", p));
+                return;
             }
         } else {
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
-
+            prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
+            if (prote == null) {
+                p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+                return;
+            }
+        }
+    
+        if (prote.isAdminProtection(p)) {
+            if (confirm(p)) {
+                plugin.getProtectionsManager().deleteProtection(prote);
+                p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
+            }
+        } else {
+            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
         }
     }
     //#region message

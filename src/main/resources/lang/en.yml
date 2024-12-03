@@ -49,6 +49,7 @@ prote:
     players: "&ePlayers: &6 "
 
 flags:
+  interact: "&cYou cant interact here."
   move: "&cYou can't move here."
   place: "&cYou can't place here."
   break: "&cYou can't break here."

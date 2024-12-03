@@ -3,6 +3,7 @@ package com.ar.askgaming.buildprotection.FlagsFromListeners;
 import java.util.HashMap;
 
 import org.bukkit.entity.Animals;
+import org.bukkit.entity.Enemy;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -29,7 +30,7 @@ public class EntityDamage implements Listener{
             handlePlayerDamage(event);
         } else if (entity instanceof Animals) {
             handleAnimalDamage(event);
-        } else if (entity instanceof Monster) {
+        } else if (entity instanceof Enemy) {
             handleMonsterDamage(event);
         }
         else {

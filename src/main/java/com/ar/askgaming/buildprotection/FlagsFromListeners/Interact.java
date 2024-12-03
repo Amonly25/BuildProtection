@@ -1,5 +1,6 @@
 package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.Location;
@@ -27,7 +28,7 @@ public class Interact implements Listener {
     }
 
     @EventHandler
-    public void onBlockInteract(PlayerInteractEvent event) {
+    public void onInteract(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         Block b = event.getClickedBlock();
         if (b == null) return;
@@ -52,21 +53,29 @@ public class Interact implements Listener {
         return false;
     }
     @EventHandler()
-    public void onBlockInteract(PlayerInteractEntityEvent event){
-        Player p = event.getPlayer();
+    public void onEntityInteract(PlayerInteractEntityEvent event){
 
+        Player p = event.getPlayer();
+        if (event.getRightClicked() instanceof Player){
+            return;
+        }
         Location l = event.getRightClicked().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)){
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            sendMessage(p);
             event.setCancelled(true);
         }
     }
     @EventHandler
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
+       
         Player p = event.getPlayer();
-        if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, event.getRightClicked().getLocation())) {
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+        if (event.getRightClicked() instanceof Player){
+            return;
+        }
+        Location l = event.getRightClicked().getLocation();
+        if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, l)) {
+            sendMessage(p);
             event.setCancelled(true);
         }
     }
@@ -74,7 +83,7 @@ public class Interact implements Listener {
     public void onPlayerBucketEmpty(PlayerBucketEmptyEvent e) {
         Player p = e.getPlayer();
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, e.getBlock().getLocation())) {
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            sendMessage(p);
             e.setCancelled(true);
         }
     }
@@ -82,7 +91,7 @@ public class Interact implements Listener {
     public void onPlayerBucketFill(PlayerBucketFillEvent e) {
         Player p = e.getPlayer();
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, e.getBlock().getLocation())) {
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            sendMessage(p);
             e.setCancelled(true);
         }
     }
@@ -90,8 +99,24 @@ public class Interact implements Listener {
     public void onSgn(SignChangeEvent e) {
         Player p = e.getPlayer();
         if (!plugin.getProtectionFlags().hasPermission(FlagType.INTERACT, p, e.getBlock().getLocation())) {
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            sendMessage(p);
             e.setCancelled(true);
         }
     }
+    private HashMap<Player, Long> lastMessage = new HashMap<Player, Long>();
+    private void sendMessage(Player p) {
+
+        // Añadir un mensaje de cooldown
+        long lastHitTime = lastMessage.getOrDefault(p, 0L);
+        long currentTime = System.currentTimeMillis();
+        // Calcular el tiempo transcurrido desde el último golpe
+        long timeSinceLastHit = System.currentTimeMillis() - lastHitTime;
+
+        if (timeSinceLastHit > 15000) {
+            // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
+            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            lastMessage.put(p, currentTime);
+        }
+    }
+
 }
