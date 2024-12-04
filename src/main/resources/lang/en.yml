@@ -43,10 +43,17 @@ prote:
   info:
     name: "&eName: &6 "
     owner: "&eOwner: &6"
+    rentable: "&eRentable, cost: &6"
     area: "&eArea: &6"
     flags: "&eFlags"
     hover: "&7(Hover over to see the flags)"
     players: "&ePlayers: &6 "
+
+rent:
+  cant_expand: "&cYou can't expand a rented area."
+  select_rented: "&cYou can't select a rented area."
+  not_rentable: "&cThis area is not rentable."  
+  already_rented: "&cThis area is already rented."
 
 flags:
   interact: "&cYou cant interact here."

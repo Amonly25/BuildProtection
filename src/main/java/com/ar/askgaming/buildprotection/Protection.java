@@ -52,8 +52,6 @@ public class Protection implements ConfigurationSerializable{
         name = proteName;
         this.loc1 = loc1;
         this.loc2 = loc2;
-
-        save();
     }
 
     public String getName() {
@@ -73,7 +71,6 @@ public class Protection implements ConfigurationSerializable{
 
     public void setOwner(OfflinePlayer owner) {
         this.owner = owner.getUniqueId();
-        save();
     }
     public Location getLoc1() {
         return loc1;
@@ -105,16 +102,6 @@ public class Protection implements ConfigurationSerializable{
         return map;
     }
 
-    public void save(){
-
-        String wName = loc1.getWorld().getName();
-        FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(wName);
-        if (cfg != null){
-            cfg.set(name, this);
-            plugin.getDataHandler().saveWorldConfig(cfg, wName);
-            plugin.getLogger().info(wName + " guardado");
-        }
-    }
     public Location getCenter() {
         double centerX = (loc1.getX() + loc2.getX()) / 2;
         double centerZ = (loc1.getZ() + loc2.getZ()) / 2;
@@ -137,40 +124,10 @@ public class Protection implements ConfigurationSerializable{
         return null;
     }
 
-    public boolean isAdminProtection(Player player){
-        
-        if (player.hasPermission("buildprotection.admin")){
-            return true;
-        }
-        if (isOwner(player)){
-            return true;
-        }
-
-        return false;
-    }
-
     public String getOwnerName(){
         return Bukkit.getOfflinePlayer(owner).getName(); 
     }
-    public boolean isInside(Location check){
 
-        double x1 = Math.min(loc1.getX(), loc2.getX());
-        double x2 = Math.max(loc1.getX(), loc2.getX());
-        double y1 = Math.min(loc1.getY(), loc2.getY());
-        double y2 = Math.max(loc1.getY(), loc2.getY());
-        double z1 = Math.min(loc1.getZ(), loc2.getZ());
-        double z2 = Math.max(loc1.getZ(), loc2.getZ());
-
-        double checkX = check.getX();
-        double checkY = check.getY();
-        double checkZ = check.getZ();
-
-        if (checkX >= x1 && checkX <= x2 && checkY >= y1 && checkY <= y2 && checkZ >= z1 && checkZ <= z2) {
-            return true;
-        }
-
-        return false;
-    }
     public Area getMainArea(){
         for (Area area : areas.values()) {
             if (area.getPriority() == 1){

@@ -65,15 +65,10 @@ public class ProtectionsManager {
     }
     public Protection getProtectionByLocation(Location l){
 
-        // Iterar sobre el HashMap usando un bucle for tradicional
-        for (Entry<String, Protection> entry : plugin.getProtectionsManager().getProtectionsByWorld(l.getWorld()).entrySet()) {
-
-            Protection prote = entry.getValue(); 
-            if (prote.isInside(l)){
-                return prote;
-            }
+        Area area = getAreaByLocation(l);
+        if (area != null){
+            return area.getParentProtection();
         }
-
         return null;
     }
     public Area getAreaByLocation(Location l){
@@ -84,7 +79,7 @@ public class ProtectionsManager {
             int highestPriority = 0;
             Area highestPriorityAreaObj = null;
             for (Area area : prote.getAreas().values()) {
-                if (area.isInside(l) && area.getPriority() > highestPriority) {
+                if (isInside(area,l) && area.getPriority() > highestPriority) {
                     highestPriority = area.getPriority();
                     highestPriorityAreaObj = area;
                 }
@@ -144,5 +139,70 @@ public class ProtectionsManager {
         int m3 = (Math.abs(x1 - x2) + 1) * (Math.abs(y1 - y2) + 1) * (Math.abs(z1 - z2) + 1);
         return m3;
 
+    }
+    public boolean hasAdminPermission(Area area, Player player){
+        
+        if (area.getRentedOwner().equals(player.getUniqueId())){
+            return true;
+        } else return hasAdminPermission(area.getParentProtection(), player);
+    }
+    public boolean hasAdminPermission(Protection prote, Player player){
+        if (prote.getOwner().equals(player.getUniqueId())){
+            return true;
+        }
+        if (player.hasPermission("buildprotection.admin")){
+            return true;
+        }
+        return false;
+    }
+    public boolean isInside(Area area, Location check){
+
+        double x1 = Math.min(area.getLoc1().getX(), area.getLoc2().getX());
+        double x2 = Math.max(area.getLoc1().getX(), area.getLoc2().getX());
+        double y1 = Math.min(area.getLoc1().getY(), area.getLoc2().getY());
+        double y2 = Math.max(area.getLoc1().getY(), area.getLoc2().getY());
+        double z1 = Math.min(area.getLoc1().getZ(), area.getLoc2().getZ());
+        double z2 = Math.max(area.getLoc1().getZ(), area.getLoc2().getZ());
+
+        double checkX = check.getX();
+        double checkY = check.getY();
+        double checkZ = check.getZ();
+
+        if (checkX >= x1 && checkX <= x2 && checkY >= y1 && checkY <= y2 && checkZ >= z1 && checkZ <= z2) {
+            return true;
+        }
+
+        return false;
+    }
+    //#region rent
+    public void rent(Area area, Player p) {
+        double d = area.getRentCost();
+
+        if (plugin.getEconomy() == null){
+            plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
+            p.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", p));
+            return;
+        }
+
+        if (plugin.getEconomy().getBalance(p) >= d){
+            area.setRented(true);
+            area.setRentedOwner(p.getUniqueId());
+            area.setRentedSince(System.currentTimeMillis());
+            save(area.getParentProtection());
+            if (plugin.getRealisticEconomy() != null){
+                plugin.getRealisticEconomy().getServerBank().depositFromPlayerToServer(p.getUniqueId(), d);
+            } else {
+                plugin.getEconomy().withdrawPlayer(p, d);
+
+            }
+        } else{
+            p.sendMessage(plugin.getDataHandler().getLang("prote.no_money", p));
+            return;
+        }
+    }
+    public void save(Protection prote){
+        FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(prote.getLoc1().getWorld().getName());
+        cfg.set(prote.getName(), prote);
+        plugin.getDataHandler().saveWorldConfig(cfg, prote.getLoc1().getWorld().getName());
     }
 }

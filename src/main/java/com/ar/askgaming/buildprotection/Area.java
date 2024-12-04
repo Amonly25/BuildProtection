@@ -2,7 +2,6 @@ package com.ar.askgaming.buildprotection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -12,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.entity.Player;
 
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
@@ -36,8 +34,13 @@ public class Area implements ConfigurationSerializable {
     private String enterMessage;
     private String exitMessage;
 
-    private Protection parentProtection;
+    private boolean isRentable;
+    private boolean isRented;
+    private UUID rentedOwner;
+    private double rentCost;
+    private long rentedSince;
 
+    private Protection parentProtection;
     public void setParentProtection(Protection parentProtection) {
         this.parentProtection = parentProtection;
     }
@@ -58,6 +61,12 @@ public class Area implements ConfigurationSerializable {
         enterMessage = "Welcome to " + parent.getName();
         exitMessage = "Goodbye from " + parent.getName();
 
+        isRentable = false;
+        rentedOwner = null;
+        rentCost = plugin.getProtectionsManager().calculateM3(loc1, loc2) * plugin.getConfig().getDouble("rent.cost_per_block",0.01);
+        rentedSince = 0;
+        isRented = false;
+        
         plugin.getProtectionFlags().setDefaultsFlags(this);
     }
 
@@ -68,7 +77,27 @@ public class Area implements ConfigurationSerializable {
         priority = (int) map.get("priority");
         enterMessage = (String) map.get("enterMessage");
         exitMessage = (String) map.get("exitMessage");
+
+        if (map.get("isRentable") != null){
+            isRentable = (boolean) map.get("isRentable");
+        } else isRentable = false;
         
+        if (map.get("rentedOwner") != null){
+            rentedOwner = UUID.fromString((String) map.get("rentedOwner"));
+        } else rentedOwner = null;
+
+        if (map.get("rentCost") != null){
+            rentCost = (double) map.get("rentCost");
+        } else rentCost = 0;
+
+        if (map.get("rentedSince") != null){
+            rentedSince = (long) map.get("rentedSince");
+        } else rentedSince = 0;
+
+        if (map.get("isRented") != null){
+            isRented = (boolean) map.get("isRented");
+        } else isRented = false;
+
         Object playersObj = map.get("players");
         if (playersObj instanceof List<?>) {
             players = new ArrayList<>();
@@ -105,8 +134,23 @@ public class Area implements ConfigurationSerializable {
         map.put("exitMessage", exitMessage);
         map.put("priority", priority);
         map.put("players", players.stream().map(UUID::toString).collect(Collectors.toList()));
+        map.put("isRentable", isRentable);
+        map.put("rentedOwner", rentedOwner.toString());
+        map.put("rentCost", rentCost);
+        map.put("rentedSince", rentedSince);
+        map.put("isRented", isRented);
         
         return map;
+    }
+    public UUID getRentedOwner() {
+        return rentedOwner;
+    }
+    public String getRentedOwnerName(){
+        return Bukkit.getOfflinePlayer(rentedOwner).getName();
+    }
+
+    public void setRentedOwner(UUID rentedOwner) {
+        this.rentedOwner = rentedOwner;
     }
     public List<String> getPlayersNames(){
         List<String> names = new ArrayList<>();
@@ -115,39 +159,19 @@ public class Area implements ConfigurationSerializable {
         }
         return names;
     }
-    public boolean isInside(Location check){
 
-        double x1 = Math.min(loc1.getX(), loc2.getX());
-        double x2 = Math.max(loc1.getX(), loc2.getX());
-        double y1 = Math.min(loc1.getY(), loc2.getY());
-        double y2 = Math.max(loc1.getY(), loc2.getY());
-        double z1 = Math.min(loc1.getZ(), loc2.getZ());
-        double z2 = Math.max(loc1.getZ(), loc2.getZ());
-
-        double checkX = check.getX();
-        double checkY = check.getY();
-        double checkZ = check.getZ();
-
-        if (checkX >= x1 && checkX <= x2 && checkY >= y1 && checkY <= y2 && checkZ >= z1 && checkZ <= z2) {
-            return true;
-        }
-
-        return false;
-    }
     public String getEnterMessage() {
         return enterMessage;
     }
 
     public void setEnterMessage(String msg) {
         enterMessage = msg;
-        parentProtection.save();
     }
     public String getExitMessage() {
         return exitMessage;
     }
     public void setExitMessage(String exitMessage) {
         this.exitMessage = exitMessage;
-        parentProtection.save();
     }
     public HashMap<FlagType, Boolean> getFlagsMap() {
         return flagsMap;
@@ -156,12 +180,11 @@ public class Area implements ConfigurationSerializable {
     public void setFlagsMap(HashMap<FlagType, Boolean> flagsMap) {
         this.flagsMap = flagsMap;
     }
-        public boolean addPlayer(String playerName) {
+    public boolean addPlayer(String playerName) {
         @SuppressWarnings("deprecation")
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
         if (player.hasPlayedBefore()){
             players.add(player.getUniqueId());
-            parentProtection.save();
             return true;
         }
         return false;
@@ -172,7 +195,6 @@ public class Area implements ConfigurationSerializable {
         OfflinePlayer player = Bukkit.getOfflinePlayer(playerName);
         if (players.contains(player.getUniqueId())){
             players.remove(player.getUniqueId());
-            parentProtection.save();
             return true;
         }
         return false;
@@ -180,21 +202,8 @@ public class Area implements ConfigurationSerializable {
 
     public void setFlag(FlagType type, boolean value) {
         getFlagsMap().put(type, value);
-        parentProtection.save();
     }
-    public LinkedHashMap<FlagType, Boolean> getSortedFlags(){
-        List<Map.Entry<FlagType, Boolean>> entryList = new ArrayList<>(flagsMap.entrySet());
 
-        // Ordenar la lista: los valores `true` primero y luego los `false`
-        entryList.sort((entry1, entry2) -> Boolean.compare(!entry1.getValue(), !entry2.getValue()));
-
-        // Crear un nuevo LinkedHashMap para mantener el orden
-        LinkedHashMap<FlagType, Boolean> sortedMap = new LinkedHashMap<>();
-        for (Map.Entry<FlagType, Boolean> entry : entryList) {
-            sortedMap.put(entry.getKey(), entry.getValue());
-        }
-        return sortedMap;
-    }
     public Protection getParentProtection() {
         return parentProtection;
     }
@@ -210,10 +219,23 @@ public class Area implements ConfigurationSerializable {
     }
     public void setPriority(int priority) {
         this.priority = priority;
-        parentProtection.save();
     }
     public Location getLoc1() {
         return loc1;
+    }
+    public boolean isRentable() {
+        return isRentable;
+    }
+
+    public void setRentable(boolean isRentable) {
+        this.isRentable = isRentable;
+    }
+    public boolean isRented() {
+        return isRented;
+    }
+
+    public void setRented(boolean isRented) {
+        this.isRented = isRented;
     }
 
     public Location getLoc2() {
@@ -244,5 +266,19 @@ public class Area implements ConfigurationSerializable {
     
     public Location getWestLocation() {
         return getLoc1().getX() < getLoc2().getX() ? loc1 : loc2;
+    }
+    public double getRentCost() {
+        return rentCost;
+    }
+
+    public void setRentCost(double rentCost) {
+        this.rentCost = rentCost;
+    }
+    public long getRentedSince() {
+        return rentedSince;
+    }
+
+    public void setRentedSince(long rentedSince) {
+        this.rentedSince = rentedSince;
     }
 }

@@ -35,7 +35,7 @@ public class Commands implements TabExecutor {
             confirmMessage.remove(p);
             return true;
         } else {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.confirm", p));
+            p.sendMessage(getLang("commands.confirm", p));
             confirmMessage.add(p);
             return false;
         }
@@ -44,6 +44,13 @@ public class Commands implements TabExecutor {
     private DataHandler dataHandler;
     private String getLang(String key,Player p){
         return dataHandler.getLang(key,p);
+    }
+    private void save(Protection prote){
+        plugin.getProtectionsManager().save(prote);
+    }
+    private void save(Area area){
+        Protection prote = area.getParentProtection();
+        save(prote);
     }
 
     @Override
@@ -95,7 +102,7 @@ public class Commands implements TabExecutor {
         Player p = (Player) sender;
 
         if (args.length == 0) {
-            p.sendMessage(plugin.getDataHandler().getLang("help", p));
+            p.sendMessage(getLang("help", p));
             return true;
         }
 
@@ -129,7 +136,7 @@ public class Commands implements TabExecutor {
                 handleMessageCommand(p, args);
                 break;
             case "help":
-                p.sendMessage(plugin.getDataHandler().getLang("help", p));
+                p.sendMessage(getLang("help", p));
                 break;
             case "create":
                 handleCreateCommand(p, args);
@@ -144,8 +151,11 @@ public class Commands implements TabExecutor {
             case "expand":
                 expand(p,args);
                 break;
+            case "rent":
+                rent(p,args);
+                break;
             default:
-                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                p.sendMessage(getLang("commands.invalid", p));
                 break;
         }
         return false;
@@ -158,24 +168,24 @@ public class Commands implements TabExecutor {
         if (args.length == 2) {
             prote = plugin.getProtectionsManager().getProtectionByName(args[1], p.getWorld());
             if (prote == null) {
-                p.sendMessage(plugin.getDataHandler().getLang("prote.no_exist", p));
+                p.sendMessage(getLang("prote.no_exist", p));
                 return;
             }
         } else {
             prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
             if (prote == null) {
-                p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+                p.sendMessage(getLang("prote.no_there", p));
                 return;
             }
         }
     
-        if (prote.isAdminProtection(p)) {
+        if (plugin.getProtectionsManager().hasAdminPermission(prote, p)) {
             if (confirm(p)) {
                 plugin.getProtectionsManager().deleteProtection(prote);
-                p.sendMessage(plugin.getDataHandler().getLang("prote.delete", p));
+                p.sendMessage(getLang("prote.delete", p));
             }
         } else {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+            p.sendMessage(getLang("commands.no_perm", p));
         }
     }
     //#region message
@@ -184,21 +194,21 @@ public class Commands implements TabExecutor {
         Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
 
         if (area == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+            p.sendMessage(getLang("prote.no_there", p));
             return;
         }
 
-        if (!area.getParentProtection().isAdminProtection(p)){
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+        if (!plugin.getProtectionsManager().hasAdminPermission(area, p)){
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
     
         if (args.length < 3) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
         if (args[2].length() > 32){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.message_long", p));
+            p.sendMessage(getLang("prote.message_long", p));
             return;
 
         }
@@ -209,15 +219,17 @@ public class Commands implements TabExecutor {
         switch (args[1].toLowerCase()) {
             case "enter":
             area.setEnterMessage(message.toString().trim());
+            save(area);
                 break;
             case "exit":
             area.setExitMessage(message.toString().trim());
+            save(area);
                 break;
             default:
-                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                p.sendMessage(getLang("commands.invalid", p));
                 return;
         }
-        p.sendMessage(plugin.getDataHandler().getLang("prote.message_set", p).replace("%message%", message.toString().trim()));
+        p.sendMessage(getLang("prote.message_set", p).replace("%message%", message.toString().trim()));
 
     }
    
@@ -225,50 +237,57 @@ public class Commands implements TabExecutor {
     private void handleSetFlagCommand(Player p, String[] args) {
 
         if (args.length != 3) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
-            return;
-        }
-        if (!plugin.getProtectionFlags().isValid(args[1])) {
-            p.sendMessage(plugin.getDataHandler().getLang("flags.invalid", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
 
         Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
 
         if (area == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+            p.sendMessage(getLang("prote.no_there", p));
+            return;
+        }
+        if (plugin.getProtectionsManager().hasAdminPermission(area, p)){
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
 
         boolean value = Boolean.parseBoolean(args[2]);
 
-        if (area.getParentProtection().isAdminProtection(p)){
-            if (plugin.getProtectionFlags().hasFlagPermission(args[1].toLowerCase(), p)){
-                area.setFlag(ProtectionFlags.FlagType.valueOf(args[1].toUpperCase()), value);
-                
-                p.sendMessage(plugin.getDataHandler().getLang("prote.flag_set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
-                
-            } else {
-                p.sendMessage(plugin.getDataHandler().getLang("flags.no_perm", p));
-            }            
-        } else {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+        if (args[1].equalsIgnoreCase("rent")){
+            area.setRentable(value);
+            save(area);
+            p.sendMessage(getLang("prote.flag_set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
+            return;
         }
+        if (!plugin.getProtectionFlags().isValid(args[1])) {
+            p.sendMessage(getLang("flags.invalid", p));
+            return;
+        }
+
+        if (plugin.getProtectionFlags().hasFlagPermission(args[1].toLowerCase(), p)){
+            area.setFlag(ProtectionFlags.FlagType.valueOf(args[1].toUpperCase()), value);
+            save(area);
+            p.sendMessage(getLang("prote.flag_set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
+            
+        } else {
+            p.sendMessage(getLang("flags.no_perm", p));
+        } 
     }
 
     //#region create
     private void handleCreateCommand(Player p, String[] args) {
         if (args.length != 2) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
         if (plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).containsKey(args[1])){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.exists", p));
+            p.sendMessage(getLang("prote.exists", p));
         } else {
             if (plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
                 plugin.getProtectionsManager().getPlayersInEditMode().get(p).preCreateProtection(args[1]);
             } else {
-                p.sendMessage(plugin.getDataHandler().getLang("select.must", p));
+                p.sendMessage(getLang("select.must", p));
             }
         }
     }
@@ -278,9 +297,9 @@ public class Commands implements TabExecutor {
         if (args.length == 1) {
             if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
                 new Selection(p,plugin);  
-                p.sendMessage(plugin.getDataHandler().getLang("select.enter", p));          
+                p.sendMessage(getLang("select.enter", p));          
             } else {
-                p.sendMessage(plugin.getDataHandler().getLang("select.exit", p));
+                p.sendMessage(getLang("select.exit", p));
                 plugin.getProtectionsManager().getPlayersInEditMode().remove(p);    
             }
 
@@ -291,7 +310,7 @@ public class Commands implements TabExecutor {
                     plugin.getProtectionsManager().getPlayersInEditMode().get(p).setByRadius(i);
                     
                 } catch (Exception e) {
-                    p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                    p.sendMessage(getLang("commands.invalid", p));
                 }
             }
         }
@@ -299,11 +318,11 @@ public class Commands implements TabExecutor {
     //#region tp
     private void handleTpCommand(Player p, String[] args) {
         if (args.length != 2) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
         if (!p.hasPermission("buildprotection.teleport")) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
 
@@ -315,43 +334,43 @@ public class Commands implements TabExecutor {
                 //Message?
             }
         }else {
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_exist", p));
+            p.sendMessage(getLang("prote.no_exist", p));
         }    
     }
     //#region show
     private void handleShowCommand(Player p, String[] args) {
 
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
+        if (prote == null){
+            p.sendMessage(getLang("prote.no_there", p));
+            return;
+        }
+        if (!plugin.getProtectionsManager().hasAdminPermission(prote, p)){
+            p.sendMessage(getLang("commands.no_perm", p));
+            return; 
 
-        if (prote != null){
-            if (prote.isAdminProtection(p)){
+        }
+            
+        Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
 
-                Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
+        p.sendMessage(getLang("select.show", p));
 
-                p.sendMessage(plugin.getDataHandler().getLang("select.show", p));
+        plugin.getShowParticles().getShowProtections().add(prote.getMainArea());
 
-                plugin.getShowParticles().getShowProtections().add(prote.getMainArea());
+        if (!area.isMain()){
 
-                if (!area.isMain()){
+            plugin.getShowParticles().getShowProtections().add(area);
 
-                    plugin.getShowParticles().getShowProtections().add(area);
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                plugin.getShowParticles().getShowProtections().remove(area);
+            }, 100L); // 100 ticks = 5 segundos (1 segundo = 20 ticks)
+        }
 
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        plugin.getShowParticles().getShowProtections().remove(area);
-                    }, 100L); // 100 ticks = 5 segundos (1 segundo = 20 ticks)
-                }
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            plugin.getShowParticles().getShowProtections().remove(prote.getMainArea());
 
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    plugin.getShowParticles().getShowProtections().remove(prote.getMainArea());
-
-                }, 100L); // 100 ticks = 5 segundos (1 segundo = 20 ticks)
-
-            } else {
-                p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
-            }
-        }else {
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
-        }    
+        }, 100L); // 100 ticks = 5 segundos (1 segundo = 20 ticks)
+                
     }
     //#region list
     private void handleListCommand(Player p, String[] args) {
@@ -390,43 +409,52 @@ public class Commands implements TabExecutor {
     private void handleInfoCommand(Player p, String[] args) {
 
         Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
-        Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
-        if (prote != null){
-
-            p.sendMessage(plugin.getDataHandler().getLang("prote.info.name", p) + prote.getName());
-            p.sendMessage(plugin.getDataHandler().getLang("prote.info.owner", p) + prote.getOwnerName());
-            String areas = prote.getAreas().keySet().toString();
-
-            if (area != null){
-                p.sendMessage(plugin.getDataHandler().getLang("prote.info.area", p) + area.getName() + ": " + areas);
-                p.sendMessage(plugin.getDataHandler().getLang("prote.info.players", p) + area.getPlayersNames());
-                TextComponent flags = new TextComponent(plugin.getDataHandler().getLang("prote.info.flags",p));
-                TextComponent hoverOver = new TextComponent(plugin.getDataHandler().getLang("prote.info.hover",p));
-                HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(ChatColor.GRAY+area.getSortedFlags().toString().replaceAll("false", ChatColor.RED+"false"+ChatColor.GRAY).replaceAll("true", ChatColor.GREEN+"true"+ChatColor.GRAY)));
-                                 
-                flags.setHoverEvent(he);
-                flags.addExtra(hoverOver);
-    
-                p.spigot().sendMessage(flags);
-            }
-            
-        } else {
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+        
+        if (area == null){
+            p.sendMessage(getLang("prote.no_there", p));
+            return;
         }
+        Protection prote = area.getParentProtection();
+        String areas = prote.getAreas().keySet().toString();
+
+        p.sendMessage(getLang("prote.info.name", p) + prote.getName());
+
+        String name;
+        if (area.isRented()){
+            name = area.getRentedOwnerName();
+        } else name = prote.getOwnerName();
+        
+        p.sendMessage(getLang("prote.info.owner", p) + name);
+
+        if (area.isRentable()){
+            p.sendMessage(getLang("prote.info.rentable", p)+ area.getRentCost());
+        } else p.sendMessage(getLang("prote.info.area", p) + area.getName() + ": " + areas);
+        
+        p.sendMessage(getLang("prote.info.players", p) + area.getPlayersNames());
+        TextComponent flags = new TextComponent(getLang("prote.info.flags",p));
+        TextComponent hoverOver = new TextComponent(getLang("prote.info.hover",p));
+        String sortedFlags = plugin.getProtectionFlags().getSortedFlags(area).toString().replaceAll("false", ChatColor.RED+"false"+ChatColor.GRAY).replaceAll("true", ChatColor.GREEN+"true"+ChatColor.GRAY);
+        HoverEvent he = new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(sortedFlags));
+                            
+        flags.setHoverEvent(he);
+        flags.addExtra(hoverOver);
+
+        p.spigot().sendMessage(flags);
+                    
     }
     //#region add/remove
     private void handleAddRemovePlayerCommand(Player p, String[] args) {
         if (args.length != 2) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
         Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
         if (area == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+            p.sendMessage(getLang("prote.no_there", p));
             return;
         }
-        if (!area.getParentProtection().isAdminProtection(p)){
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+        if (!plugin.getProtectionsManager().hasAdminPermission(area, p)){
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
         String playerName = args[1];
@@ -438,40 +466,42 @@ public class Commands implements TabExecutor {
         switch (args[0].toLowerCase()) {
             case "add":
                 if (area.getPlayers().contains(player.getUniqueId())){
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_added", p).replace("%player%", args[1]));
+                    p.sendMessage(getLang("prote.player_added", p).replace("%player%", args[1]));
                     return;
                 }
                 if (area.addPlayer(args[1])){
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_added", p).replace("%player%", args[1]));
+                    p.sendMessage(getLang("prote.player_added", p).replace("%player%", args[1]));
+                    save(area);
                 } else{
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_no_exist", p).replace("%player%", args[1]));
+                    p.sendMessage(getLang("prote.player_no_exist", p).replace("%player%", args[1]));
                 }
                 break;
             case "remove":
                 if (area.removePlayer(args[1])){
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_removed", p).replace("%player%", args[1]));
+                    p.sendMessage(getLang("prote.player_removed", p).replace("%player%", args[1]));
+                    save(area);
                 } else {
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.player_no_exist", p).replace("%player%", args[1]));        
+                    p.sendMessage(getLang("prote.player_no_exist", p).replace("%player%", args[1]));        
                 }
                 break;
             default:
-                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                p.sendMessage(getLang("commands.invalid", p));
                 break;
         }
     }
     //#region Subzone
     private void subzone(Player p, String[] args) {
         if (args.length != 3){
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(p.getLocation());
         if (prote == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+            p.sendMessage(getLang("prote.no_there", p));
             return;
         }
-        if (!prote.isAdminProtection(p)){
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+        if (!plugin.getProtectionsManager().hasAdminPermission(prote, p)){
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
         switch (args[1].toLowerCase()) {
@@ -482,14 +512,14 @@ public class Commands implements TabExecutor {
                 deleteSubzone(p, prote, args[2]);
                 break;
             default:
-                p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+                p.sendMessage(getLang("commands.invalid", p));
                 break;
         }
     }
     private void createSubzone(Player p, Protection prote, String name) {
 
         if (prote.getAreas().containsKey(name)){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.sub_exists", p));
+            p.sendMessage(getLang("prote.sub_exists", p));
             return;
         }
         plugin.getProtectionsManager().getPlayersInEditMode().get(p).preCreateArea(name);
@@ -500,37 +530,41 @@ public class Commands implements TabExecutor {
         for (Area area : prote.getAreas().values()) {
             if (area.getName().equalsIgnoreCase(name)){
                 if (area.isMain()){
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.subzone_main", p));
+                    p.sendMessage(getLang("prote.subzone_main", p));
                     return;
                 }
                 if (confirm(p)){
-                    p.sendMessage(plugin.getDataHandler().getLang("prote.subzone_delete", p));
+                    p.sendMessage(getLang("prote.subzone_delete", p));
                     prote.getAreas().remove(area.getName());
                     area = null;
-                    prote.save();
+                    save(prote);
                 }
                 return;
             }
         }
 
-        p.sendMessage(plugin.getDataHandler().getLang("prote.no_exists", p));
+        p.sendMessage(getLang("prote.no_exists", p));
     }
     //#region expand
     private List<Player> preExpand = new ArrayList<>();
     private void expand(Player p, String[] args){
         Selection sel = plugin.getProtectionsManager().getPlayersInEditMode().getOrDefault(p, null);
         if (sel == null){
-            p.sendMessage(plugin.getDataHandler().getLang("select.must", p));
+            p.sendMessage(getLang("select.must", p));
             return;      
         }   
         Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
-
+        
         if (area == null){
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_there", p));
+            p.sendMessage(getLang("prote.no_there", p));
             return;
         }
-        if (!area.getParentProtection().isAdminProtection(p)){
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+        if (area.isRentable()){
+            p.sendMessage(getLang("rent.cant_expand", p));
+            return;
+        }
+        if (!plugin.getProtectionsManager().hasAdminPermission(area.getParentProtection(), p)){
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
 
@@ -538,14 +572,14 @@ public class Commands implements TabExecutor {
 
             //Expand selection confirm
             if (plugin.getSelectionManager().expandArea(area, sel)){
-                p.sendMessage(plugin.getDataHandler().getLang("prote.area_expand", p));
+                p.sendMessage(getLang("prote.area_expand", p));
                 preExpand.remove(p);
             }
             return;
         }
 
         if (args.length != 3){
-            p.sendMessage(plugin.getDataHandler().getLang("commands.missing_arg", p));
+            p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
 
@@ -553,14 +587,14 @@ public class Commands implements TabExecutor {
         try {
             direction = SelectionManager.Direction.valueOf(args[1].toUpperCase());
         } catch (Exception e) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+            p.sendMessage(getLang("commands.invalid", p));
             return;
         }
         int i = 0;
         try {
             i = Integer.parseInt(args[2]);
         } catch (Exception e) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.invalid", p));
+            p.sendMessage(getLang("commands.invalid", p));
             return;
         }
         //Expand selection
@@ -576,6 +610,27 @@ public class Commands implements TabExecutor {
         } else {
             p.sendMessage(getLang("prote.no_money", p));
         }
+    }
+    //#region rent
+    public void rent(Player p, String[] args){
+        if (args.length == 1){
+            p.sendMessage(getLang("commands.missing_arg", p));
+            return;
+        }
+        Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
+        if (area == null){
+            p.sendMessage(getLang("prote.no_there", p));
+            return;
+        }
+        if (!area.isRentable()){
+            p.sendMessage(getLang("rent.not_rentable", p));
+            return;
+        }
+        if (area.isRented()){
+            p.sendMessage(getLang("rent.already_rented", p));
+            return;
+        }
+        plugin.getProtectionsManager().rent(area, p);
     }
 }
 

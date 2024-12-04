@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -85,23 +87,24 @@ public class ProtectionFlags {
 
     public boolean hasPermission(FlagType type, Player player, Location location){
 
-        if (player.hasPermission("buildprotection.admin")) {
+        Area area = plugin.getProtectionsManager().getAreaByLocation(location);
+        if (area == null){
             return true;
         }
 
-        Area area = plugin.getProtectionsManager().getAreaByLocation(location);
-        if (area != null){
-            if (area.getParentProtection().getOwner().equals(player.getUniqueId())) {
-                return true;
-            } else if (area.getPlayers().contains(player.getUniqueId())){
-                return true;
-            }
-            else {
-                return area.getFlagsMap().get(type);
-            }
+        if (plugin.getProtectionsManager().hasAdminPermission(area, player)){
+            return true;
+        }
+        if (area.getRentedOwner().equals(player.getUniqueId())){
+            return true;
+        }
+        if (area.getPlayers().contains(player.getUniqueId())){
+            return true;
+        }
+        else {
+            return area.getFlagsMap().get(type);
         } 
-        
-        return true;
+
     }
     public boolean hasFlagPermission(String flag, Player player){
 
@@ -136,5 +139,18 @@ public class ProtectionFlags {
     }
     public List<String> getContainerFlagsInteracts() {
         return containerFlagsInteracts;
+    }
+    public LinkedHashMap<FlagType, Boolean> getSortedFlags(Area area){
+        List<Map.Entry<FlagType, Boolean>> entryList = new ArrayList<>(area.getFlagsMap().entrySet());
+
+        // Ordenar la lista: los valores `true` primero y luego los `false`
+        entryList.sort((entry1, entry2) -> Boolean.compare(!entry1.getValue(), !entry2.getValue()));
+
+        // Crear un nuevo LinkedHashMap para mantener el orden
+        LinkedHashMap<FlagType, Boolean> sortedMap = new LinkedHashMap<>();
+        for (Map.Entry<FlagType, Boolean> entry : entryList) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
     }
 }

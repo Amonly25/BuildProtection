@@ -1,6 +1,5 @@
 package com.ar.askgaming.buildprotection.Managers;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -26,7 +25,7 @@ public class SelectionManager {
             return false;
         }
 
-        if (player.hasPermission("nullprotection.admin")){
+        if (player.hasPermission("buildprotection.admin")){
             expandSuccess(area, selection);
             return true;
         }
@@ -50,7 +49,7 @@ public class SelectionManager {
         Protection prote = area.getParentProtection();
         prote.setLoc1(selection.getLoc1());
         prote.setLoc2(selection.getLoc2());
-        prote.save();
+        plugin.getProtectionsManager().save(prote);
         plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
     }
     public boolean hasExpandCost(Area area, Selection selection){

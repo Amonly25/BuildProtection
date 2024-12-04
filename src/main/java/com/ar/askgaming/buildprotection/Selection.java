@@ -67,6 +67,7 @@ public class Selection{
         plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
         player.sendMessage(plugin.getDataHandler().getLang("prote.create", player).replace("%name%", name));
         createArea("Main",prote);
+        
     }
     //#endregion
     //#region Create Area
@@ -90,7 +91,7 @@ public class Selection{
         Area subzone = new Area(loc1, loc2, name, prote);
         subzone.setPriority(prote.getAreas().size()+1);
         prote.getAreas().put(name, subzone);
-        prote.save();
+        plugin.getProtectionsManager().save(prote);
 
         plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
         player.sendMessage(plugin.getDataHandler().getLang("prote.subzone_create", player));
@@ -145,11 +146,22 @@ public class Selection{
         return player;
     }
     
-    public void setLoc1(Location loc1) {
-        if (!insideLimits(loc2)){
+    private boolean isRentedArea(Location loc){
+        Area area = plugin.getProtectionsManager().getAreaByLocation(loc);
+        if (area != null){
+            return area.isRentable();
+        }
+        return false;
+    }
+    public void setLoc1(Location loc) {
+        if (!insideLimits(loc)){
             return;
         }
-        this.loc1 = loc1;
+        if (isRentedArea(loc)){
+            player.sendMessage(plugin.getDataHandler().getLang("rent.select.rented", player));
+            return;
+        }
+        this.loc1 = loc;
         if (loc1 != null && loc2 != null){
             player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
             int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
@@ -157,11 +169,15 @@ public class Selection{
             return ;
         }
     }
-    public void setLoc2(Location loc2) {
-        if (!insideLimits(loc2)){
+    public void setLoc2(Location loc) {
+        if (!insideLimits(loc)){
             return;
         }
-        this.loc2 = loc2;
+        if (isRentedArea(loc)){
+            player.sendMessage(plugin.getDataHandler().getLang("rent.select.rented", player));
+            return;
+        }
+        this.loc2 = loc;
         if (loc1 != null && loc2 != null){
             player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
             int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
@@ -243,10 +259,11 @@ public class Selection{
             player.sendMessage(plugin.getDataHandler().getLang("select.same", player));
             return false;
         }
-        if (loc1.getBlockZ() == loc2.getBlockZ() || loc1.getBlockX() == loc2.getBlockX()){
+        if (loc1.getZ() == loc2.getZ() || loc1.getX() == loc2.getX()|| loc1.getY() == loc2.getY()){
             player.sendMessage(plugin.getDataHandler().getLang("select.flat", player));
             return false;
         }
         return true;
     }
+    
 }

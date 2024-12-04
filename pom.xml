@@ -51,6 +51,12 @@
         <version>1.7</version>
         <scope>provided</scope>
     </dependency>
+
+    <dependency>
+        <groupId>com.ar.asgaming.realisticeconomy</groupId>
+        <artifactId>realisticeconomy</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </dependency>
        
   </dependencies>
 

@@ -3,6 +3,7 @@
 
 #enter_message_type: "message" "action" "none"
 
+#All cost are calculated per block in m3 Area. x*y*z
 
 protection:
   cost_create_per_block: 1
@@ -11,6 +12,8 @@ protection:
   max_height: 100
   max_width: 100
   max_radius: 50
-
+rent:
+  cost_per_block: 0.01
+  time_in_days: 15
 options:
   no_enter_message_using_elytra: true 

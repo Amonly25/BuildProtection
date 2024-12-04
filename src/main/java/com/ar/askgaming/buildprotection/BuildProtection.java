@@ -26,6 +26,7 @@ import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
 import com.ar.askgaming.buildprotection.Managers.ProtectionsManager;
 import com.ar.askgaming.buildprotection.Managers.SelectionManager;
 import com.ar.askgaming.buildprotection.Managers.ShowBordersManager;
+import com.ar.askgaming.realisticeconomy.RealisticEconomy;
 
 import net.milkbowl.vault.economy.Economy;
 
@@ -39,6 +40,7 @@ public class BuildProtection extends JavaPlugin{
     private ProtectionFlags protectionFlags;
 
     private Economy economy;
+    private RealisticEconomy realisticEconomy;
 
     public void onEnable(){
 
@@ -93,6 +95,12 @@ public class BuildProtection extends JavaPlugin{
             //getServer().getPluginManager().disablePlugin(this);
             return;
         }
+        if (getServer().getPluginManager().isPluginEnabled("RealisticEconomy")) {
+            getLogger().info("RealisticEconomy found!");
+            realisticEconomy = (RealisticEconomy) Bukkit.getPluginManager().getPlugin("RealisticEconomy");
+        } else {
+            getLogger().info("RealisticEconomy not found!");
+        }
     }
 
     public void onDisable(){ 
@@ -116,5 +124,8 @@ public class BuildProtection extends JavaPlugin{
     }
     public SelectionManager getSelectionManager() {
         return selectionManager;
+    }
+    public RealisticEconomy getRealisticEconomy() {
+        return realisticEconomy;
     }
 }
