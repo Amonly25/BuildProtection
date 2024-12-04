@@ -19,7 +19,7 @@ public class Break implements Listener {
     public Break(BuildProtection main){
         plugin = main;
     }
-    @EventHandler()
+    @EventHandler(ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event){
         Player p = event.getPlayer();
         Location l = event.getBlock().getLocation();
@@ -29,7 +29,7 @@ public class Break implements Listener {
             event.setCancelled(true);
         }
     }
-    @EventHandler()
+    @EventHandler(ignoreCancelled = true)
     public void onHangingItemBreak(HangingBreakByEntityEvent event){
         if (event.getRemover() instanceof Player){
             Player p = (Player) event.getRemover();
