@@ -3,6 +3,7 @@ package com.ar.askgaming.buildprotection.Managers;
 import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -65,9 +66,14 @@ public class ProtectionsManager {
     }
     public Protection getProtectionByLocation(Location l){
 
-        Area area = getAreaByLocation(l);
-        if (area != null){
-            return area.getParentProtection();
+        World world = l.getWorld();
+        for (Entry<String, Protection> entry : plugin.getProtectionsManager().getProtectionsByWorld(world).entrySet()) {
+            Protection prote = entry.getValue(); 
+            for (Area area : prote.getAreas().values()) {
+                if (isInside(area,l)){
+                    return prote;
+                }
+            } 
         }
         return null;
     }
@@ -141,10 +147,11 @@ public class ProtectionsManager {
 
     }
     public boolean hasAdminPermission(Area area, Player player){
-        
-        if (area.getRentedOwner().equals(player.getUniqueId())){
+        UUID rentOwner = area.getRentedOwner();
+        if (rentOwner != null && rentOwner.equals(player.getUniqueId())){
             return true;
-        } else return hasAdminPermission(area.getParentProtection(), player);
+        } 
+        return hasAdminPermission(area.getParentProtection(), player);
     }
     public boolean hasAdminPermission(Protection prote, Player player){
         if (prote.getOwner().equals(player.getUniqueId())){
@@ -188,6 +195,7 @@ public class ProtectionsManager {
             area.setRented(true);
             area.setRentedOwner(p.getUniqueId());
             area.setRentedSince(System.currentTimeMillis());
+            p.sendMessage(plugin.getDataHandler().getLang("prote.rented", p));
             save(area.getParentProtection());
             if (plugin.getRealisticEconomy() != null){
                 plugin.getRealisticEconomy().getServerBank().depositFromPlayerToServer(p.getUniqueId(), d);

@@ -91,6 +91,9 @@ public class Area implements ConfigurationSerializable {
         } else rentCost = 0;
 
         if (map.get("rentedSince") != null){
+            if (map.get("rentedSince") instanceof Integer){
+                rentedSince = (int) map.get("rentedSince");
+            } else
             rentedSince = (long) map.get("rentedSince");
         } else rentedSince = 0;
 
@@ -135,7 +138,12 @@ public class Area implements ConfigurationSerializable {
         map.put("priority", priority);
         map.put("players", players.stream().map(UUID::toString).collect(Collectors.toList()));
         map.put("isRentable", isRentable);
-        map.put("rentedOwner", rentedOwner.toString());
+        if (rentedOwner != null) {
+            map.put("rentedOwner", rentedOwner.toString());
+        } else {
+            map.put("rentedOwner", null);
+        }
+        
         map.put("rentCost", rentCost);
         map.put("rentedSince", rentedSince);
         map.put("isRented", isRented);

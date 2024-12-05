@@ -247,7 +247,7 @@ public class Commands implements TabExecutor {
             p.sendMessage(getLang("prote.no_there", p));
             return;
         }
-        if (plugin.getProtectionsManager().hasAdminPermission(area, p)){
+        if (!plugin.getProtectionsManager().hasAdminPermission(area, p)){
             p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
@@ -613,7 +613,7 @@ public class Commands implements TabExecutor {
     }
     //#region rent
     public void rent(Player p, String[] args){
-        if (args.length == 1){
+        if (args.length != 1){
             p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
@@ -628,6 +628,9 @@ public class Commands implements TabExecutor {
         }
         if (area.isRented()){
             p.sendMessage(getLang("rent.already_rented", p));
+            return;
+        }
+        if (p.getUniqueId().equals(area.getParentProtection().getOwner())){
             return;
         }
         plugin.getProtectionsManager().rent(area, p);

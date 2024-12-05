@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -95,7 +96,8 @@ public class ProtectionFlags {
         if (plugin.getProtectionsManager().hasAdminPermission(area, player)){
             return true;
         }
-        if (area.getRentedOwner().equals(player.getUniqueId())){
+        UUID owner = area.getRentedOwner();
+        if (owner != null && owner.equals(player.getUniqueId())){
             return true;
         }
         if (area.getPlayers().contains(player.getUniqueId())){

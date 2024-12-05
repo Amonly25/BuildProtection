@@ -54,6 +54,7 @@ rent:
   select_rented: "&cYou can't select a rented area."
   not_rentable: "&cThis area is not rentable."  
   already_rented: "&cThis area is already rented."
+  rented: "&2You have rented this area."
 
 flags:
   interact: "&cYou cant interact here."
