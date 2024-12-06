@@ -181,7 +181,7 @@ public class Commands implements TabExecutor {
     
         if (plugin.getProtectionsManager().hasAdminPermission(prote, p)) {
             if (confirm(p)) {
-                plugin.getProtectionsManager().deleteProtection(prote);
+                plugin.getProtectionsManager().deleteProtection(p,prote);
                 p.sendMessage(getLang("prote.delete", p));
             }
         } else {
@@ -552,10 +552,12 @@ public class Commands implements TabExecutor {
     //#region expand
     private List<Player> preExpand = new ArrayList<>();
     private void expand(Player p, String[] args){
-        Selection sel = plugin.getProtectionsManager().getPlayersInEditMode().getOrDefault(p, null);
-        if (sel == null){
-            p.sendMessage(getLang("select.must", p));
-            return;      
+        Selection sel;
+        if (!plugin.getProtectionsManager().getPlayersInEditMode().containsKey(p)){
+            sel = new Selection(p,plugin);  
+            p.sendMessage(getLang("select.enter", p));          
+        } else {
+            sel = plugin.getProtectionsManager().getPlayersInEditMode().get(p);
         }   
         Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
         

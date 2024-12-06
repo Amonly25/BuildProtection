@@ -111,22 +111,22 @@ public class ProtectionsManager {
     }
 
     //#region deleteProtection
-    public void deleteProtection(Protection prote) {
+    public void deleteProtection(Player p, Protection prote) {
         String wName = prote.getLoc1().getWorld().getName();
         FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(wName);
         if (cfg != null){
             double d = calculateM3(prote.getLoc1(), prote.getLoc2());  
             if (plugin.getEconomy() != null){
-                OfflinePlayer owner = Bukkit.getOfflinePlayer(prote.getOwner());
-                if (!owner.getPlayer().hasPermission("buildprotection.admin")){
+                
+                if (!p.hasPermission("buildprotection.admin")){
                     double price = d * plugin.getConfig().getDouble("protection.cost_sell_per_block"); 
-                    plugin.getEconomy().depositPlayer(Bukkit.getOfflinePlayer(prote.getOwner()), price);
-                    Bukkit.getPlayer(prote.getOwner()).sendMessage("You have been refunded " + price + " for the protection " + prote.getName());
+                    plugin.getEconomy().depositPlayer(p, price);
+                    p.sendMessage("You have been refunded " + price + " for the protection " + prote.getName());
                 } else {
-                    Bukkit.getPlayer(prote.getOwner()).sendMessage("No refund was given because you are an admin");
+                    p.sendMessage("No refund was given because you are an admin");
                 }
             }
-            Bukkit.getPlayer(prote.getOwner()).sendMessage("You have deleted the protection " + prote.getName());
+            p.sendMessage("You have deleted the protection " + prote.getName());
             cfg.set(prote.getName(), null);
             plugin.getDataHandler().saveWorldConfig(cfg, wName);
             mapList.get(wName).remove(prote.getName());

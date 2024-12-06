@@ -229,8 +229,14 @@ public class Selection{
         int upperZ = Math.max(loc1.getBlockZ(), loc2.getBlockZ());
 
         // Obtener el área de la primera ubicación
-        Area initialArea = plugin.getProtectionsManager().getAreaByLocation(new Location(world, lowerX, lowerY, lowerZ));
-
+        Area initialArea = plugin.getProtectionsManager().getAreaByLocation(loc1);
+        if (initialArea == null){
+            initialArea = plugin.getProtectionsManager().getAreaByLocation(loc2);
+        }
+        if (initialArea == null){
+            return true;
+        }
+        
         // Recorrer todos los bloques en el cuboide
         for (int x = lowerX; x <= upperX; x++) {
             for (int y = lowerY; y <= upperY; y++) {
@@ -238,7 +244,7 @@ public class Selection{
                     Location currentLocation = new Location(world, x, y, z);
                     Area currentArea = plugin.getProtectionsManager().getAreaByLocation(currentLocation);
 
-                    // Si el área es diferente, retornar false
+                    // Si el área es diferente, true
                     if (currentArea != null && !currentArea.equals(initialArea)) {
                         return true;
                     }
@@ -246,7 +252,7 @@ public class Selection{
             }
         }
 
-        // Si todas las áreas son iguales, retornar true
+        // Si no se detecta ninguna colisión, false
         return false;
     }
     //#region isValid
