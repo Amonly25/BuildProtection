@@ -195,7 +195,7 @@ public class ProtectionsManager {
             area.setRented(true);
             area.setRentedOwner(p.getUniqueId());
             area.setRentedSince(System.currentTimeMillis());
-            p.sendMessage(plugin.getDataHandler().getLang("prote.rented", p));
+            p.sendMessage(plugin.getDataHandler().getLang("rent.rented", p));
             save(area.getParentProtection());
             if (plugin.getRealisticEconomy() != null){
                 plugin.getRealisticEconomy().getServerBank().depositFromPlayerToServer(p.getUniqueId(), d);

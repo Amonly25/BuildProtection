@@ -417,14 +417,18 @@ public class Commands implements TabExecutor {
         Protection prote = area.getParentProtection();
         String areas = prote.getAreas().keySet().toString();
 
-        p.sendMessage(getLang("prote.info.name", p) + prote.getName());
-
-        String name;
+        String proteName;
+        String ownerName;
         if (area.isRented()){
-            name = area.getRentedOwnerName();
-        } else name = prote.getOwnerName();
+            proteName = area.getName();
+            ownerName = area.getRentedOwnerName();
+        } else {
+            proteName = prote.getName();
+            ownerName = prote.getOwnerName();
+        }
         
-        p.sendMessage(getLang("prote.info.owner", p) + name);
+        p.sendMessage(getLang("prote.info.name", p) + proteName);
+        p.sendMessage(getLang("prote.info.owner", p) + ownerName);
 
         if (area.isRentable()){
             p.sendMessage(getLang("prote.info.rentable", p)+ area.getRentCost());
