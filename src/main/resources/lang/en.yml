@@ -32,7 +32,7 @@ prote:
   message_set: "&2You have set the message to %message%."
   message_long: "&cThe message is too long, max allowed es 32."
   no_there: "&cThere is no protection here."
-  exist: "&cA protection with this name already exists."
+  exists: "&cA protection with this name already exists."
   sub_exist: "&cA subzone with this name already exists."
   no_exists: "&cThis protection doesn't exist."
   list: "&eProtections in that world:"

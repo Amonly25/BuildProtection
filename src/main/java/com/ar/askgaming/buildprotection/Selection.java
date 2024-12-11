@@ -34,7 +34,7 @@ public class Selection{
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != null || area2 != null){
-            player.sendMessage(plugin.getDataHandler().getLang("prote.exists", player));
+            player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
             return;
         }
 
@@ -233,9 +233,10 @@ public class Selection{
         if (initialArea == null){
             initialArea = plugin.getProtectionsManager().getAreaByLocation(loc2);
         }
-        if (initialArea == null){
-            return true;
-        }
+        // Test, esto no debería ser necesario
+        // if (initialArea == null){
+        //     return true;
+        // }
         
         // Recorrer todos los bloques en el cuboide
         for (int x = lowerX; x <= upperX; x++) {
