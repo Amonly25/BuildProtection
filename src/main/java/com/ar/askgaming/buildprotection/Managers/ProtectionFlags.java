@@ -82,7 +82,7 @@ public class ProtectionFlags {
         flagsMap.put(FlagType.EXPLODE, config.getBoolean("default_flags.explode",false));
         flagsMap.put(FlagType.CONTAINER, config.getBoolean("default_flags.container",false));
         flagsMap.put(FlagType.USE, config.getBoolean("default_flags.use",false));
-
+        
         area.setFlagsMap(flagsMap);
     }
 

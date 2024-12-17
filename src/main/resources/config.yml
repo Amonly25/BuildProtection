@@ -14,6 +14,10 @@ protection:
   max_radius: 50
 rent:
   cost_per_block: 0.1
-  time_in_days: 15
+  time_in_days: 1
+  auto_rent: true
+random_teleport:
+  min_x_z: 500
+  max_x_z: 8000
 options:
   no_enter_message_using_elytra: true 

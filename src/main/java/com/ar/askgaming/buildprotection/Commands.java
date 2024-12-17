@@ -154,6 +154,9 @@ public class Commands implements TabExecutor {
             case "rent":
                 rent(p,args);
                 break;
+            case "rtp":
+                randomTeleport(p,args);
+                break;
             default:
                 p.sendMessage(getLang("commands.invalid", p));
                 break;
@@ -254,7 +257,7 @@ public class Commands implements TabExecutor {
 
         boolean value = Boolean.parseBoolean(args[2]);
 
-        if (args[1].equalsIgnoreCase("rent")){
+        if (args[1].equalsIgnoreCase("rentable")){
             area.setRentable(value);
             save(area);
             p.sendMessage(getLang("prote.flag_set", p).replace("%flag%", args[1]).replace("%value%", String.valueOf(value)));
@@ -640,6 +643,40 @@ public class Commands implements TabExecutor {
             return;
         }
         plugin.getProtectionsManager().rent(area, p);
+    }
+    //#region unrent
+    public void unrent(Player p, String[] args){
+        if (args.length != 1){
+            p.sendMessage(getLang("commands.missing_arg", p));
+            return;
+        }
+        Area area = plugin.getProtectionsManager().getAreaByLocation(p.getLocation());
+        if (area == null){
+            p.sendMessage(getLang("prote.no_there", p));
+            return;
+        }
+        if (!area.isRented()){
+            p.sendMessage(getLang("rent.not_rentable", p));
+            return;
+        }
+        if (plugin.getProtectionsManager().hasAdminPermission(area, p)){
+            plugin.getProtectionsManager().unrent(area, p);
+        } else {
+            p.sendMessage(getLang("commands.no_perm", p));
+
+        }
+    }
+    //#region rtp
+    private void randomTeleport(Player p, String[] args) {
+        if (args.length != 1){
+            p.sendMessage(getLang("commands.missing_arg", p));
+            return;
+        }
+        if (!p.hasPermission("buildprotection.rtp")){
+            p.sendMessage(getLang("commands.no_perm", p));
+            return;
+        }
+        plugin.getRandomTeleport().send(p);
     }
 }
 

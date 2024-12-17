@@ -55,6 +55,7 @@ rent:
   not_rentable: "&cThis area is not rentable."  
   already_rented: "&cThis area is already rented."
   rented: "&2You have rented this area."
+  unrented: "&2You have unrented this area."
 
 flags:
   interact: "&cYou cant interact here."
@@ -69,6 +70,12 @@ flags:
   no_perm: "&cYou don't have permission to set this flag."
   container: "&cYou can't open containers here."
   use: "&cYou can't use that here."
+
+rtp:
+  searching: "&eSearching for a safe place to teleport."
+  teleport: "&eTeleporting to a safe place, dont move."
+  cancel: "&cTeleportation canceled."
+  failed: "&cFailed to teleport, try again."
 
 help:
   - "&e/prote select &7- Enter in edit mode."

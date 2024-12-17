@@ -26,6 +26,8 @@ import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
 import com.ar.askgaming.buildprotection.Managers.ProtectionsManager;
 import com.ar.askgaming.buildprotection.Managers.SelectionManager;
 import com.ar.askgaming.buildprotection.Managers.ShowBordersManager;
+import com.ar.askgaming.buildprotection.Misc.RandomTeleport;
+import com.ar.askgaming.buildprotection.Misc.RentScheduler;
 import com.ar.askgaming.realisticeconomy.RealisticEconomy;
 
 import net.milkbowl.vault.economy.Economy;
@@ -36,9 +38,9 @@ public class BuildProtection extends JavaPlugin{
     private DataHandler dataHandler;
     private ProtectionsManager protectionsManager;
     private SelectionManager selectionManager;
-
+    private RentScheduler rentScheduler;
     private ProtectionFlags protectionFlags;
-
+    private RandomTeleport randomTeleport;
     private Economy economy;
     private RealisticEconomy realisticEconomy;
 
@@ -54,9 +56,13 @@ public class BuildProtection extends JavaPlugin{
         protectionsManager = new ProtectionsManager(this);
         selectionManager = new SelectionManager(this);
         protectionFlags = new ProtectionFlags(this);
-
+        randomTeleport = new RandomTeleport(this);
+        
         showParticles = new ShowBordersManager(this);
         showParticles.runTaskTimer(this, 0, 20);
+
+        rentScheduler = new RentScheduler(this);
+        rentScheduler.runTaskTimer(this, 0, 20*60*60);
 
         Bukkit.getPluginCommand("prote").setExecutor(new Commands(this));
 
@@ -127,5 +133,8 @@ public class BuildProtection extends JavaPlugin{
     }
     public RealisticEconomy getRealisticEconomy() {
         return realisticEconomy;
+    }
+    public RandomTeleport getRandomTeleport() {
+        return randomTeleport;
     }
 }

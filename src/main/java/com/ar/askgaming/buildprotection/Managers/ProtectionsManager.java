@@ -146,6 +146,7 @@ public class ProtectionsManager {
         return m3;
 
     }
+    //#region adminPerm
     public boolean hasAdminPermission(Area area, Player player){
         UUID rentOwner = area.getRentedOwner();
         if (rentOwner != null && rentOwner.equals(player.getUniqueId())){
@@ -186,7 +187,7 @@ public class ProtectionsManager {
         double d = area.getRentCost();
 
         if (plugin.getEconomy() == null){
-            plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
+            plugin.getLogger().warning("No economy plugin found, cant rent protection.");
             p.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", p));
             return;
         }
@@ -208,9 +209,43 @@ public class ProtectionsManager {
             return;
         }
     }
+    public void autoRent(Area area, OfflinePlayer player) {
+        if (player.isOnline()){
+            rent(area, (Player) player);
+            return;
+        }
+        if (plugin.getEconomy() == null){
+            return;
+        }
+        
+        double d = area.getRentCost();
+
+        if (plugin.getEconomy().getBalance(player) >= d){
+            area.setRentedSince(System.currentTimeMillis());
+
+            if (plugin.getRealisticEconomy() != null){
+                plugin.getRealisticEconomy().getServerBank().depositFromPlayerToServer(player.getUniqueId(), d);
+            } else {
+                plugin.getEconomy().withdrawPlayer(player, d);
+            }
+        } else {
+            area.setRented(false);
+            area.setRentedOwner(null);
+            area.setRentedSince(0);
+        }
+        save(area.getParentProtection());
+    }
     public void save(Protection prote){
         FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(prote.getLoc1().getWorld().getName());
         cfg.set(prote.getName(), prote);
         plugin.getDataHandler().saveWorldConfig(cfg, prote.getLoc1().getWorld().getName());
+    }
+    //#region unrent
+    public void unrent(Area area, Player p) {
+        area.setRented(false);
+        area.setRentedOwner(null);
+        area.setRentedSince(0);
+        p.sendMessage(plugin.getDataHandler().getLang("rent.unrented", p));
+        save(area.getParentProtection());
     }
 }
