@@ -154,6 +154,9 @@ public class Commands implements TabExecutor {
             case "rent":
                 rent(p,args);
                 break;
+            case "unrent":
+                unrent(p,args);
+                break;
             case "rtp":
                 randomTeleport(p,args);
                 break;

@@ -52,7 +52,7 @@ public class RandomTeleport {
 				
 		Area area = plugin.getProtectionsManager().getAreaByLocation(modified);
         
-        if (area != null) {
+        if (area == null) {
         	return modified;
         }
         return null;
@@ -62,7 +62,7 @@ public class RandomTeleport {
 		
 		final int playerZ = p.getLocation().getBlockZ(), playerX = p.getLocation().getBlockX();
 		p.sendMessage(plugin.getDataHandler().getLang("rtp.teleport", p));
-		
+		loc.getChunk().load();
 		new BukkitRunnable() {
 			int count = 5;
 			
