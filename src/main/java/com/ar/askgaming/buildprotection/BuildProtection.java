@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Break;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Damage;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.EntityDamage;
+import com.ar.askgaming.buildprotection.FlagsFromListeners.EntitySpawn;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Explode;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Fish;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Flow;
@@ -83,6 +84,7 @@ public class BuildProtection extends JavaPlugin{
         Bukkit.getPluginManager().registerEvents(new Move(this), this);
         Bukkit.getPluginManager().registerEvents(new Ignite(this), this);
         Bukkit.getPluginManager().registerEvents(new Explode(this), this);
+        Bukkit.getPluginManager().registerEvents(new EntitySpawn(this), this);
 
         //Vault Integration
         if (getServer().getPluginManager().isPluginEnabled("Vault")) {

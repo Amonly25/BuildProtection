@@ -17,6 +17,7 @@ default_flags:
   container: false
   use: false
   flow: true
+  enemy_spawn: true
 
 #You can change blocks types of some flags
 flags:

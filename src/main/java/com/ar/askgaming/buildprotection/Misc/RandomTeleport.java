@@ -1,25 +1,67 @@
 package com.ar.askgaming.buildprotection.Misc;
 
+import java.io.File;
+
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Commands;
-
-import net.md_5.bungee.api.ChatColor;
 
 public class RandomTeleport {
 
     private BuildProtection plugin;
+	private File file;
+	private FileConfiguration config;
     public RandomTeleport(BuildProtection main){
         plugin = main;
+
+		file = new File(plugin.getDataFolder() + "/protections", "rtp_cooldowns.yml");
+
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		config = new YamlConfiguration();
+
+		try {
+			config.load(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void saveCooldown(Player player) {
+		config.set(player.getUniqueId().toString(), System.currentTimeMillis());
+
+		try {
+			config.save(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+			
     }
 
     public void send(Player player) {
+
+		if (config.contains(player.getUniqueId().toString()) && (!player.hasPermission("buildprotection.rtp.cooldown.bypass"))) {
+			long last = config.getLong(player.getUniqueId().toString());
+			long current = System.currentTimeMillis();
+			long diff = current - last;
+			long cooldown = plugin.getConfig().getInt("random_teleport.cooldown",1440) * 1000 * 60;
+			long remaining = cooldown - diff;
+			if (remaining > 0) {
+				player.sendMessage(plugin.getDataHandler().getLang("rtp.cooldown", player).replace("%time%", String.valueOf(remaining / 1000/60)));
+				return;
+			}
+		}
 				
 		player.sendMessage(plugin.getDataHandler().getLang("rtp.searching", player));
         
@@ -70,6 +112,7 @@ public class RandomTeleport {
 	    	public void run() {	      
 	    		if (count == 0) {
 					p.teleport(loc);
+					saveCooldown(p);
 	                cancel(); 
 	                return;
 	    		}	    	    	                                    	    	                        

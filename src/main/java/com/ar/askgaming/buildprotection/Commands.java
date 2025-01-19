@@ -26,6 +26,8 @@ public class Commands implements TabExecutor {
     public Commands(BuildProtection main) {
         plugin = main;
         dataHandler = plugin.getDataHandler();
+        
+        plugin.getServer().getPluginCommand("rtp").setExecutor(this);
     }
 
     private List<Player> confirmMessage = new ArrayList<>();
@@ -59,7 +61,7 @@ public class Commands implements TabExecutor {
         List<String> list = new ArrayList<>();
 
         if (args.length == 1) {
-            return List.of("expand","select", "create", "list","set","tp","info","show","add","remove","message","delete","subzone","help");
+            return List.of("expand","select", "create", "list","set","tp","info","show","add","remove","message","delete","subzone","help","rent","unrent","rtp");
         }
         if (args.length == 2) {
             switch (args[0].toLowerCase()) {
@@ -100,6 +102,11 @@ public class Commands implements TabExecutor {
         } else {return true;}
 
         Player p = (Player) sender;
+
+        if (command.getName().equalsIgnoreCase("rtp")) {
+            randomTeleport(p, args);
+            return true;
+        }
 
         if (args.length == 0) {
             p.sendMessage(getLang("help", p));
@@ -404,7 +411,9 @@ public class Commands implements TabExecutor {
             p.sendMessage("Listing protections of player " + args[1]);
             plugin.getProtectionsManager().getAllProtections().forEach((world,map) -> {
                 map.forEach((name,prote) -> {
-                    if (prote.getOwner().equals(Bukkit.getPlayer(args[1]).getUniqueId())){
+                    @SuppressWarnings("deprecation")
+                    OfflinePlayer player = Bukkit.getOfflinePlayer(args[1]);
+                    if (prote.getOwner().equals(player.getUniqueId())){
                         p.sendMessage(name + " at world: " + world);
                     }
                 });
@@ -579,15 +588,14 @@ public class Commands implements TabExecutor {
             p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
-
-        if (args[1].equalsIgnoreCase("confirm") && preExpand.contains(p)){
-
+        if (args.length == 2 && args[1].equalsIgnoreCase("confirm") && preExpand.contains(p)){
             //Expand selection confirm
             if (plugin.getSelectionManager().expandArea(area, sel)){
                 p.sendMessage(getLang("prote.area_expand", p));
                 preExpand.remove(p);
             }
             return;
+
         }
 
         if (args.length != 3){
@@ -671,13 +679,17 @@ public class Commands implements TabExecutor {
     }
     //#region rtp
     private void randomTeleport(Player p, String[] args) {
-        if (args.length != 1){
-            p.sendMessage(getLang("commands.missing_arg", p));
-            return;
-        }
+
         if (!p.hasPermission("buildprotection.rtp")){
             p.sendMessage(getLang("commands.no_perm", p));
             return;
+        }
+        List<String> worlds = plugin.getConfig().getStringList("random_teleport.disabled_worlds");
+        for (String world : worlds) {
+            if (world.equalsIgnoreCase(p.getWorld().getName())){
+                p.sendMessage(getLang("rtp.disabled", p));
+                return;
+            }
         }
         plugin.getRandomTeleport().send(p);
     }

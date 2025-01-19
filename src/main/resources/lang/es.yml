@@ -56,6 +56,8 @@ rent:
   already_rented: "&cEsta área ya está alquilada."
   rented: "&2Has alquilado esta área."
   unrented: "&2Has dejado de alquilar esta área."
+  available: "&eEsta área está disponible para alquilar, costo: &6%cost%&e, usa &6/prote rent &epara alquilar."
+  rented: "&cÁrea alquilada por %player%."
 
 flags:
   interact: "&cNo puedes interactuar aquí."
@@ -76,6 +78,8 @@ rtp:
   teleport: "&eTeletransportándose a un lugar seguro, no te muevas."
   cancel: "&cTeletransportación cancelada."
   failed: "&cFalló la teletransportación, intenta de nuevo."
+  cooldown: "&cNo puedes teletransportarte aún, espera %time% minutos."
+  disabled: "&cEl aleatoria está desactivado en este mundo."
 
 help:
   - "&e/prote select &7- Entra en el modo de edición."
@@ -83,6 +87,7 @@ help:
   - "&e/prote set flag <value>&7- Establece una bandera."
   - "&e/prote <add/remove> <player> &7- Añade o elimina un jugador."
   - "&e/prote message <enter/exit>&7- Cambia el mensaje."
+  - "&e/prote rent &7- Alquila una protección."
   - "&e/prote expand <direction> <number>&7- Amplía la protección."
   - "&e/prote subzone <create/delete> <name>&7- Añade o elimina una subzona."
   - "&e/prote delete &7- Elimina una protección."

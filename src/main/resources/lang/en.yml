@@ -56,6 +56,8 @@ rent:
   already_rented: "&cThis area is already rented."
   rented: "&2You have rented this area."
   unrented: "&2You have unrented this area."
+  available: "&eThis area is available to rent, cost: &6%cost%&e, use &6/prote rent &eto rent."
+  rented: "&cArea rented by %player%."
 
 flags:
   interact: "&cYou cant interact here."
@@ -76,6 +78,8 @@ rtp:
   teleport: "&eTeleporting to a safe place, dont move."
   cancel: "&cTeleportation canceled."
   failed: "&cFailed to teleport, try again."
+  cooldown: "&cYou can't teleport yet, wait %time% minutes."
+  disabled: "&cRandom teleport is disabled in this world."
 
 help:
   - "&e/prote select &7- Enter in edit mode."
@@ -85,6 +89,7 @@ help:
   - "&e/prote message <enter/exit>&7- Changue the message."
   - "&e/prote expand <direction> <number>&7- Expand the protection."
   - "&e/prote subzone <create/delete> <name>&7- Add or remove a subzone."
+  - "&e/prote rent/unrent &7- Rent an area."
   - "&e/prote delete &7- Delete a protection."
   - "&e/prote list &7- List all protections."
   - "&e/prote show &7- Show borders of area/prote."

@@ -8,6 +8,7 @@ commands:
   prote:
     aliases: [protection]
     description: Manage dragons in your server.
+  rtp:
 permissions:
   buildprotection.commands:
     description: Allows the player to use the /protection command.

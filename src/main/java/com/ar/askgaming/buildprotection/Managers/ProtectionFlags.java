@@ -60,7 +60,8 @@ public class ProtectionFlags {
         MONSTERS,
         EXPLODE,
         CONTAINER,
-        USE
+        USE,
+        ENEMY_SPAWN,
     }
         //#region setDefautsFlags
     public void setDefaultsFlags(Area area){
@@ -82,6 +83,7 @@ public class ProtectionFlags {
         flagsMap.put(FlagType.EXPLODE, config.getBoolean("default_flags.explode",false));
         flagsMap.put(FlagType.CONTAINER, config.getBoolean("default_flags.container",false));
         flagsMap.put(FlagType.USE, config.getBoolean("default_flags.use",false));
+        flagsMap.put(FlagType.ENEMY_SPAWN, config.getBoolean("default_flags.enemy_spawn",true));
         
         area.setFlagsMap(flagsMap);
     }
@@ -104,7 +106,7 @@ public class ProtectionFlags {
             return true;
         }
         else {
-            return area.getFlagsMap().get(type);
+            return area.getFlagsMap().getOrDefault(type, false);
         } 
 
     }
@@ -118,7 +120,7 @@ public class ProtectionFlags {
     public boolean isFlagEnabled(FlagType type, Location location){
         Area area = plugin.getProtectionsManager().getAreaByLocation(location);
         if (area != null){
-            return area.getFlagsMap().get(type);
+            return area.getFlagsMap().getOrDefault(type, true);
         } 
         return true;
     }
