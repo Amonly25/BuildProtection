@@ -26,7 +26,11 @@ public class ProtectionsManager {
     }
 
     public HashMap<String, Protection> getProtectionsByWorld(World world) {
-        return mapList.get(world.getName());
+        HashMap<String, Protection> worldMap = mapList.get(world.getName());
+        if (worldMap == null) {
+            createWorldConfig(world);
+        }
+        return worldMap;
     }
 
     private BuildProtection plugin;
@@ -36,27 +40,32 @@ public class ProtectionsManager {
         // Cargar todas las protecciones guardadas en los archivos de configuración
         Bukkit.getWorlds().forEach(world -> {
 
-            //Crear mapa que contiene las protecciones de cada mundo
-            HashMap<String, Protection> worldMap = new HashMap<>();
-
-            FileConfiguration config = plugin.getDataHandler().getWorldConfig(world.getName());
-
-            // Obtener todas las claves del nivel raíz
-            Set<String> protectionKeys = config.getKeys(false);
-    
-            // Iterar sobre todas las keys y cargar cada Protection
-            for (String key : protectionKeys) {
-                Object obj = config.get(key);
-                if (obj instanceof Protection) {
-                    Protection protection = (Protection) obj;
-    
-                    // Guardar cada Protection en el mapa con su clave
-                    worldMap.put(key, protection);
-                    protection.setName(key);
-                }
-            }
-            mapList.put(world.getName(), worldMap);
+            createWorldConfig(world);
         });
+    }
+    private void createWorldConfig(World world){
+        //Crear mapa que contiene las protecciones de cada mundo
+        HashMap<String, Protection> worldMap = new HashMap<>();
+
+        FileConfiguration config = plugin.getDataHandler().getWorldConfig(world.getName());
+        if (config == null){
+            config = plugin.getDataHandler().createWorldConfig(world.getName());
+        }
+        // Obtener todas las claves del nivel raíz
+        Set<String> protectionKeys = config.getKeys(false);
+
+        // Iterar sobre todas las keys y cargar cada Protection
+        for (String key : protectionKeys) {
+            Object obj = config.get(key);
+            if (obj instanceof Protection) {
+                Protection protection = (Protection) obj;
+
+                // Guardar cada Protection en el mapa con su clave
+                worldMap.put(key, protection);
+                protection.setName(key);
+            }
+        }
+        mapList.put(world.getName(), worldMap);
     }
 
     private HashMap<Player,Selection> playersInEditMode = new HashMap<>();
@@ -67,7 +76,7 @@ public class ProtectionsManager {
     public Protection getProtectionByLocation(Location l){
 
         World world = l.getWorld();
-        for (Entry<String, Protection> entry : plugin.getProtectionsManager().getProtectionsByWorld(world).entrySet()) {
+        for (Entry<String, Protection> entry : getProtectionsByWorld(world).entrySet()) {
             Protection prote = entry.getValue(); 
             for (Area area : prote.getAreas().values()) {
                 if (isInside(area,l)){

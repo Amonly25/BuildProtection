@@ -130,4 +130,23 @@ public class DataHandler {
 
         return lang.getString(path,"Undefined key: " + path);
     }
+    public FileConfiguration createWorldConfig(String name) {
+        File wFile = new File(plugin.getDataFolder()+"/protections/" + name+".yml");
+        if (!wFile.exists()){
+            try {
+                wFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileConfiguration wConfig = new YamlConfiguration();
+
+        try {
+            wConfig.save(wFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return wConfig;
+    }
 }
