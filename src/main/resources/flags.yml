@@ -57,6 +57,7 @@ flags:
   - STONECUTTER
   - POT
   - GRINDSTONE
+  - BED
   teleport: # This blocks chorus teleport
   - CHORUS_FRUIT
   #- COMMAND

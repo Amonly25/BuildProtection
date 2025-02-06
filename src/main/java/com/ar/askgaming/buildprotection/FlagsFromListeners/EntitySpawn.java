@@ -21,7 +21,7 @@ public class EntitySpawn implements Listener{
     public void onEntitySpawn(EntitySpawnEvent event) {
         
         Entity entity = event.getEntity();
-
+        
         if (entity instanceof Player) {
 
         } else if (entity instanceof Animals) {
