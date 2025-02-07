@@ -37,14 +37,13 @@ public class Selection{
             player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
             return;
         }
-
+        if (player.hasPermission("buildprotection.admin")){
+            createProtection(name);
+            return;
+        }
+        
         if (plugin.getEconomy() != null){
             int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
-
-            if (player.hasPermission("buildprotection.admin")){
-                createProtection(name);
-                return;
-            }
             
             double price = cost * plugin.getConfig().getDouble("protection.cost_create_per_block"); 
             EconomyResponse e = plugin.getEconomy().withdrawPlayer(player, price);

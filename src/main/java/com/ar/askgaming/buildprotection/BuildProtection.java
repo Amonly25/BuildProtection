@@ -91,7 +91,7 @@ public class BuildProtection extends JavaPlugin{
             getLogger().info("Vault found!");
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp == null) {
-                getLogger().info("Non economy plugin found! disabling plugin");
+                getLogger().info("Non economy plugin found!");
                 //getServer().getPluginManager().disablePlugin(this);
             } else {
                 economy = rsp.getProvider();
@@ -99,16 +99,17 @@ public class BuildProtection extends JavaPlugin{
             }
 
         } else {
-            getLogger().info("Vault not found! disabling plugin");
+            getLogger().info("Vault not found!");
             //getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        if (getServer().getPluginManager().isPluginEnabled("RealisticEconomy")) {
-            getLogger().info("RealisticEconomy found!");
-            realisticEconomy = (RealisticEconomy) Bukkit.getPluginManager().getPlugin("RealisticEconomy");
-        } else {
-            getLogger().info("RealisticEconomy not found!");
-        }
+        // Not supported yet
+        // if (getServer().getPluginManager().isPluginEnabled("RealisticEconomy")) {
+        //     getLogger().info("RealisticEconomy found!");
+        //     realisticEconomy = (RealisticEconomy) Bukkit.getPluginManager().getPlugin("RealisticEconomy");
+        // } else {
+        //     getLogger().info("RealisticEconomy not found!");
+        // }
     }
 
     public void onDisable(){ 

@@ -1,10 +1,12 @@
 package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
 import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
 
@@ -18,17 +20,29 @@ public class Move implements Listener{
     public void onPlayerMove(PlayerMoveEvent event){
 
         Player p = event.getPlayer();
+        Location to = event.getTo();
 
-        if (event.getFrom().getBlockX() == event.getTo().getBlockX() &&
-            event.getFrom().getBlockY() == event.getTo().getBlockY() &&
-            event.getFrom().getBlockZ() == event.getTo().getBlockZ()) {
+        if (event.getFrom().getBlockX() == to.getBlockX() &&
+            event.getFrom().getBlockY() == to.getBlockY() &&
+            event.getFrom().getBlockZ() == to.getBlockZ()) {
             return;
         }
 
-        if (!plugin.getProtectionFlags().hasPermission(FlagType.MOVE, p, event.getTo())){
+        if (!plugin.getProtectionFlags().hasPermission(FlagType.MOVE, p, to)){
             event.setCancelled(true);
             p.sendMessage(plugin.getDataHandler().getLang("flags.move", p));
         }
-    }
+        // if (p.isGliding() || p.isFlying()){
+        //     return;
+        // }
+        // Area area = plugin.getProtectionsManager().getAreaByLocation(to);
 
+        // if (area != null){
+                
+        //     if (to.getBlock().getType().isSolid() || to.getBlock().getRelative(0, 1, 0).getType().isSolid()) {
+        //         event.setCancelled(true);
+
+        //     }
+        // }
+    }
 }
