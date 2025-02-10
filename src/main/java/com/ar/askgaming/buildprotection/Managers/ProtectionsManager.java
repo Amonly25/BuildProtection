@@ -76,6 +76,8 @@ public class ProtectionsManager {
     public Protection getProtectionByLocation(Location l){
 
         World world = l.getWorld();
+        if (getProtectionsByWorld(world) == null) return null;
+        
         for (Entry<String, Protection> entry : getProtectionsByWorld(world).entrySet()) {
             Protection prote = entry.getValue(); 
             for (Area area : prote.getAreas().values()) {
