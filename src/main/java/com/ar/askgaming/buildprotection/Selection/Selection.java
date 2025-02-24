@@ -1,8 +1,12 @@
-package com.ar.askgaming.buildprotection;
+package com.ar.askgaming.buildprotection.Selection;
 
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+
+import com.ar.askgaming.buildprotection.BuildProtection;
+import com.ar.askgaming.buildprotection.Protection.Area;
+import com.ar.askgaming.buildprotection.Protection.Protection;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -20,6 +24,10 @@ public class Selection{
         player = p;
     }
 
+    private String getLang(String key){
+        return plugin.getLangManager().getLang(key, player);
+    }
+
     //#region Create protection
     public void preCreateProtection(String name){
 
@@ -28,13 +36,13 @@ public class Selection{
         }
 
         if (detectCollision()){
-            player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
+            player.sendMessage(getLang("select.collision"));
             return;
         }
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != null || area2 != null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
+            player.sendMessage(getLang("select.collision"));
             return;
         }
         if (player.hasPermission("buildprotection.admin")){
@@ -50,13 +58,13 @@ public class Selection{
     
             if (e.transactionSuccess()){
                 createProtection(name);
-                player.sendMessage(plugin.getDataHandler().getLang("prote.cost", player).replace("%cost%", String.valueOf(cost)));
+                player.sendMessage(getLang("prote.cost").replace("%cost%", String.valueOf(cost)));
             } else {
-                player.sendMessage(plugin.getDataHandler().getLang("prote.no_money", player));
+                player.sendMessage(getLang("prote.no_money"));
             }
         } else {
             plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
-            player.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", player));
+            player.sendMessage(getLang("misc.no_economy"));
             //createSucces(name);
         }
     }
@@ -64,7 +72,7 @@ public class Selection{
         Protection prote = new Protection(loc1,loc2,player,name);
         plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
         plugin.getProtectionsManager().getProtectionsByWorld(loc1.getWorld()).put(name, prote);
-        player.sendMessage(plugin.getDataHandler().getLang("prote.create", player).replace("%name%", name));
+        player.sendMessage(getLang("prote.create").replace("%name%", name));
         createArea("Main",prote);
         
     }
@@ -79,7 +87,7 @@ public class Selection{
         Area area = plugin.getProtectionsManager().getAreaByLocation(loc1);
         Area area2 = plugin.getProtectionsManager().getAreaByLocation(loc2);
         if (area != area2){
-            player.sendMessage(plugin.getDataHandler().getLang("select.same_area", player));
+            player.sendMessage(getLang("select.same_area"));
             return;
         }
         createArea(name,area.getParentProtection());
@@ -93,7 +101,7 @@ public class Selection{
         plugin.getProtectionsManager().save(prote);
 
         plugin.getProtectionsManager().getPlayersInEditMode().remove(player);
-        player.sendMessage(plugin.getDataHandler().getLang("prote.subzone_create", player));
+        player.sendMessage(getLang("prote.subzone_create"));
     }
     //#region Set by radius
     public void setByRadius(int radius){
@@ -101,20 +109,20 @@ public class Selection{
         Protection prote = plugin.getProtectionsManager().getProtectionByLocation(l);
         int limit = plugin.getConfig().getInt("protection.max_radius");
         if (prote != null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.cant", player));
+            player.sendMessage(getLang("select.cant"));
             return;
         }
         if (radius < 1) {
-            player.sendMessage(plugin.getDataHandler().getLang("select.too_low", player));
+            player.sendMessage(getLang("select.too_low"));
             return;
         }
         if (radius > limit) {
-            player.sendMessage(plugin.getDataHandler().getLang("select.too_high", player));
+            player.sendMessage(getLang("select.too_high"));
             return;
         }
 
-        player.sendMessage(plugin.getDataHandler().getLang("select.radius",player).replace("%radius%", String.valueOf(radius)));
-        player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
+        player.sendMessage(getLang("select.radius").replace("%radius%", String.valueOf(radius)));
+        player.sendMessage(getLang("select.show"));
         int x = l.getBlockX();
         int y = l.getBlockY();
         int z = l.getBlockZ();
@@ -123,7 +131,7 @@ public class Selection{
         loc2 = new Location(player.getWorld(), x+radius, y+radius, z+radius);
 
         int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
-        player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
+        player.sendMessage(getLang("select.cost").replace("%cost%", String.valueOf(cost)));
 
     }
     //#region setters
@@ -157,14 +165,14 @@ public class Selection{
             return;
         }
         if (isRentedArea(loc)){
-            player.sendMessage(plugin.getDataHandler().getLang("rent.select.rented", player));
+            player.sendMessage(getLang("rent.select.rented"));
             return;
         }
         this.loc1 = loc;
         if (loc1 != null && loc2 != null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
+            player.sendMessage(getLang("select.show"));
             int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
-            player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
+            player.sendMessage(getLang("select.cost").replace("%cost%", String.valueOf(cost)));
             return ;
         }
     }
@@ -173,14 +181,14 @@ public class Selection{
             return;
         }
         if (isRentedArea(loc)){
-            player.sendMessage(plugin.getDataHandler().getLang("rent.select.rented", player));
+            player.sendMessage(getLang("rent.select.rented"));
             return;
         }
         this.loc2 = loc;
         if (loc1 != null && loc2 != null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.show", player));
+            player.sendMessage(getLang("select.show"));
             int cost = plugin.getProtectionsManager().calculateM3(loc1, loc2);
-            player.sendMessage(plugin.getDataHandler().getLang("select.cost", player).replace("%cost%", String.valueOf(cost)));
+            player.sendMessage(getLang("select.cost").replace("%cost%", String.valueOf(cost)));
             return ;
         }
     }
@@ -199,13 +207,13 @@ public class Selection{
         Location reference = (loc1 != null) ? loc1 : loc2;
     
         if (Math.abs(reference.getBlockY() - toVerify.getBlockY()) > limitY) {
-            player.sendMessage(plugin.getDataHandler().getLang("select.too_high", player));
+            player.sendMessage(getLang("select.too_high"));
             return false;
         }
     
         if (Math.abs(reference.getBlockX() - toVerify.getBlockX()) > limitXZ || 
             Math.abs(reference.getBlockZ() - toVerify.getBlockZ()) > limitXZ) {
-            player.sendMessage(plugin.getDataHandler().getLang("select.too_high", player));
+            player.sendMessage(getLang("select.too_high"));
             return false;
         }
         return true;
@@ -258,15 +266,15 @@ public class Selection{
     //#region isValid
     private boolean isValidSelection(){
         if (loc1 == null || loc2 == null){
-            player.sendMessage(plugin.getDataHandler().getLang("select.must", player));
+            player.sendMessage(getLang("select.must"));
             return false;
         }
         if (loc1.equals(loc2)){
-            player.sendMessage(plugin.getDataHandler().getLang("select.same", player));
+            player.sendMessage(getLang("select.same"));
             return false;
         }
         if (loc1.getZ() == loc2.getZ() || loc1.getX() == loc2.getX()|| loc1.getY() == loc2.getY()){
-            player.sendMessage(plugin.getDataHandler().getLang("select.flat", player));
+            player.sendMessage(getLang("select.flat"));
             return false;
         }
         return true;

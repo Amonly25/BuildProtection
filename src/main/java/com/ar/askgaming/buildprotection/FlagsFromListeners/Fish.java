@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerBucketEntityEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Fish implements Listener{
 
@@ -26,7 +26,7 @@ public class Fish implements Listener{
         Location l = event.getHook().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.FISH, p, l)){
-            p.sendMessage(plugin.getDataHandler().getLang("flags.fish", p));
+            p.sendMessage(plugin.getLangManager().getLang("flags.fish", p));
             event.setCancelled(true);
         }
     }
@@ -37,7 +37,7 @@ public class Fish implements Listener{
         Location l = event.getEntity().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.FISH, p, l)){
-            p.sendMessage(plugin.getDataHandler().getLang("flags.fish", p));
+            p.sendMessage(plugin.getLangManager().getLang("flags.fish", p));
             event.setCancelled(true);
         }
     }

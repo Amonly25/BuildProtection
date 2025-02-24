@@ -1,5 +1,5 @@
 select:
-  enter: "&eYou have entered in edit mode. Can select now two blocks or set a radius. Use &6/prote select &eagain to exit."
+  enter: "&eYou have entered in edit mode. &7Can select now two blocks with a stick or set a radius using /prote select <radius>. &eUse &6/prote select &eagain to exit."
   cost: "&eThe selection cost is &6%cost%&e."
   exit: "&eYou have exited from edit mode."
   not_owner: "&cYou can't select here, there is an another protection."

@@ -11,7 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Break implements Listener {
     
@@ -58,7 +58,7 @@ public class Break implements Listener {
 
         if (timeSinceLastHit > 15000) {
             // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
-            p.sendMessage(plugin.getDataHandler().getLang("flags.break", p));
+            p.sendMessage(plugin.getLangManager().getLang("flags.break", p));
             lastMessage.put(p, currentTime);
         }
     }

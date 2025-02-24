@@ -8,9 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.Area;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -73,9 +72,9 @@ public class PlayerMoveListener implements Listener {
             message = prote.getEnterMessage();
             if (prote.isRentable() && !prote.isRented()) {
                 double cost = prote.getRentCost();
-                message = plugin.getDataHandler().getLang("rent.available", p).replace("%cost%", cost + "");
+                message = plugin.getLangManager().getLang("rent.available", p).replace("%cost%", cost + "");
             } else if (prote.isRentable() && prote.isRented()) {
-                message = plugin.getDataHandler().getLang("rent.rented", p).replace("%player%", prote.getRentedOwnerName());
+                message = plugin.getLangManager().getLang("rent.rented", p).replace("%player%", prote.getRentedOwnerName());
             }
         } else {
             message = prote.getExitMessage();

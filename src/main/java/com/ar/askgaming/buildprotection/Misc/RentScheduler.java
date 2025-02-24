@@ -4,8 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
+import com.ar.askgaming.buildprotection.Protection.Area;
 
 public class RentScheduler extends BukkitRunnable{
 

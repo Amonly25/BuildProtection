@@ -9,7 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class EntitySpawn implements Listener{
 

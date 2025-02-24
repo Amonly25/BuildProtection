@@ -2,18 +2,19 @@ package com.ar.askgaming.buildprotection.FlagsFromListeners;
 
 import java.util.HashMap;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Enemy;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class EntityDamage implements Listener{
     
@@ -33,10 +34,35 @@ public class EntityDamage implements Listener{
         } else if (entity instanceof Enemy) {
             handleMonsterDamage(event);
         }
-        else {
-            if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.ENTITY_DAMAGE, entity.getLocation())) {
+        else if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.ENTITY_DAMAGE, entity.getLocation())) {
                 event.setCancelled(true);
+            
+        }
+    }
+    @EventHandler()
+    public void onEntityDamage(EntityDamageEvent event){
+        Entity entity = event.getEntity();
+
+        if (entity instanceof Enemy){
+            return;
+        }
+
+        Location l = event.getEntity().getLocation();
+
+        if (entity instanceof Animals) {
+            handleAnimalDamage(event);
+        }
+        
+        if (entity instanceof Player){
+            if (plugin.getProtectionFlags().isFlagEnabled(FlagType.PVP, l)){
+                return;
             }
+
+        }
+        
+        if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.ENTITY_DAMAGE, l)){
+            event.setCancelled(true);
+ 
         }
     }
     
@@ -64,6 +90,11 @@ public class EntityDamage implements Listener{
             event.setCancelled(true);
         }
     }
+    private void handleAnimalDamage(EntityDamageEvent event) {
+        if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.ANIMALS, event.getEntity().getLocation())) {
+            event.setCancelled(true);
+        }
+    }
     
     private void handleMonsterDamage(EntityDamageByEntityEvent event) {
         if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.MONSTERS, event.getEntity().getLocation())) {
@@ -82,7 +113,7 @@ public class EntityDamage implements Listener{
 
         if (timeSinceLastHit > 15000) {
             // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
-            p.sendMessage(plugin.getDataHandler().getLang("flags.pvp", p));
+            p.sendMessage(plugin.getLangManager().getLang("flags.pvp", p));
             lastMessage.put(p, currentTime);
         }
     }

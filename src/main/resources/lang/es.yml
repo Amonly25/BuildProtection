@@ -1,5 +1,5 @@
 select:
-  enter: "&eHas entrado en el modo de edición. Ahora puedes seleccionar dos bloques o establecer un radio. Usa &6/prote select &e de nuevo para salir."
+  enter: "&eHas entrado en el modo de edición. &7Ahora puedes seleccionar dos bloques con un palo formando un cubo o establecer un radio usando /prote select <radio>. &eUsa &6/prote select &e de nuevo para salir."
   cost: "&eEl costo de la selección es de &6%cost%&e."
   exit: "&eHas salido del modo de edición."
   not_owner: "&cNo puedes seleccionar aquí, hay otra protección."
@@ -82,7 +82,7 @@ rtp:
   disabled: "&cEl aleatoria está desactivado en este mundo."
 
 help:
-  - "&e/prote select &7- Entra en el modo de edición."
+  - "&e/prote select &7- Entra en el modo de edición - &cObligatorio."
   - "&e/prote create <name>&7- Crea una protección."
   - "&e/prote set flag <value>&7- Establece una bandera."
   - "&e/prote <add/remove> <player> &7- Añade o elimina un jugador."

@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityMountEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Ride implements Listener{
 
@@ -31,7 +31,7 @@ public class Ride implements Listener{
             Player p = (Player) event.getEntity();
             Location l = p.getLocation();
             if (!plugin.getProtectionFlags().hasPermission(FlagType.RIDE, p,l)){
-                p.sendMessage(plugin.getDataHandler().getLang("flags.ride", p));
+                p.sendMessage(plugin.getLangManager().getLang("flags.ride", p));
                 event.setCancelled(true);
             }
         } else if (!(event.getMount() instanceof Player)){

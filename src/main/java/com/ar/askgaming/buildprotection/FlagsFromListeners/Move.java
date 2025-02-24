@@ -6,9 +6,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.Area;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Move implements Listener{
 
@@ -30,7 +30,7 @@ public class Move implements Listener{
 
         if (!plugin.getProtectionFlags().hasPermission(FlagType.MOVE, p, to)){
             event.setCancelled(true);
-            p.sendMessage(plugin.getDataHandler().getLang("flags.move", p));
+            p.sendMessage(plugin.getLangManager().getLang("flags.move", p));
         }
         // if (p.isGliding() || p.isFlying()){
         //     return;

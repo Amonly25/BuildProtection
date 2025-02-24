@@ -1,4 +1,4 @@
-package com.ar.askgaming.buildprotection.Managers;
+package com.ar.askgaming.buildprotection.Protection;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -12,10 +12,8 @@ import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Protection;
-import com.ar.askgaming.buildprotection.Selection;
+import com.ar.askgaming.buildprotection.Selection.Selection;
 
 public class ProtectionsManager {
 
@@ -47,22 +45,23 @@ public class ProtectionsManager {
         //Crear mapa que contiene las protecciones de cada mundo
         HashMap<String, Protection> worldMap = new HashMap<>();
 
-        FileConfiguration config = plugin.getDataHandler().getWorldConfig(world.getName());
-        if (config == null){
-            config = plugin.getDataHandler().createWorldConfig(world.getName());
-        }
+        FileConfiguration config = plugin.getProtectionsData().getWorldConfig(world.getName());
+
         // Obtener todas las claves del nivel raíz
         Set<String> protectionKeys = config.getKeys(false);
+        if (!protectionKeys.isEmpty()) {
 
-        // Iterar sobre todas las keys y cargar cada Protection
-        for (String key : protectionKeys) {
-            Object obj = config.get(key);
-            if (obj instanceof Protection) {
-                Protection protection = (Protection) obj;
+            // Iterar sobre todas las keys y cargar cada Protection
+            for (String key : protectionKeys) {
+                Object obj = config.get(key);
+                if (obj == null) continue;
+                if (obj instanceof Protection) {
+                    Protection protection = (Protection) obj;
 
-                // Guardar cada Protection en el mapa con su clave
-                worldMap.put(key, protection);
-                protection.setName(key);
+                    // Guardar cada Protection en el mapa con su clave
+                    worldMap.put(key, protection);
+                    protection.setName(key);
+                }
             }
         }
         mapList.put(world.getName(), worldMap);
@@ -124,7 +123,7 @@ public class ProtectionsManager {
     //#region deleteProtection
     public void deleteProtection(Player p, Protection prote) {
         String wName = prote.getLoc1().getWorld().getName();
-        FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(wName);
+        FileConfiguration cfg = plugin.getProtectionsData().getWorldConfig(wName);
         if (cfg != null){
             double d = calculateM3(prote.getLoc1(), prote.getLoc2());  
             if (plugin.getEconomy() != null){
@@ -139,7 +138,7 @@ public class ProtectionsManager {
             }
             p.sendMessage("You have deleted the protection " + prote.getName());
             cfg.set(prote.getName(), null);
-            plugin.getDataHandler().saveWorldConfig(cfg, wName);
+            plugin.getProtectionsData().saveWorldConfig(cfg, wName);
             mapList.get(wName).remove(prote.getName());
             prote = null;
         }
@@ -199,7 +198,7 @@ public class ProtectionsManager {
 
         if (plugin.getEconomy() == null){
             plugin.getLogger().warning("No economy plugin found, cant rent protection.");
-            p.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", p));
+            p.sendMessage(plugin.getLangManager().getLang("misc.no_economy", p));
             return;
         }
 
@@ -207,7 +206,7 @@ public class ProtectionsManager {
             area.setRented(true);
             area.setRentedOwner(p.getUniqueId());
             area.setRentedSince(System.currentTimeMillis());
-            p.sendMessage(plugin.getDataHandler().getLang("rent.rented", p));
+            p.sendMessage(plugin.getLangManager().getLang("rent.rented", p));
             save(area.getParentProtection());
             if (plugin.getRealisticEconomy() != null){
                 plugin.getRealisticEconomy().getServerBank().depositFromPlayerToServer(p.getUniqueId(), d);
@@ -216,7 +215,7 @@ public class ProtectionsManager {
 
             }
         } else{
-            p.sendMessage(plugin.getDataHandler().getLang("prote.no_money", p));
+            p.sendMessage(plugin.getLangManager().getLang("prote.no_money", p));
             return;
         }
     }
@@ -247,16 +246,17 @@ public class ProtectionsManager {
         save(area.getParentProtection());
     }
     public void save(Protection prote){
-        FileConfiguration cfg = plugin.getDataHandler().getWorldConfig(prote.getLoc1().getWorld().getName());
+        FileConfiguration cfg = plugin.getProtectionsData().getWorldConfig(prote.getLoc1().getWorld().getName());
         cfg.set(prote.getName(), prote);
-        plugin.getDataHandler().saveWorldConfig(cfg, prote.getLoc1().getWorld().getName());
+        plugin.getProtectionsData().saveWorldConfig(cfg, prote.getLoc1().getWorld().getName());
     }
     //#region unrent
     public void unrent(Area area, Player p) {
         area.setRented(false);
         area.setRentedOwner(null);
         area.setRentedSince(0);
-        p.sendMessage(plugin.getDataHandler().getLang("rent.unrented", p));
+        p.sendMessage(plugin.getLangManager().getLang("rent.unrented", p));
         save(area.getParentProtection());
     }
+
 }

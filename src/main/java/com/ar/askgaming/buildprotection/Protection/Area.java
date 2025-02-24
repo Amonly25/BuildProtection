@@ -1,4 +1,4 @@
-package com.ar.askgaming.buildprotection;
+package com.ar.askgaming.buildprotection.Protection;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,8 @@ import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.BuildProtection;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Area implements ConfigurationSerializable {
 

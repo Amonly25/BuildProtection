@@ -1,9 +1,8 @@
-package com.ar.askgaming.buildprotection.Managers;
+package com.ar.askgaming.buildprotection.Misc;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,18 +12,11 @@ import com.ar.askgaming.buildprotection.BuildProtection;
 
 import net.md_5.bungee.api.ChatColor;
 
+public class LanguageManager {
 
-public class DataHandler {
-    
     private final BuildProtection plugin;
-
-    public DataHandler(BuildProtection main) {
+    public LanguageManager(BuildProtection main){
         plugin = main;
-
-        File protectionsFolder = new File(plugin.getDataFolder() + "/protections");
-        if (!protectionsFolder.exists()) {
-            protectionsFolder.mkdirs();
-        }
 
         // Save default lang file from resources if it doesn't exist
         File defaultLangFile = new File(plugin.getDataFolder() + "/lang/en.yml");
@@ -36,48 +28,8 @@ public class DataHandler {
         if (!esLangFile.exists()) {
             plugin.saveResource("lang/es.yml", false);
         }
-
-        //Create world file if dosent exist
-        Bukkit.getWorlds().forEach(world -> {
-            
-            File wFile = new File(plugin.getDataFolder()+"/protections/" + world.getName()+".yml");
-
-            if (!wFile.exists()){
-                try {
-                    wFile.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
     }
-    public FileConfiguration getWorldConfig(String world){
-
-        //Add cache maybe
-
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + world+".yml");
-        FileConfiguration wConfig = new YamlConfiguration();
-
-        try {
-            wConfig.load(wFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
-
-        return wConfig;
-    }
-
-    public void saveWorldConfig(FileConfiguration config, String world){
-
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + world+".yml");
-
-        try {
-            config.save(wFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    
+        
     public String getLang(String path, Player p) {
 
         File file = new File(plugin.getDataFolder() + "/lang/" + p.getLocale().split("_")[0] + ".yml");
@@ -129,24 +81,5 @@ public class DataHandler {
         }
 
         return lang.getString(path,"Undefined key: " + path);
-    }
-    public FileConfiguration createWorldConfig(String name) {
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + name+".yml");
-        if (!wFile.exists()){
-            try {
-                wFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        FileConfiguration wConfig = new YamlConfiguration();
-
-        try {
-            wConfig.save(wFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return wConfig;
     }
 }

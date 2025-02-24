@@ -8,7 +8,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Teleport implements Listener {
     
@@ -28,7 +28,7 @@ public class Teleport implements Listener {
                     if (plugin.getProtectionFlags().hasPermission(FlagType.TELEPORT, p, l)){
                         return;
                     }
-                    p.sendMessage(plugin.getDataHandler().getLang("flags.teleport", p));
+                    p.sendMessage(plugin.getLangManager().getLang("flags.teleport", p));
                     event.setCancelled(true);
                     
                 }

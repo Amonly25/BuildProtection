@@ -1,4 +1,4 @@
-package com.ar.askgaming.buildprotection.Managers;
+package com.ar.askgaming.buildprotection.Misc;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,8 @@ import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
+import com.ar.askgaming.buildprotection.Protection.Area;
 
 public class ShowBordersManager extends BukkitRunnable {
 

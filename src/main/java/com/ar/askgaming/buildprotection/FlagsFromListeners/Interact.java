@@ -17,8 +17,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags.FlagType;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Interact implements Listener {
 
@@ -45,7 +45,7 @@ public class Interact implements Listener {
         for (String mat : materials) {
             if (blockMaterial.toString().replace("_", "").contains(mat)) {
                 if (!plugin.getProtectionFlags().hasPermission(flagType, player, location)) {
-                    player.sendMessage(plugin.getDataHandler().getLang(langKey, player));
+                    player.sendMessage(plugin.getLangManager().getLang(langKey, player));
                     event.setCancelled(true);
                 }
             }
@@ -114,7 +114,7 @@ public class Interact implements Listener {
 
         if (timeSinceLastHit > 15000) {
             // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
-            p.sendMessage(plugin.getDataHandler().getLang("flags.interact", p));
+            p.sendMessage(plugin.getLangManager().getLang("flags.interact", p));
             lastMessage.put(p, currentTime);
         }
     }

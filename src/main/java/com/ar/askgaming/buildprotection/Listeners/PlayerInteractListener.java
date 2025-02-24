@@ -10,7 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Protection;
+import com.ar.askgaming.buildprotection.Protection.Protection;
 
 public class PlayerInteractListener implements Listener{
 
@@ -46,19 +46,19 @@ public class PlayerInteractListener implements Listener{
 
             if (prote != null){
                 if (!prote.getOwner().equals(p.getUniqueId())){
-                    p.sendMessage(plugin.getDataHandler().getLang("select.not_owner", p));
+                    p.sendMessage(plugin.getLangManager().getLang("select.not_owner", p));
                     return;
                 }
-                p.sendMessage(plugin.getDataHandler().getLang("select.inside_own", p));
+                p.sendMessage(plugin.getLangManager().getLang("select.inside_own", p));
             }
             
 
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-               p.sendMessage(plugin.getDataHandler().getLang("select.p1", p));
+               p.sendMessage(plugin.getLangManager().getLang("select.p1", p));
                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(block.getLocation());
 
             } else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-                p.sendMessage(plugin.getDataHandler().getLang("select.p2", p));
+                p.sendMessage(plugin.getLangManager().getLang("select.p2", p));
                 plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation());
             }
         }

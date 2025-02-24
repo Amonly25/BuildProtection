@@ -11,9 +11,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.ar.askgaming.buildprotection.Managers.DataHandler;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
-import com.ar.askgaming.buildprotection.Managers.SelectionManager;
+import com.ar.askgaming.buildprotection.Protection.Area;
+import com.ar.askgaming.buildprotection.Protection.Protection;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags;
+import com.ar.askgaming.buildprotection.Selection.Selection;
+import com.ar.askgaming.buildprotection.Selection.SelectionManager;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -25,7 +27,6 @@ public class Commands implements TabExecutor {
     private final BuildProtection plugin;
     public Commands(BuildProtection main) {
         plugin = main;
-        dataHandler = plugin.getDataHandler();
         
         plugin.getServer().getPluginCommand("rtp").setExecutor(this);
     }
@@ -43,9 +44,8 @@ public class Commands implements TabExecutor {
         }
     }
 
-    private DataHandler dataHandler;
     private String getLang(String key,Player p){
-        return dataHandler.getLang(key,p);
+        return plugin.getLangManager().getLang(key, p);
     }
     private void save(Protection prote){
         plugin.getProtectionsManager().save(prote);
@@ -294,6 +294,9 @@ public class Commands implements TabExecutor {
             p.sendMessage(getLang("commands.missing_arg", p));
             return;
         }
+        if (!isValid(p, args[1])){
+            return;
+        }
         if (plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).containsKey(args[1])){
             p.sendMessage(getLang("prote.exists", p));
         } else {
@@ -389,7 +392,7 @@ public class Commands implements TabExecutor {
     private void handleListCommand(Player p, String[] args) {
         if (args.length == 1) {
             // Listar todas las protecciones del jugador
-            p.sendMessage(plugin.getDataHandler().getLang("prote.list", p));
+            p.sendMessage(getLang("prote.list", p));
             plugin.getProtectionsManager().getProtectionsByWorld(p.getWorld()).forEach((name, prote) -> {
                 if (prote.getOwner().equals(p.getUniqueId())){
                     p.sendMessage(name);
@@ -398,7 +401,7 @@ public class Commands implements TabExecutor {
             return;
         }
         if (!p.hasPermission("buildprotection.listothers")) {
-            p.sendMessage(plugin.getDataHandler().getLang("commands.no_perm", p));
+            p.sendMessage(getLang("commands.no_perm", p));
             return;
         }
         if (args[1].equalsIgnoreCase("all")){
@@ -521,6 +524,9 @@ public class Commands implements TabExecutor {
         }
         if (!plugin.getProtectionsManager().hasAdminPermission(prote, p)){
             p.sendMessage(getLang("commands.no_perm", p));
+            return;
+        }
+        if (!isValid(p, args[2])){
             return;
         }
         switch (args[1].toLowerCase()) {
@@ -692,6 +698,26 @@ public class Commands implements TabExecutor {
             }
         }
         plugin.getRandomTeleport().send(p);
+    }
+    private boolean isValid(Player player, String name) {
+        if (name.length() > 16) {
+            player.sendMessage("Name is too long");
+            return false;
+        }
+        if (name.length() < 3) {
+            player.sendMessage("Name is too short");
+            return false;
+        }
+        if (name.contains(" ")) {
+            player.sendMessage("Name cannot contain spaces");
+            return false;
+        }
+        if (!name.matches("^[a-zA-Z0-9]+$")) {
+            player.sendMessage("Name can only contain letters and numbers");
+            return false;
+        }
+    
+        return true;
     }
 }
 

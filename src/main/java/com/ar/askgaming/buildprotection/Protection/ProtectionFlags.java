@@ -1,4 +1,4 @@
-package com.ar.askgaming.buildprotection.Managers;
+package com.ar.askgaming.buildprotection.Protection;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +15,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
 
 public class ProtectionFlags {

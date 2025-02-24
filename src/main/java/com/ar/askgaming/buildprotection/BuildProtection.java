@@ -6,7 +6,6 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Break;
-import com.ar.askgaming.buildprotection.FlagsFromListeners.Damage;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.EntityDamage;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.EntitySpawn;
 import com.ar.askgaming.buildprotection.FlagsFromListeners.Explode;
@@ -22,13 +21,16 @@ import com.ar.askgaming.buildprotection.FlagsFromListeners.Teleport;
 import com.ar.askgaming.buildprotection.Listeners.PlayerInteractListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerMoveListener;
 import com.ar.askgaming.buildprotection.Listeners.PlayerQuitListener;
-import com.ar.askgaming.buildprotection.Managers.DataHandler;
-import com.ar.askgaming.buildprotection.Managers.ProtectionFlags;
-import com.ar.askgaming.buildprotection.Managers.ProtectionsManager;
-import com.ar.askgaming.buildprotection.Managers.SelectionManager;
-import com.ar.askgaming.buildprotection.Managers.ShowBordersManager;
+import com.ar.askgaming.buildprotection.Misc.LanguageManager;
 import com.ar.askgaming.buildprotection.Misc.RandomTeleport;
 import com.ar.askgaming.buildprotection.Misc.RentScheduler;
+import com.ar.askgaming.buildprotection.Misc.ShowBordersManager;
+import com.ar.askgaming.buildprotection.Protection.Area;
+import com.ar.askgaming.buildprotection.Protection.Protection;
+import com.ar.askgaming.buildprotection.Protection.ProtectionFlags;
+import com.ar.askgaming.buildprotection.Protection.ProtectionsData;
+import com.ar.askgaming.buildprotection.Protection.ProtectionsManager;
+import com.ar.askgaming.buildprotection.Selection.SelectionManager;
 import com.ar.askgaming.realisticeconomy.RealisticEconomy;
 
 import net.milkbowl.vault.economy.Economy;
@@ -36,7 +38,7 @@ import net.milkbowl.vault.economy.Economy;
 public class BuildProtection extends JavaPlugin{
 
     private ShowBordersManager showParticles;
-    private DataHandler dataHandler;
+    private ProtectionsData protectionsData;
     private ProtectionsManager protectionsManager;
     private SelectionManager selectionManager;
     private RentScheduler rentScheduler;
@@ -44,12 +46,13 @@ public class BuildProtection extends JavaPlugin{
     private RandomTeleport randomTeleport;
     private Economy economy;
     private RealisticEconomy realisticEconomy;
+    private LanguageManager langManager;
 
     public void onEnable(){
 
         saveDefaultConfig();
 
-        dataHandler = new DataHandler(this);
+        protectionsData = new ProtectionsData(this);
         
         ConfigurationSerialization.registerClass(Protection.class,"Protection");
         ConfigurationSerialization.registerClass(Area.class,"Area");
@@ -58,6 +61,7 @@ public class BuildProtection extends JavaPlugin{
         selectionManager = new SelectionManager(this);
         protectionFlags = new ProtectionFlags(this);
         randomTeleport = new RandomTeleport(this);
+        langManager = new LanguageManager(this);
         
         showParticles = new ShowBordersManager(this);
         showParticles.runTaskTimer(this, 0, 20);
@@ -76,7 +80,6 @@ public class BuildProtection extends JavaPlugin{
         Bukkit.getPluginManager().registerEvents(new Place(this), this);
         Bukkit.getPluginManager().registerEvents(new Flow(this), this);
         Bukkit.getPluginManager().registerEvents(new EntityDamage(this), this);
-        Bukkit.getPluginManager().registerEvents(new Damage(this), this);
         Bukkit.getPluginManager().registerEvents(new Ride(this), this);
         Bukkit.getPluginManager().registerEvents(new Fish(this), this);
         Bukkit.getPluginManager().registerEvents(new Piston(this), this);
@@ -113,11 +116,11 @@ public class BuildProtection extends JavaPlugin{
     }
 
     public void onDisable(){ 
-    
+       getServer().shutdown();
     }
 
-    public DataHandler getDataHandler() {
-        return dataHandler;
+    public ProtectionsData getProtectionsData() {
+        return protectionsData;
     }
     public ShowBordersManager getShowParticles() {
         return showParticles;
@@ -139,5 +142,8 @@ public class BuildProtection extends JavaPlugin{
     }
     public RandomTeleport getRandomTeleport() {
         return randomTeleport;
+    }
+    public LanguageManager getLangManager() {
+        return langManager;
     }
 }

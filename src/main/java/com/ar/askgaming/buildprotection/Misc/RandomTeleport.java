@@ -9,8 +9,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
+import com.ar.askgaming.buildprotection.Protection.Area;
 
 public class RandomTeleport {
 
@@ -20,7 +20,7 @@ public class RandomTeleport {
     public RandomTeleport(BuildProtection main){
         plugin = main;
 
-		file = new File(plugin.getDataFolder() + "/protections", "rtp_cooldowns.yml");
+		file = new File(plugin.getDataFolder(), "rtp_cooldowns.yml");
 
 		if (!file.exists()) {
 			try {
@@ -29,13 +29,7 @@ public class RandomTeleport {
 				e.printStackTrace();
 			}
 		}
-		config = new YamlConfiguration();
-
-		try {
-			config.load(file);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		config = YamlConfiguration.loadConfiguration(file);
 	}
 
 	public void saveCooldown(Player player) {
@@ -58,12 +52,12 @@ public class RandomTeleport {
 			long cooldown = plugin.getConfig().getInt("random_teleport.cooldown",1440) * 1000 * 60;
 			long remaining = cooldown - diff;
 			if (remaining > 0) {
-				player.sendMessage(plugin.getDataHandler().getLang("rtp.cooldown", player).replace("%time%", String.valueOf(remaining / 1000/60)));
+				player.sendMessage(plugin.getLangManager().getLang("rtp.cooldown", player).replace("%time%", String.valueOf(remaining / 1000/60)));
 				return;
 			}
 		}
 				
-		player.sendMessage(plugin.getDataHandler().getLang("rtp.searching", player));
+		player.sendMessage(plugin.getLangManager().getLang("rtp.searching", player));
         
 		Location loc = null;
 
@@ -75,7 +69,7 @@ public class RandomTeleport {
             }
         }
     
-        player.sendMessage(plugin.getDataHandler().getLang("rtp.failed", player));
+        player.sendMessage(plugin.getLangManager().getLang("rtp.failed", player));
 		
 	}
 		
@@ -103,7 +97,7 @@ public class RandomTeleport {
 	private void teleport(Player p, Location loc) {
 		
 		final int playerZ = p.getLocation().getBlockZ(), playerX = p.getLocation().getBlockX();
-		p.sendMessage(plugin.getDataHandler().getLang("rtp.teleport", p));
+		p.sendMessage(plugin.getLangManager().getLang("rtp.teleport", p));
 		loc.getChunk().load();
 		new BukkitRunnable() {
 			int count = 5;
@@ -117,7 +111,7 @@ public class RandomTeleport {
 	                return;
 	    		}	    	    	                                    	    	                        
 	            if (playerZ != p.getLocation().getBlockZ() || playerX != p.getLocation().getBlockX()){
-	            	p.sendMessage(plugin.getDataHandler().getLang("rtp.cancel", p));
+	            	p.sendMessage(plugin.getLangManager().getLang("rtp.cancel", p));
 	            	cancel();
 	            	return;
 	            }

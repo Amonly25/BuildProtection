@@ -1,12 +1,11 @@
-package com.ar.askgaming.buildprotection.Managers;
+package com.ar.askgaming.buildprotection.Selection;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.ar.askgaming.buildprotection.Area;
 import com.ar.askgaming.buildprotection.BuildProtection;
-import com.ar.askgaming.buildprotection.Protection;
-import com.ar.askgaming.buildprotection.Selection;
+import com.ar.askgaming.buildprotection.Protection.Area;
+import com.ar.askgaming.buildprotection.Protection.Protection;
 
 import net.milkbowl.vault.economy.EconomyResponse;
 
@@ -21,7 +20,7 @@ public class SelectionManager {
     public boolean expandArea(Area area, Selection selection){
         Player player = selection.getPlayer();
         if (selection.detectCollision()){
-            player.sendMessage(plugin.getDataHandler().getLang("select.collision", player));
+            player.sendMessage(plugin.getLangManager().getLang("select.collision", player));
             return false;
         }
 
@@ -38,7 +37,7 @@ public class SelectionManager {
             return true;
 
         } else {
-            player.sendMessage(plugin.getDataHandler().getLang("prote.no_money", player.getPlayer()));
+            player.sendMessage(plugin.getLangManager().getLang("prote.no_money", player.getPlayer()));
             return false;
         }
     }
@@ -61,7 +60,7 @@ public class SelectionManager {
         }
         if (plugin.getEconomy() == null){
             plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
-            player.sendMessage(plugin.getDataHandler().getLang("misc.no_economy", player));
+            player.sendMessage(plugin.getLangManager().getLang("misc.no_economy", player));
             return false;
         }
         if (plugin.getEconomy().getBalance(player) >= getExpandCost(area, selection)){
