@@ -53,6 +53,7 @@ public class ProtectionsManager {
 
             // Iterar sobre todas las keys y cargar cada Protection
             for (String key : protectionKeys) {
+                if (key.isBlank()) continue;
                 Object obj = config.get(key);
                 if (obj == null) continue;
                 if (obj instanceof Protection) {

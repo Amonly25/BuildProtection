@@ -700,20 +700,21 @@ public class Commands implements TabExecutor {
         plugin.getRandomTeleport().send(p);
     }
     private boolean isValid(Player player, String name) {
+        String invalid = getLang("misc.invalid_name", player);
         if (name.length() > 16) {
-            player.sendMessage("Name is too long");
+            player.sendMessage(invalid);
             return false;
         }
         if (name.length() < 3) {
-            player.sendMessage("Name is too short");
+            player.sendMessage(invalid);
             return false;
         }
         if (name.contains(" ")) {
-            player.sendMessage("Name cannot contain spaces");
+            player.sendMessage(invalid);
             return false;
         }
         if (!name.matches("^[a-zA-Z0-9]+$")) {
-            player.sendMessage("Name can only contain letters and numbers");
+            player.sendMessage(invalid);
             return false;
         }
     

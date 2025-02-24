@@ -103,4 +103,5 @@ commands:
 
 misc:
   no_economy: "&cEconomy plugin not found, cant create protection."
+  invalid_name: "&cInvalid name, use only letters and numbers between 3 and 16 characters."
 
