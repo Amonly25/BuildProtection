@@ -78,7 +78,8 @@ rtp:
   teleport: "&eTeleporting to a safe place, dont move."
   cancel: "&cTeleportation canceled."
   failed: "&cFailed to teleport, try again."
-  cooldown: "&cYou can't teleport yet, wait %time% minutes."
+  cooldown: "&cYou can't teleport yet to a new location, wait %time% minutes."
+  last_location: "&7You can return to your last location using &6/prote rtp return."
   disabled: "&cRandom teleport is disabled in this world."
 
 help:

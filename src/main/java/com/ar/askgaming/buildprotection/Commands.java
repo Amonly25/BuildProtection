@@ -686,6 +686,15 @@ public class Commands implements TabExecutor {
     //#region rtp
     private void randomTeleport(Player p, String[] args) {
 
+        if (args.length == 2){
+            if (args[1].equalsIgnoreCase("return")){
+                plugin.getRandomTeleport().sendToLastLocation(p);
+                return;
+            }
+            p.sendMessage(getLang("commands.missing_arg", p));
+            return;
+        }
+
         if (!p.hasPermission("buildprotection.rtp")){
             p.sendMessage(getLang("commands.no_perm", p));
             return;
@@ -697,7 +706,7 @@ public class Commands implements TabExecutor {
                 return;
             }
         }
-        plugin.getRandomTeleport().send(p);
+        plugin.getRandomTeleport().sendToRandomLocation(p);
     }
     private boolean isValid(Player player, String name) {
         String invalid = getLang("misc.invalid_name", player);
@@ -719,6 +728,11 @@ public class Commands implements TabExecutor {
         }
     
         return true;
+    }
+    private void reload(Player p) {
+        plugin.reloadConfig();
+       // plugin.getLangManager().reload();
+        p.sendMessage("Config and lang files reloaded.");
     }
 }
 

@@ -20,6 +20,7 @@ random_teleport:
   min_x_z: 500
   max_x_z: 8000
   cooldown: 1440 #minutes
+  last_location_on_cooldown: true #If true, the player can return to the last location using /prote rtp return
   disabled_worlds:
   - "world_nether"
   - "world_the_end"

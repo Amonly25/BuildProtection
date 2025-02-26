@@ -80,6 +80,7 @@ rtp:
   failed: "&cFalló la teletransportación, intenta de nuevo."
   cooldown: "&cNo puedes teletransportarte aún, espera %time% minutos."
   disabled: "&cEl aleatoria está desactivado en este mundo."
+  last_location: "&7Puedes regresar a tu última ubicación usando &6/prote rtp return."
 
 help:
   - "&e/prote select &7- Entra en el modo de edición - &cObligatorio."
