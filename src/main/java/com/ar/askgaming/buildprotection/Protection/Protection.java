@@ -28,6 +28,7 @@ public class Protection implements ConfigurationSerializable{
         this.loc1 = loc1;
         this.loc2 = loc2;
     }
+    @SuppressWarnings("unchecked")
     public Protection(Map<String, Object> map) {
 
         loc1 =  (Location) map.get("loc1");

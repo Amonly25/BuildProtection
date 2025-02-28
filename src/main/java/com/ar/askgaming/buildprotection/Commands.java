@@ -167,6 +167,9 @@ public class Commands implements TabExecutor {
             case "rtp":
                 randomTeleport(p,args);
                 break;
+            case "reload":
+                reload(p);
+                break;
             default:
                 p.sendMessage(getLang("commands.invalid", p));
                 break;
