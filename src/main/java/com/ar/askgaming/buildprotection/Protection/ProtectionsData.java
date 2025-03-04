@@ -44,7 +44,7 @@ public class ProtectionsData {
     }
     public FileConfiguration getWorldConfig(String world){
 
-        plugin.getLogger().info("Loading protections from world file: "+world);
+       // plugin.getLogger().info("Loading protections from world file: "+world);
 
         //Add cache maybe
         if (!existsWorldFile(world)){

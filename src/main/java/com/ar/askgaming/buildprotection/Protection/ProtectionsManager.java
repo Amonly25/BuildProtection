@@ -247,9 +247,11 @@ public class ProtectionsManager {
         save(area.getParentProtection());
     }
     public void save(Protection prote){
-        FileConfiguration cfg = plugin.getProtectionsData().getWorldConfig(prote.getLoc1().getWorld().getName());
+        String wName = prote.getLoc1().getWorld().getName();
+        
+        FileConfiguration cfg = plugin.getProtectionsData().getWorldConfig(wName);
         cfg.set(prote.getName(), prote);
-        plugin.getProtectionsData().saveWorldConfig(cfg, prote.getLoc1().getWorld().getName());
+        plugin.getProtectionsData().saveWorldConfig(cfg, wName);
     }
     //#region unrent
     public void unrent(Area area, Player p) {
