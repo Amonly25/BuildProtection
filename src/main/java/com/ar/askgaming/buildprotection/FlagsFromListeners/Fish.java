@@ -26,7 +26,7 @@ public class Fish implements Listener{
         Location l = event.getHook().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.FISH, p, l)){
-            p.sendMessage(plugin.getLangManager().getLang("flags.fish", p));
+            p.sendMessage(plugin.getLangManager().get("flags.fish", p));
             event.setCancelled(true);
         }
     }
@@ -37,7 +37,7 @@ public class Fish implements Listener{
         Location l = event.getEntity().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.FISH, p, l)){
-            p.sendMessage(plugin.getLangManager().getLang("flags.fish", p));
+            p.sendMessage(plugin.getLangManager().get("flags.fish", p));
             event.setCancelled(true);
         }
     }

@@ -28,7 +28,7 @@ public class Teleport implements Listener {
                     if (plugin.getProtectionFlags().hasPermission(FlagType.TELEPORT, p, l)){
                         return;
                     }
-                    p.sendMessage(plugin.getLangManager().getLang("flags.teleport", p));
+                    p.sendMessage(plugin.getLangManager().get("flags.teleport", p));
                     event.setCancelled(true);
                     
                 }

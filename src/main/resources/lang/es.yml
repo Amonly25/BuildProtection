@@ -40,6 +40,9 @@ prote:
   expand_fail: "&cNo puedes ampliar la protección."
   expand_cost: "&cProcesando el costo de expansión: &6%cost%&c."
   expand_confirm: "&ePara confirmar la expansión usa &6/prote expand confirm"
+  max: "&cHas alcanzado el número máximo de protecciones."
+  refund: "&2Se te ha reembolsado &6%cost%&2."
+  deleted: "&2La protección %name% ha sido eliminada."
   info:
     name: "&eNombre: &6 "
     owner: "&ePropietario: &6"

@@ -29,7 +29,7 @@ public class Move implements Listener{
 
         if (!plugin.getProtectionFlags().hasPermission(FlagType.MOVE, p, to)){
             event.setCancelled(true);
-            p.sendMessage(plugin.getLangManager().getLang("flags.move", p));
+            p.sendMessage(plugin.getLangManager().get("flags.move", p));
         }
         // if (p.isGliding() || p.isFlying()){
         //     return;

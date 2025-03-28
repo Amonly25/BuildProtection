@@ -17,41 +17,18 @@ import com.ar.askgaming.buildprotection.Protection.ProtectionFlags.FlagType;
 
 public class Area implements ConfigurationSerializable {
 
-    private BuildProtection plugin = BuildProtection.getPlugin(BuildProtection.class);
+    private BuildProtection plugin = BuildProtection.getInstance();
 
-    private String name;
     private int priority = 0;
-
     private Location loc1, loc2;
-
-    public void setLoc1(Location loc1) {
-        this.loc1 = loc1;
-    }
-
-    public void setLoc2(Location loc2) {
-        this.loc2 = loc2;
-    }
-
-    private String enterMessage;
-    private String exitMessage;
-
-    private boolean isRentable;
-    private boolean isRented;
+    private String name, enterMessage, exitMessage;
+    private boolean isRentable, isRented;
     private UUID rentedOwner;
     private double rentCost;
     private long rentedSince;
-
     private Protection parentProtection;
-    public void setParentProtection(Protection parentProtection) {
-        this.parentProtection = parentProtection;
-    }
-
     private HashMap<FlagType, Boolean> flagsMap = new HashMap<>();
     private List<UUID> players = new ArrayList<>();
-
-    public List<UUID> getPlayers() {
-        return players;
-    }
 
     public Area(Location loc1, Location loc2, String name, Protection parent) {
         this.loc1 = loc1;
@@ -289,5 +266,18 @@ public class Area implements ConfigurationSerializable {
 
     public void setRentedSince(long rentedSince) {
         this.rentedSince = rentedSince;
+    }
+    public void setLoc1(Location loc1) {
+        this.loc1 = loc1;
+    }
+
+    public void setLoc2(Location loc2) {
+        this.loc2 = loc2;
+    }
+    public void setParentProtection(Protection parentProtection) {
+        this.parentProtection = parentProtection;
+    }
+    public List<UUID> getPlayers() {
+        return players;
     }
 }

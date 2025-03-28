@@ -46,19 +46,19 @@ public class PlayerInteractListener implements Listener{
 
             if (prote != null){
                 if (!prote.getOwner().equals(p.getUniqueId())){
-                    p.sendMessage(plugin.getLangManager().getLang("select.not_owner", p));
+                    p.sendMessage(plugin.getLangManager().get("select.not_owner", p));
                     return;
                 }
-                p.sendMessage(plugin.getLangManager().getLang("select.inside_own", p));
+                p.sendMessage(plugin.getLangManager().get("select.inside_own", p));
             }
             
 
             if(event.getAction() == Action.RIGHT_CLICK_BLOCK){
-               p.sendMessage(plugin.getLangManager().getLang("select.p1", p));
+               p.sendMessage(plugin.getLangManager().get("select.p1", p));
                plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc1(block.getLocation());
 
             } else if(event.getAction().equals(Action.LEFT_CLICK_BLOCK)){
-                p.sendMessage(plugin.getLangManager().getLang("select.p2", p));
+                p.sendMessage(plugin.getLangManager().get("select.p2", p));
                 plugin.getProtectionsManager().getPlayersInEditMode().get(p).setLoc2(block.getLocation());
             }
         }

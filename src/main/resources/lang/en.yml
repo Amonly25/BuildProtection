@@ -40,6 +40,9 @@ prote:
   expand_fail: "&cYou can't expand the protection."
   expand_cost: "&cProcessing the expansion cost: &6%cost%&c."
   expand_confirm: "&eTo confirm expansion use &6/prote expand confirm"
+  max: "&cYou have reached the maximum number of protections."
+  refund: "&2You have been refunded &6%cost%&2."
+  deleted: "&2The protection %name% has been deleted."
   info:
     name: "&eName: &6 "
     owner: "&eOwner: &6"

@@ -16,8 +16,13 @@ public class RentScheduler extends BukkitRunnable{
     public RentScheduler(BuildProtection main){
         plugin = main;
 
-        rentDays = plugin.getConfig().getInt("rent.time_in_days");
-        autoRent = plugin.getConfig().getBoolean("rent.auto_rent");
+        load();
+
+        runTaskTimer(plugin, 0, 20*60*60);
+    }
+    public void load(){
+        rentDays = plugin.getConfig().getInt("rent.time_in_days",10);
+        autoRent = plugin.getConfig().getBoolean("rent.auto_rent",true);
     }
 
     @Override

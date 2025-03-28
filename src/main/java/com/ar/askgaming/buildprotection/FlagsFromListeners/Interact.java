@@ -45,7 +45,7 @@ public class Interact implements Listener {
         for (String mat : materials) {
             if (blockMaterial.toString().replace("_", "").contains(mat)) {
                 if (!plugin.getProtectionFlags().hasPermission(flagType, player, location)) {
-                    player.sendMessage(plugin.getLangManager().getLang(langKey, player));
+                    player.sendMessage(plugin.getLangManager().get(langKey, player));
                     event.setCancelled(true);
                 }
             }
@@ -114,7 +114,7 @@ public class Interact implements Listener {
 
         if (timeSinceLastHit > 15000) {
             // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
-            p.sendMessage(plugin.getLangManager().getLang("flags.interact", p));
+            p.sendMessage(plugin.getLangManager().get("flags.interact", p));
             lastMessage.put(p, currentTime);
         }
     }

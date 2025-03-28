@@ -58,7 +58,7 @@ public class Break implements Listener {
 
         if (timeSinceLastHit > 15000) {
             // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
-            p.sendMessage(plugin.getLangManager().getLang("flags.break", p));
+            p.sendMessage(plugin.getLangManager().get("flags.break", p));
             lastMessage.put(p, currentTime);
         }
     }

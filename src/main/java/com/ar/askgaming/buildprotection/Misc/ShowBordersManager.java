@@ -14,10 +14,12 @@ import com.ar.askgaming.buildprotection.Protection.Area;
 
 public class ShowBordersManager extends BukkitRunnable {
 
-    private BuildProtection plugin;
+    private final BuildProtection plugin;
 
     public ShowBordersManager(BuildProtection main) {
         plugin = main;
+
+        runTaskTimer(plugin, 20, 20);
     }
 
     private List<Area> showProtections = new ArrayList<>();
@@ -70,7 +72,5 @@ public class ShowBordersManager extends BukkitRunnable {
                 }
             }
         }
-    }
-
-    
+    }  
 }
