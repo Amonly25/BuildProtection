@@ -27,11 +27,11 @@ public class ProtectionsManager {
         plugin = main;
 
         Bukkit.getWorlds().forEach(world -> {
-            createWorldConfig(world);
+            getProtectionDataFromWorld(world);
         });
     }
     //#region loadProtections
-    private void createWorldConfig(World world){
+    private void getProtectionDataFromWorld(World world){
         HashMap<String, Protection> worldMap = new HashMap<>();
 
         FileConfiguration config = plugin.getProtectionsData().getWorldConfig(world.getName());
@@ -58,24 +58,24 @@ public class ProtectionsManager {
     public void deleteProtection(Player p, Protection prote) {
         String wName = prote.getLoc1().getWorld().getName();
         FileConfiguration cfg = plugin.getProtectionsData().getWorldConfig(wName);
-        if (cfg != null){
-            double d = calculateM3(prote.getLoc1(), prote.getLoc2());  
-            if (plugin.getEconomy() != null){
-                
-                if (!p.hasPermission("buildprotection.admin")){
-                    double price = d * plugin.getConfig().getDouble("protection.cost_sell_per_block"); 
-                    plugin.getEconomy().depositPlayer(p, price);
-                    p.sendMessage(plugin.getLangManager().get("prote.refund", p).replace("%cost%", price + ""));
-                } else {
-                    p.sendMessage("No refund was given because you are an admin");
-                }
+
+        double d = calculateM3(prote.getLoc1(), prote.getLoc2());  
+        if (plugin.getEconomy() != null){
+            
+            if (!p.hasPermission("buildprotection.admin")){
+                double price = d * plugin.getConfig().getDouble("protection.cost_sell_per_block"); 
+                plugin.getEconomy().depositPlayer(p, price);
+                p.sendMessage(plugin.getLangManager().get("prote.refund", p).replace("%cost%", price + ""));
+            } else {
+                p.sendMessage("No refund was given because you are an admin");
             }
-            p.sendMessage(plugin.getLangManager().get("prote.deleted", p).replace("%name%", prote.getName()));
-            cfg.set(prote.getName(), null);
-            plugin.getProtectionsData().saveWorldConfig(cfg, wName);
-            mapList.get(wName).remove(prote.getName());
-            prote = null;
         }
+        p.sendMessage(plugin.getLangManager().get("prote.deleted", p).replace("%name%", prote.getName()));
+        cfg.set(prote.getName(), null);
+        plugin.getProtectionsData().saveWorldConfig(cfg, wName);
+        mapList.get(wName).remove(prote.getName());
+        prote = null;
+        
     }
     //#region calculateM3
     public Integer calculateM3(Location loc1, Location loc2){
@@ -205,23 +205,25 @@ public class ProtectionsManager {
     public HashMap<String, HashMap<String, Protection>> getAllProtections() {
         return mapList;
     }
-
     public HashMap<String, Protection> getProtectionsByWorld(World world) {
         HashMap<String, Protection> worldMap = mapList.get(world.getName());
         if (worldMap == null) {
-            createWorldConfig(world);
+            getProtectionDataFromWorld(world);
+            worldMap = mapList.get(world.getName());
         }
         return worldMap;
     }
+
     public HashMap<Player, Selection> getPlayersInEditMode() {
         return playersInEditMode;
     }
     public Protection getProtectionByLocation(Location l){
 
         World world = l.getWorld();
-        if (getProtectionsByWorld(world) == null) return null;
+        HashMap<String, Protection> worldMap = getProtectionsByWorld(world);
+        if (worldMap == null || worldMap.isEmpty()) return null;
         
-        for (Entry<String, Protection> entry : getProtectionsByWorld(world).entrySet()) {
+        for (Entry<String, Protection> entry : worldMap.entrySet()) {
             Protection prote = entry.getValue(); 
             for (Area area : prote.getAreas().values()) {
                 if (isInside(area,l)){
@@ -253,7 +255,7 @@ public class ProtectionsManager {
     public Protection getProtectionByName(String name, World world){
 
         // Iterar sobre el HashMap usando un bucle for tradicional
-        for (Entry<String, Protection> entry : plugin.getProtectionsManager().getProtectionsByWorld(world).entrySet()) {
+        for (Entry<String, Protection> entry : getProtectionsByWorld(world).entrySet()) {
             String proteName = entry.getKey();
             Protection prote = entry.getValue(); 
 

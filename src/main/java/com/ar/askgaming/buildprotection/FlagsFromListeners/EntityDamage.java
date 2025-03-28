@@ -51,18 +51,17 @@ public class EntityDamage implements Listener{
 
         if (entity instanceof Animals) {
             handleAnimalDamage(event);
+            return;
         }
         
         if (entity instanceof Player){
             if (plugin.getProtectionFlags().isFlagEnabled(FlagType.PVP, l)){
                 return;
             }
-
         }
         
         if (!plugin.getProtectionFlags().isFlagEnabled(FlagType.ENTITY_DAMAGE, l)){
             event.setCancelled(true);
- 
         }
     }
     
