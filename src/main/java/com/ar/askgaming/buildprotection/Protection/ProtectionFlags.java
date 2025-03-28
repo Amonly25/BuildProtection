@@ -1,7 +1,6 @@
 package com.ar.askgaming.buildprotection.Protection;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -10,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Location;
-import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -27,16 +26,16 @@ public class ProtectionFlags {
         plugin = main;
 
         file = new File(plugin.getDataFolder(), "flags.yml");
+
+        reload();
+    }
+    public void reload(){
+
         if (!file.exists()) {
             plugin.saveResource("flags.yml", false);
         }
-        config = new YamlConfiguration();
-        try {
-            config.load(file);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
-        }
 
+        config = YamlConfiguration.loadConfiguration(file);
         useFlagsInteracts = config.getStringList("flags.use");
         containerFlagsInteracts = config.getStringList("flags.container");
         teleportFlagsInteracts = config.getStringList("flags.teleport");
@@ -89,9 +88,16 @@ public class ProtectionFlags {
 
     public boolean hasPermission(FlagType type, Player player, Location location){
 
+        if (player.hasPermission("buildprotection.admin")){
+            return true;
+        }
+
         Area area = plugin.getProtectionsManager().getAreaByLocation(location);
         if (area == null){
-            return true;
+            World world = location.getWorld();
+            boolean flag = config.getBoolean("worlds." + world.getName() +"."+ type.name().toLowerCase(), true);
+            //plugin.getLogger().info("Flag: " + flag);
+            return flag;
         }
 
         if (plugin.getProtectionsManager().hasAdminPermission(area, player)){
@@ -121,7 +127,10 @@ public class ProtectionFlags {
         if (area != null){
             return area.getFlagsMap().getOrDefault(type, true);
         } 
-        return true;
+
+        World world = location.getWorld();
+        boolean flag = config.getBoolean("worlds." + world.getName() +"."+ type.name().toLowerCase(), true);
+        return flag;
     }
     public boolean isValid(String string) {
         for (FlagType flag : FlagType.values()) {

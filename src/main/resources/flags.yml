@@ -19,6 +19,30 @@ default_flags:
   flow: true
   enemy_spawn: true
 
+#worlds default flags
+# If no protection is created in a world, the default flags will be used
+# This can be useful for creating a world where players can't break blocks or something like that
+worlds:
+  world:
+    move: true
+    place: true
+    break: true
+    interact: true
+    pvp: true
+    teleport: true
+    fish: true
+    ride: true
+    piston: true
+    ignite: true
+    explode: true
+    entity_damage: true
+    animals: true
+    monsters: true
+    container: true
+    use: true
+    flow: true
+    enemy_spawn: true
+
 #You can change blocks types of some flags
 flags:
   container:

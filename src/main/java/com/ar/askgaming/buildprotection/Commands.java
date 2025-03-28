@@ -732,8 +732,15 @@ public class Commands implements TabExecutor {
     
         return true;
     }
+    //#region reload
     private void reload(Player p) {
+        if (!p.hasPermission("buildprotection.reload")) {
+            p.sendMessage(getLang("commands.no_perm", p));
+            return;
+
+        }
         plugin.reloadConfig();
+        plugin.getProtectionFlags().reload();
        // plugin.getLangManager().reload();
         p.sendMessage("Config and lang files reloaded.");
     }
