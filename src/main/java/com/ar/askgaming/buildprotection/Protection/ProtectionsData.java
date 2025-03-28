@@ -9,60 +9,60 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import com.ar.askgaming.buildprotection.BuildProtection;
 
-
 public class ProtectionsData {
     
     private final BuildProtection plugin;
+    private final File protectionsFolder;
 
     public ProtectionsData(BuildProtection main) {
         plugin = main;
-
-        File protectionsFolder = new File(plugin.getDataFolder() + "/protections");
+        protectionsFolder = new File(plugin.getDataFolder() + "/protections");
+        load();
+    }
+    public void load(){
         if (!protectionsFolder.exists()) {
             protectionsFolder.mkdirs();
         }
 
         //Create world file if dosent exist
-        Bukkit.getWorlds().forEach(world -> {
-            createWorldFile(world.getName());
-        });
-    }
-    public void createWorldFile(String world){
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + world+".yml");
+        Bukkit.getWorlds().forEach(world -> createWorldFile(world.getName()));
 
-        if (!wFile.exists()){
+    }
+    private void createWorldFile(String world) {
+        File worldFile = getWorldFile(world);
+        
+        if (!worldFile.exists()) {
             try {
-                wFile.createNewFile();
+                if (worldFile.createNewFile()) {
+                    plugin.getLogger().info("Created protection file for world: " + world);
+                }
             } catch (IOException e) {
+                plugin.getLogger().severe("Failed to create protection file for world: " + world);
                 e.printStackTrace();
             }
         }
     }
-    private boolean existsWorldFile(String world){
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + world+".yml");
-        return wFile.exists();
+    
+    private File getWorldFile(String world) {
+        return new File(protectionsFolder, world + ".yml");
     }
-    public FileConfiguration getWorldConfig(String world){
-
-       // plugin.getLogger().info("Loading protections from world file: "+world);
-
-        //Add cache maybe
-        if (!existsWorldFile(world)){
+    
+    public FileConfiguration getWorldConfig(String world) {
+        if (!existsWorldFile(world)) {
             createWorldFile(world);
         }
-        
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + world+".yml");
-        FileConfiguration wConfig = YamlConfiguration.loadConfiguration(wFile);
-        return wConfig;
+        return YamlConfiguration.loadConfiguration(getWorldFile(world));
     }
-
-    public void saveWorldConfig(FileConfiguration config, String world){
-
-        File wFile = new File(plugin.getDataFolder()+"/protections/" + world+".yml");
-
+    
+    private boolean existsWorldFile(String world) {
+        return getWorldFile(world).exists();
+    }
+    
+    public void saveWorldConfig(FileConfiguration config, String world) {
         try {
-            config.save(wFile);
+            config.save(getWorldFile(world));
         } catch (IOException e) {
+            plugin.getLogger().severe("Failed to save protection file for world: " + world);
             e.printStackTrace();
         }
     }

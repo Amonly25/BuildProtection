@@ -22,7 +22,7 @@ public class Place implements Listener {
         Location l = event.getBlock().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.PLACE, p, l)){
-            p.sendMessage(plugin.getLangManager().getLang("flags.place", p));
+            p.sendMessage(plugin.getLangManager().get("flags.place", p));
             event.setCancelled(true);
         }
     }
@@ -32,7 +32,7 @@ public class Place implements Listener {
         Location l = event.getBlock().getLocation();
         
         if (!plugin.getProtectionFlags().hasPermission(FlagType.PLACE, p, l)){
-            p.sendMessage(plugin.getLangManager().getLang("flags.place", p));
+            p.sendMessage(plugin.getLangManager().get("flags.place", p));
             event.setCancelled(true);
         }
     }

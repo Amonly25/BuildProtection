@@ -7,17 +7,16 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
 public class Protection implements ConfigurationSerializable{
 
-    private UUID owner;
+    private final UUID owner;
+    private final HashMap<String, Area> areas = new HashMap<>();
     private String name;
     private Location loc1, loc2;
-    private HashMap<String, Area> areas = new HashMap<>();
 
     //#region Constructors
     public Protection(Location loc1, Location loc2, Player player, String proteName) {
@@ -109,9 +108,6 @@ public class Protection implements ConfigurationSerializable{
         return owner.equals(player.getUniqueId());
     }
 
-    public void setOwner(OfflinePlayer owner) {
-        this.owner = owner.getUniqueId();
-    }
     public Location getLoc1() {
         return loc1;
     }

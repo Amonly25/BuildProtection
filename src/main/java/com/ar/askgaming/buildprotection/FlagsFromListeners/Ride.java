@@ -31,7 +31,7 @@ public class Ride implements Listener{
             Player p = (Player) event.getEntity();
             Location l = p.getLocation();
             if (!plugin.getProtectionFlags().hasPermission(FlagType.RIDE, p,l)){
-                p.sendMessage(plugin.getLangManager().getLang("flags.ride", p));
+                p.sendMessage(plugin.getLangManager().get("flags.ride", p));
                 event.setCancelled(true);
             }
         } else if (!(event.getMount() instanceof Player)){

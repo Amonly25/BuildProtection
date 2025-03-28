@@ -1,9 +1,6 @@
 package com.ar.askgaming.buildprotection.Misc;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -17,18 +14,22 @@ import com.ar.askgaming.buildprotection.Protection.Area;
 
 public class RandomTeleport {
 
-    private BuildProtection plugin;
-	private File file;
+    private final BuildProtection plugin;
+	private final File file;
 	private FileConfiguration config;
 
-	private HashMap<UUID, Long> cooldowns = new HashMap<>();
-	private HashMap<UUID, Location> lastLocation = new HashMap<>();
+	private boolean lastLocation;
+	private long cooldown;
+	private double minXZ, maxXZ;
 
     public RandomTeleport(BuildProtection main){
         plugin = main;
 
 		file = new File(plugin.getDataFolder(), "rtp_cooldowns.yml");
 
+		load();
+	}
+	public void load(){
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -37,27 +38,22 @@ public class RandomTeleport {
 			}
 		}
 		config = YamlConfiguration.loadConfiguration(file);
+
+		lastLocation = plugin.getConfig().getBoolean("random_teleport.last_location_on_cooldown", true);
+		cooldown = plugin.getConfig().getInt("random_teleport.cooldown", 1440);
+		minXZ = plugin.getConfig().getDouble("random_teleport.min_x_z", 1000);
+		maxXZ = plugin.getConfig().getDouble("random_teleport.max_x_z", 1000);
 	}
-	public void loadCooldowns() {
-		Set<String> keys = config.getKeys(false);
-		if (keys.isEmpty()) {
-			return;
-		}
-		for (String key : config.getKeys(false)) {
-			UUID uuid = UUID.fromString(key);
-			long cooldown = config.getLong(key + ".cooldown");
-			Location loc = (Location) config.get(key + ".last");
-			cooldowns.put(uuid, cooldown);
-			lastLocation.put(uuid, loc);
-		}
+
+	private String getLang(String path, Player player) {
+		return plugin.getLangManager().get(path, player);
 	}
 
 	public void saveCooldown(Player player) {
-		cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
-		lastLocation.put(player.getUniqueId(), player.getLocation());
-		config.set(player.getUniqueId().toString()+".cooldown", System.currentTimeMillis());
-		config.set(player.getUniqueId().toString() + ".last", player.getLocation());
+		String key = player.getUniqueId().toString();
 
+		config.set(key + ".cooldown", System.currentTimeMillis());
+		config.set(key + ".last", player.getLocation());
 
 		try {
 			config.save(file);
@@ -66,47 +62,44 @@ public class RandomTeleport {
 		} 
 			
     }
-
+	//#region CanTelepor
     public boolean canTeleport(Player player) {
 
 		if (player.hasPermission("buildprotection.rtp.cooldown.bypass")){
 			return true;
 		}
 
-		long last = cooldowns.getOrDefault(player.getUniqueId(), 0L);
+		long last = config.getLong(player.getUniqueId().toString() + ".cooldown", 0);
 		long current = System.currentTimeMillis();
 		long diff = current - last;
-		long cooldown = plugin.getConfig().getInt("random_teleport.cooldown",1440) * 1000 * 60;
-		long remaining = cooldown - diff;
+		long remaining = (this.cooldown * 1000 * 60) - diff;
+
 		if (remaining > 0) {
-			player.sendMessage(plugin.getLangManager().getLang("rtp.cooldown", player).replace("%time%", String.valueOf(remaining / 1000/60)));
-			if (plugin.getConfig().getBoolean("random_teleport.last_location_on_cooldown", true)) {
-				if (lastLocation.containsKey(player.getUniqueId())) {
-					player.sendMessage(plugin.getLangManager().getLang("rtp.last_location", player));
+			player.sendMessage(getLang("rtp.cooldown", player).replace("%time%", String.valueOf(remaining / 1000/60)));
+			if (lastLocation) {
+				if (config.getLocation(player.getUniqueId().toString() + ".last") != null) {
+					player.sendMessage(getLang("rtp.last_location", player));
 				}
 			}
 			return false;
 		}
 		return true;			
 	}
+	//#region sendToLast
 	public void sendToLastLocation(Player player) {
-		if (!plugin.getConfig().getBoolean("random_teleport.last_location_on_cooldown", true)) {
-			player.sendMessage(plugin.getLangManager().getLang("rtp.disabled", player));
+		if (!lastLocation) {
+			player.sendMessage(getLang("rtp.disabled", player));
 			return;
 		}
-		if (lastLocation.containsKey(player.getUniqueId())) {
-			Location loc = lastLocation.get(player.getUniqueId());
-			teleport(player, loc);
-		} else {
-			sendToLastLocation(player);
-		}
+		Location loc = config.getLocation(player.getUniqueId().toString() + ".last");
+		if (loc != null) teleport(player, loc);
 	}
-
+	//#region send
 	public void sendToRandomLocation(Player player) {
 		if (!canTeleport(player)) {
 			return;
 		}
-		player.sendMessage(plugin.getLangManager().getLang("rtp.searching", player));
+		player.sendMessage(getLang("rtp.searching", player));
         
 		Location loc = null;
 
@@ -118,15 +111,13 @@ public class RandomTeleport {
             }
         }
     
-        player.sendMessage(plugin.getLangManager().getLang("rtp.failed", player));
+        player.sendMessage(getLang("rtp.failed", player));
 	}
-		
+	//#region search
 	private Location searchLocation(Player p) {
-		
-		double max = plugin.getConfig().getDouble("random_teleport.max_x_z"), min = plugin.getConfig().getDouble("random_teleport.min_x_z");
-		
-		double randX = Math.floor(Math.random() * (max - min + 1)) + min, 
-			   randZ = Math.floor(Math.random() * (max - min + 1)) + min,
+				
+		double randX = Math.floor(Math.random() * (maxXZ - minXZ + 1)) + minXZ, 
+			   randZ = Math.floor(Math.random() * (maxXZ - minXZ + 1)) + minXZ,
 			   randY = 100;
 
 		World world = p.getWorld();
@@ -141,11 +132,11 @@ public class RandomTeleport {
         }
         return null;
 	}
-	
+	//#region teleport
 	private void teleport(Player p, Location loc) {
 		
 		final int playerZ = p.getLocation().getBlockZ(), playerX = p.getLocation().getBlockX();
-		p.sendMessage(plugin.getLangManager().getLang("rtp.teleport", p));
+		p.sendMessage(getLang("rtp.teleport", p));
 		loc.getChunk().load();
 		new BukkitRunnable() {
 			int count = 5;
@@ -159,7 +150,7 @@ public class RandomTeleport {
 	                return;
 	    		}	    	    	                                    	    	                        
 	            if (playerZ != p.getLocation().getBlockZ() || playerX != p.getLocation().getBlockX()){
-	            	p.sendMessage(plugin.getLangManager().getLang("rtp.cancel", p));
+	            	p.sendMessage(getLang("rtp.cancel", p));
 	            	cancel();
 	            	return;
 	            }

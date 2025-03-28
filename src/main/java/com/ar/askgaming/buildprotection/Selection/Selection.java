@@ -12,9 +12,9 @@ import net.milkbowl.vault.economy.EconomyResponse;
 
 public class Selection{
     
-    private BuildProtection plugin;
+    private final BuildProtection plugin;
+    private final Player player;
     private Location loc1, loc2 = null;
-    private Player player;
 
     public Selection(Player p, BuildProtection main) {
 
@@ -25,7 +25,7 @@ public class Selection{
     }
 
     private String getLang(String key){
-        return plugin.getLangManager().getLang(key, player);
+        return plugin.getLangManager().get(key, player);
     }
 
     //#region Create protection

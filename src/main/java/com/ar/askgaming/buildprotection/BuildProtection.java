@@ -37,6 +37,8 @@ import net.milkbowl.vault.economy.Economy;
 
 public class BuildProtection extends JavaPlugin{
 
+    private static BuildProtection instance;
+
     private ShowBordersManager showParticles;
     private ProtectionsData protectionsData;
     private ProtectionsManager protectionsManager;
@@ -50,6 +52,7 @@ public class BuildProtection extends JavaPlugin{
 
     public void onEnable(){
 
+        instance = this;
         saveDefaultConfig();
 
         protectionsData = new ProtectionsData(this);
@@ -64,10 +67,8 @@ public class BuildProtection extends JavaPlugin{
         langManager = new LanguageManager(this);
         
         showParticles = new ShowBordersManager(this);
-        showParticles.runTaskTimer(this, 0, 20);
 
         rentScheduler = new RentScheduler(this);
-        rentScheduler.runTaskTimer(this, 0, 20*60*60);
 
         Bukkit.getPluginCommand("prote").setExecutor(new Commands(this));
 
@@ -95,7 +96,6 @@ public class BuildProtection extends JavaPlugin{
             RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp == null) {
                 getLogger().info("Non economy plugin found!");
-                //getServer().getPluginManager().disablePlugin(this);
             } else {
                 economy = rsp.getProvider();
                 getLogger().info("Vault Economy found!");
@@ -103,7 +103,6 @@ public class BuildProtection extends JavaPlugin{
 
         } else {
             getLogger().info("Vault not found!");
-            //getServer().getPluginManager().disablePlugin(this);
             return;
         }
         // Not supported yet
@@ -146,4 +145,11 @@ public class BuildProtection extends JavaPlugin{
     public LanguageManager getLangManager() {
         return langManager;
     }
+    public static BuildProtection getInstance() {
+        return instance;
+    }
+    public RentScheduler getRentScheduler() {
+        return rentScheduler;
+    }
+    
 }

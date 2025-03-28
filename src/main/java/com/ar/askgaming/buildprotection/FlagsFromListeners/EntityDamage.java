@@ -113,7 +113,7 @@ public class EntityDamage implements Listener{
 
         if (timeSinceLastHit > 15000) {
             // Si el tiempo transcurrido es menor que el cooldown, enviar el mensaje y actualizar el último golpe
-            p.sendMessage(plugin.getLangManager().getLang("flags.pvp", p));
+            p.sendMessage(plugin.getLangManager().get("flags.pvp", p));
             lastMessage.put(p, currentTime);
         }
     }

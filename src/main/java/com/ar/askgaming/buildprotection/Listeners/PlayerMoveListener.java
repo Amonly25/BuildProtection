@@ -72,9 +72,9 @@ public class PlayerMoveListener implements Listener {
             message = prote.getEnterMessage();
             if (prote.isRentable() && !prote.isRented()) {
                 double cost = prote.getRentCost();
-                message = plugin.getLangManager().getLang("rent.available", p).replace("%cost%", cost + "");
+                message = plugin.getLangManager().get("rent.available", p).replace("%cost%", cost + "");
             } else if (prote.isRentable() && prote.isRented()) {
-                message = plugin.getLangManager().getLang("rent.rented", p).replace("%player%", prote.getRentedOwnerName());
+                message = plugin.getLangManager().get("rent.rented", p).replace("%player%", prote.getRentedOwnerName());
             }
         } else {
             message = prote.getExitMessage();

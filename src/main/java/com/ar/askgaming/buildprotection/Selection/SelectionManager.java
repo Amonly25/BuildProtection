@@ -20,7 +20,7 @@ public class SelectionManager {
     public boolean expandArea(Area area, Selection selection){
         Player player = selection.getPlayer();
         if (selection.detectCollision()){
-            player.sendMessage(plugin.getLangManager().getLang("select.collision", player));
+            player.sendMessage(plugin.getLangManager().get("select.collision", player));
             return false;
         }
 
@@ -37,7 +37,7 @@ public class SelectionManager {
             return true;
 
         } else {
-            player.sendMessage(plugin.getLangManager().getLang("prote.no_money", player.getPlayer()));
+            player.sendMessage(plugin.getLangManager().get("prote.no_money", player.getPlayer()));
             return false;
         }
     }
@@ -60,7 +60,7 @@ public class SelectionManager {
         }
         if (plugin.getEconomy() == null){
             plugin.getLogger().warning("No economy plugin found, creating protection without cost.");
-            player.sendMessage(plugin.getLangManager().getLang("misc.no_economy", player));
+            player.sendMessage(plugin.getLangManager().get("misc.no_economy", player));
             return false;
         }
         if (plugin.getEconomy().getBalance(player) >= getExpandCost(area, selection)){
